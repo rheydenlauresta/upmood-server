@@ -12,7 +12,7 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    public function validator($request, $rules)
+    public function validator($request, $rules, $module)
     {
     	
     	$validate = Validator::make($request, $rules);
@@ -20,19 +20,21 @@ class Controller extends BaseController
     	if(!$validate->fails()){
 
     		return [
-    			'status' => 200,
-				'module' => 'facebook-login',
-				'errors' => [],
-				'data'	 => [],
+                'status'   => (int) env('SUCCESS_RESPONSE_CODE'),
+                'messagge' => 'success',
+                'module'   => $module,
+                'errors'   => [],
+                'data'     => [],
     		];
 
     	}
 
     	return [
-			'status' => 422,
-			'module' => 'facebook-login',
-			'errors' => $validate->errors()->toArray(),
-			'data'	 => [],
+            'status'   => (int) env('VALIDATION_ERROR_RESPONSE_CODE'),
+            'messagge' => 'validation_error',
+            'module'   => $module,
+            'errors'   => $validate->errors()->toArray(),
+            'data'     => [],
 		];
 
     }

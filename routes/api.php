@@ -17,6 +17,8 @@ Route::group(['middleware' => 'auth:api'], function (){
 
 	Route::post('/authenticate/{type}', 'Api\Auth\AuthenticateController@login')->where('type', 'facebook|local');
 
+	Route::post('/search', 'Api\UserController@search');
+
 });
 
 // Route::middleware('auth:api')->get('/user', function (Request $request) {
