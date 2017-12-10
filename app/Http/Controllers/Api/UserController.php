@@ -8,14 +8,6 @@ use App\RestModel\User;
 
 class UserController extends Controller
 {
-    
-    public function __construct()
-    {
-
-        $this->middleware('user-access');
-        $this->middleware('account-status');
-
-    }
 
     public function search(Request $request)
     {
@@ -31,14 +23,12 @@ class UserController extends Controller
 
         $user = User::search();
 
-        if($user->toArray()['total'] <= 0){ $validator['status'] = (int) env('EMPTY_RESPONSE_CODE'); $validator['messagge'] = 'No Record Found'; }
+        if($user->toArray()['total'] <= 0){ $validator['status'] = (int) env('EMPTY_RESPONSE_CODE'); $validator['message'] = 'No Record Found'; }
 
         $validator['data'] = $user->toArray();
 
 	    return json_encode($validator);
 
     }
-
-
 
 }

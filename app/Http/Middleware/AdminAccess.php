@@ -19,7 +19,7 @@ class AdminAccess
 
             $data = [
                 'status'   => (int) env('NON_AUTHORITATIVE_CODE'),
-                'messagge' => 'non-authoritative-token',
+                'messagge' => 'Non Authoritative Token',
                 'module'   => 'user_signin',
                 'errors'   => [],
                 'data'     => [],

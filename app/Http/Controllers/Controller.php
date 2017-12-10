@@ -21,7 +21,7 @@ class Controller extends BaseController
 
     		return [
                 'status'   => (int) env('SUCCESS_RESPONSE_CODE'),
-                'messagge' => 'success',
+                'message' => 'success',
                 'module'   => $module,
                 'errors'   => [],
                 'data'     => [],
@@ -31,7 +31,7 @@ class Controller extends BaseController
 
     	return [
             'status'   => (int) env('VALIDATION_ERROR_RESPONSE_CODE'),
-            'messagge' => 'validation_error',
+            'message' => 'validation_error',
             'module'   => $module,
             'errors'   => $validate->errors()->toArray(),
             'data'     => [],

@@ -17,12 +17,12 @@ Route::group(['middleware' => 'auth:api'], function (){
 
 	Route::post('/authenticate/{type}', 'Api\Auth\AuthenticateController@login')->where('type', 'facebook|local');
 
-	Route::post('/search', 'Api\UserController@search');
+	Route::prefix('user')->middleware(['user-access', 'account-status'])->group(function () {
+
+		Route::post('search', 'Api\UserController@search');
+
+		Route::post('connection/{type?}', 'Api\ConnectionController@connection')->where('type', 'connect|disconnect|accept');
+
+	});
 
 });
-
-// Route::middleware('auth:api')->get('/user', function (Request $request) {
-
-//     return $request->user();
-
-// });

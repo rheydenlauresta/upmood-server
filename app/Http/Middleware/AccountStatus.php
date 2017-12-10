@@ -19,7 +19,7 @@ class AccountStatus
 
             $data = [
                 'status'   => (int) env('INACTIVE_CODE'),
-                'messagge' => 'inactive_account',
+                'messagge' => 'Inactive Account',
                 'module'   => 'user_signin',
                 'errors'   => [],
                 'data'     => [],

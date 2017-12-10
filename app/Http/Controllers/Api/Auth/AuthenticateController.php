@@ -47,6 +47,16 @@ class AuthenticateController extends Controller
     public function local()
     {
         
+        return json_encode([
+
+            'status'   => (int) env('NOT_IMPLEMENTED'),
+            'messagge' => 'module_not_implemented',
+            'module'   => 'local-login',
+            'errors'   => '',
+            'data'     => '',
+
+        ]);
+
     }
 
 }

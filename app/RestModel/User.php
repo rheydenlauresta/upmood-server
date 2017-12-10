@@ -4,6 +4,7 @@ namespace App\RestModel;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use DB;
 
 class User extends Authenticatable
 {
@@ -120,5 +121,79 @@ class User extends Authenticatable
 
     }
 
+    public function scopeCheckUser($query, $module)
+    {
+        $user = $query->find(request('id'));
+
+        if(!$user) return ['status' => false, 'message' => 'No User Found'];
+
+        $connection = $user->checkConnections($module);
+
+        return $this->$module($connection);
+
+    }
+
+    public function checkConnections($module)
+    {
+        return $this->hasMany('App\RestModel\Connection')
+                    ->selectRaw('CASE connections.status
+                                      WHEN 1 THEN "Already Connected"
+                                      WHEN 0 THEN CASE '.request('id').' WHEN connections.user_id THEN "Waiting for your confirmation" WHEN connections.friend_id THEN "Already send Invitation" END
+                                 END as connection_status, connections.id')
+                    ->where('friend_id', request()->user()->id)
+                    ->orWhere('user_id', request()->user()->id)
+                    ->where('friend_id', request('id'))
+                    ->first();
+    }
+
+    public function connect($status)
+    {
+      
+        if($status) return ['status' => false, 'message' => $status->connection_status];
+
+        Connection::create([
+            'user_id'   => request()->user()->id,
+            'friend_id' => (int) request('id'),
+        ]);
+
+        return ['status' => true, 'data' => [] ];
+
+    }
+
+    public function disconnect($status)
+    {
+
+        if(!$status) return ['status' => false, 'message' => 'No requests / Not Connected'];
+
+        $status->delete();
+
+        return [ 'status' => true, 'data' => [] ];
+
+    }
+
+    public function accept($status)
+    {
+        if(!$status) return ['status' => false, 'message' => 'No requests / Not Connected'];
+
+        if($status->connection_status != 'Waiting for your confirmation') return ['status' => false, 'message' => 'No Connection Request'];
+
+        $status->update(['status' => 1]);
+
+        return [ 'status' => true, 'data' => [] ];
+    }
+
+    public function connections()
+    {
+        return $this->hasMany('App\RestModel\Connection')
+                    ->selectRaw('users.id, users.name, users.email, users.image, users.profile_post, users.gender, users.age, users.birthday, users.phonenumber,
+                                 CONCAT(resources.type,"/",resources.set_name,"/",resources.filename) as resource_file, records.heartbeat_count, users.is_online')
+                    ->orWhere('friend_id', request()->user()->id)
+                    ->leftJoin('users', 'users.id', '=', DB::raw('CASE '.request()->user()->id.' WHEN connections.user_id THEN connections.friend_id ELSE connections.user_id END'))
+                    ->leftJoin('records', 'records.user_id', '=', 'users.id')
+                    ->leftJoin('resources', 'records.resources_id','=', 'resources.id')
+                    ->where('connections.status', 1)
+                    ->orderBy('records.id', 'DESC')
+                    ->groupBy('users.id');
+    }
 
 }
