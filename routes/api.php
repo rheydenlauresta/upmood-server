@@ -23,6 +23,8 @@ Route::group(['middleware' => 'auth:api'], function (){
 
 		Route::post('connection/{type?}', 'Api\ConnectionController@connection')->where('type', 'connect|disconnect|accept');
 
+		Route::get('notification/{type?}/{id?}', 'Api\NotificationController@notification')->where('type', 'seen|connect|approve|react|status');
+
 	});
 
 });

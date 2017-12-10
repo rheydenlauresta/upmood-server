@@ -15,8 +15,8 @@ class CreateNotificationsTable extends Migration
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id');
-            $table->integer('friend_id');
+            $table->integer('user_id')->comment('Request From');
+            $table->integer('friend_id')->comment('Request To');
             $table->integer('type_id')->comment('TYPE 1: Connect Request, TYPE 2: Approve Request, TYPE 3: Update Heartbeat and Emoticon, TYPE 4: Reaction Send');
             $table->text('content');
             $table->integer('seen')->default(0);

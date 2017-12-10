@@ -36,7 +36,7 @@ class ConnectionController extends Controller
 
     public function connectionList()
     {
-    	$connection = User::find(request()->user()->id)->connections()->simplePaginate(2);
+    	$connection = User::find(request()->user()->id)->connections()->simplePaginate(20);
 
     	$data = [];
 

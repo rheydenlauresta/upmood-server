@@ -56,7 +56,7 @@ class User extends Authenticatable
 
         $user = $query->find($data->id);
 
-        $notification = $user->notifications(0)->count();
+        $notification = $user->notifications(0, 'all')->count();
 
         $record = $user->records([
             'limit' => 1
@@ -71,9 +71,29 @@ class User extends Authenticatable
 
     }
 
-    public function notifications($status)
+    public function notifications($status, $type = null)
     {
-        return $this->hasMany('App\RestModel\Notification')->where('seen', $status)->get();
+        $query = $this->hasMany('App\RestModel\Notification')
+                      ->select('id','type_id', 'content', 'created_at');
+
+        if(!$type) return $query->where('seen', $status)->simplePaginate(20);
+
+        if($type == 'all') return $query->where('seen', $status)->get();
+
+        if($this->notiType($type) == 4) return $query->where('type_id', 4)->simplePaginate(20);
+
+        return $query->where('type_id', $this->notiType($type))->where('seen', $status)->simplePaginate(20);
+
+    }
+
+    public function notiType($type)
+    {
+        if($type == 'connect') return 1;
+        if($type == 'approve') return 2;
+        if($type == 'status') return 3;
+        if($type == 'react') return 4;
+
+        return 0;
     }
 
     public function records($filter = null)
