@@ -23,8 +23,8 @@ class Controller extends BaseController
                 'status'   => (int) env('SUCCESS_RESPONSE_CODE'),
                 'message' => 'success',
                 'module'   => $module,
-                'errors'   => [],
-                'data'     => [],
+                'errors'   => (Object) [],
+                'data'     => (Object) [],
     		];
 
     	}
@@ -34,7 +34,7 @@ class Controller extends BaseController
             'message' => 'validation_error',
             'module'   => $module,
             'errors'   => $validate->errors()->toArray(),
-            'data'     => [],
+            'data'     => (Object) [],
 		];
 
     }
