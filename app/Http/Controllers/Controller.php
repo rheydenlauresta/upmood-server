@@ -11,32 +11,4 @@ use Validator;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
-
-    public function validator($request, $rules, $module)
-    {
-    	
-    	$validate = Validator::make($request, $rules);
-
-    	if(!$validate->fails()){
-
-    		return [
-                'status'   => (int) env('SUCCESS_RESPONSE_CODE'),
-                'message' => 'success',
-                'module'   => $module,
-                'errors'   => (Object) [],
-                'data'     => (Object) [],
-    		];
-
-    	}
-
-    	return [
-            'status'   => (int) env('VALIDATION_ERROR_RESPONSE_CODE'),
-            'message' => 'validation_error',
-            'module'   => $module,
-            'errors'   => $validate->errors()->toArray(),
-            'data'     => (Object) [],
-		];
-
-    }
-
 }

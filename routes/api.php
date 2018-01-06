@@ -13,9 +13,13 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::group(['middleware' => 'auth:api'], function (){
+Route::group(['middleware' => 'auth:admin-api'], function (){
 
 	Route::post('/authenticate/{type}', 'Api\Auth\AuthenticateController@login')->where('type', 'facebook|local');
+
+});
+
+Route::group(['middleware' => 'auth:api'], function (){
 
 	Route::prefix('user')->middleware(['user-access', 'account-status'])->group(function () {
 
@@ -33,6 +37,18 @@ Route::group(['middleware' => 'auth:api'], function (){
 			 	'mode' => 'paid|free|emoji|sticker|pancake|gummybear|hotdog|pancake|regular', 
 			 	'set' => 'pancake|gummybear|hotdog|pancake|regular'
 			 ]);
+
+		Route::resource('post', 'Api\PostController', ['only' => [
+		    'index', 'store'
+		]]);
+
+		Route::resource('reaction', 'Api\ReactionController', ['only' => [
+		    'index', 'store', 'show'
+		]]);
+
+		Route::resource('record', 'Api\RecordController', ['only' => [
+		    'index', 'store', 'show'
+		]]);
 
 	});
 

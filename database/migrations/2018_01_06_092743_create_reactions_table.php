@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRecordsTable extends Migration
+class CreateReactionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,14 @@ class CreateRecordsTable extends Migration
      */
     public function up()
     {
-        Schema::create('records', function (Blueprint $table) {
+        Schema::create('reactions', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('type')->comment('value: automated, manual')->default('automated');
-            $table->integer('user_id');
-            $table->integer('resources_id')->comment('old: emoji_id');
-            $table->string('stress_level');
+            $table->integer('user_id')->comment('User sending the reaction');
+            $table->integer('friend_id')->comment('User receiving the reaction');
             $table->integer('heartbeat_count');
+            $table->integer('emoji_resource_id');
+            $table->integer('reaction_resource_id');
+            $table->integer('post_id');
             $table->timestamps();
         });
     }
@@ -29,8 +30,9 @@ class CreateRecordsTable extends Migration
      *
      * @return void
      */
+
     public function down()
     {
-        Schema::dropIfExists('records');
+        Schema::dropIfExists('reactions');
     }
 }

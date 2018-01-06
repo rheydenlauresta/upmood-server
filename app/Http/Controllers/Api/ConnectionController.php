@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController as BaseController;
 use App\RestModel\User;
 
-class ConnectionController extends Controller
+class ConnectionController extends BaseController
 {
 
     public function connection(Request $request, $type = null)

@@ -15,7 +15,7 @@ class AccountStatus
      */
     public function handle($request, Closure $next)
     {
-        if(request()->user()->status != 1){
+        if(request()->user()->deleted == 1){
 
             $data = [
                 'status'   => (int) env('INACTIVE_CODE'),

@@ -3,16 +3,14 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController as BaseController;
 use App\RestModel\User;
 
-class AuthenticateController extends Controller
+class AuthenticateController extends BaseController
 {
 
     public function __construct()
     {
-
-        $this->middleware('admin-access');
 
     }
 
@@ -52,8 +50,8 @@ class AuthenticateController extends Controller
             'status'   => (int) env('NOT_IMPLEMENTED'),
             'messagge' => 'module_not_implemented',
             'module'   => 'local-login',
-            'errors'   => '',
-            'data'     => '',
+            'errors'   => (Object) [],
+            'data'     => (Object) [],
 
         ]);
 

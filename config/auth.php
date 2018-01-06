@@ -43,8 +43,14 @@ return [
 
         'api' => [
             'driver' => 'token',
-            'provider' => 'users',
+            'provider' => 'users-api',
         ],
+
+        'admin-api' => [
+            'driver' => 'token',
+            'provider' => 'admin',
+        ],
+
     ],
 
     /*
@@ -65,15 +71,22 @@ return [
     */
 
     'providers' => [
+
+        'admin' => [
+            'driver' => 'eloquent',
+            'model' => App\Admin::class,
+        ],
+
         'users' => [
             'driver' => 'eloquent',
             'model' => App\User::class,
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'users-api' => [
+            'driver' => 'eloquent',
+            'model' => App\RestModel\User::class,
+        ],
+
     ],
 
     /*

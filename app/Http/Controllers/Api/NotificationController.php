@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController as BaseController;
 use App\RestModel\User;
 use App\RestModel\Notification;
 
-class NotificationController extends Controller
+class NotificationController extends BaseController
 {
     public function notification($type = null, $id = null)
     {

@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController as BaseController;
 use App\RestModel\User;
 
-class UserController extends Controller
+class UserController extends BaseController
 {
 
     public function search(Request $request)

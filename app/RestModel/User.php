@@ -48,7 +48,8 @@ class User extends Authenticatable
                     'email'           => request('email'),
                     'record_count'    => 0,
                     'post_count'      => 0,
-                    'status'          => 1,
+                    'reaction_count'  => 0,
+                    'status'          => 0,
                     'is_online'       => 1,
                     'deleted'         => 0
                 ]
@@ -99,7 +100,7 @@ class User extends Authenticatable
     public function records($filter = null)
     {
         $query = $this->hasMany('App\RestModel\Records')
-                      ->select('records.id','records.type','records.heartbeat_count',
+                      ->select('records.id','records.type','records.heartbeat_count','records.stress_level',
                                'resources.id as resource_id','resources.type as resource_type','resources.set_name as resource_set_name',
                                'resources.filename as resource_filename',
                                'records.created_at','records.updated_at')
@@ -107,14 +108,15 @@ class User extends Authenticatable
                       ->where(['resources.status' => 1, 'resources.deleted' => 0])
                       ->orderBy('id', 'desc');
 
-        if(!$filter) return $query;
+        if(!$filter) return $query->get();
 
-        if(isset($filter['limit']))
+        if(isset($filter['limit'])){
 
             if($filter['limit'] == 1) return $query->first();
 
-            if($filter['limit'] > 1) return $query->take($filter['limit'])->get();
+            if($filter['limit'] > 1) return $query->simplePaginate($filter['limit']);
 
+        }
 
     }
 
@@ -214,6 +216,37 @@ class User extends Authenticatable
                     ->where('connections.status', 1)
                     ->orderBy('records.id', 'DESC')
                     ->groupBy('users.id');
+    }
+
+    public function posts($count)
+    {
+
+        return $this->hasMany('App\RestModel\Post')
+                    ->selectraw('id, content, created_at')
+                    ->simplePaginate($count);
+
+    }
+
+    public function reactions($owner, $count)
+    {
+      
+        $query = $this->hasMany('App\RestModel\Reaction', 'friend_id')
+                    ->selectraw('reactions.id,
+                                 users.name, users.image, 
+                                 CONCAT(emoji.type,"/",emoji.set_name,"/",emoji.filename) as emoji_path,
+                                 CONCAT(reaction.type,"/",reaction.set_name,"/",reaction.filename) as reaction_path,
+                                 posts.content as own_post,
+                                 reactions.created_at')
+                    ->leftJoin('users', 'reactions.user_id', '=', 'users.id')
+                    ->leftJoin('resources as emoji', 'reactions.emoji_resource_id', '=', 'emoji.id')
+                    ->leftJoin('resources as reaction', 'reactions.reaction_resource_id', '=', 'reaction.id')
+                    ->leftJoin('posts', 'reactions.post_id', '=', 'posts.id')
+                    ->simplePaginate($count);
+
+        $query->appends(request()->query());
+
+        return $query;
+
     }
 
 }

@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController as BaseController;
 use App\RestModel\Resources;
 
-class ResourcesController extends Controller
+class ResourcesController extends BaseController
 {
     
     public function resources($type = null, $mode = null, $set = null)
