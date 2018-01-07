@@ -50,6 +50,10 @@ Route::group(['middleware' => 'auth:api'], function (){
 		    'index', 'store', 'show'
 		]]);
 
+		Route::resource('group', 'Api\GroupController', ['only' => [
+		    'index', 'store', 'show'
+		]]);
+
 	});
 
 });

@@ -227,6 +227,47 @@ class User extends Authenticatable
 
     }
 
+    public function groups($id = null)
+    {
+
+        $query = $this->hasMany('App\RestModel\Group')
+                    ->selectraw('groups.*, users.id as friend_id, users.name as user_name, users.image as user_image, users.email as user_email')
+                    ->leftJoin('users', function($join){
+                        $join->on(DB::raw("FIND_IN_SET(users.id, groups.members)"), '>', DB::raw("0"));
+                    });
+
+        if($id){
+          $query = $query->where('groups.id', $id);
+        }
+
+        return $query->get()->groupBy('id')->transform(function ($value, $key){
+
+            $data = [
+                'id'                => $value[0]['id'],
+                'name'              => $value[0]['name'],
+                'emotion'           => $value[0]['emotion'],
+                'heartbeat'         => $value[0]['heartbeat'],
+                'stress_level'      => $value[0]['stress_level'],
+                'my_mood'           => $value[0]['my_mood'],
+                'notification_type' => $value[0]['notification_type'],
+                'type_data'         => $value[0]['type_data'],
+                'emotions'          => $value[0]['emotions'],
+                'members'           => collect($value)->transform(function ($value, $key){
+                    return [
+                        'id'    => $value->friend_id,
+                        'name'  => $value->user_name,
+                        'image' => $value->user_image,
+                        'email' => $value->user_email,
+                    ];
+                }),
+            ];
+
+            return $data;
+
+        })->values();
+
+    }
+
     public function reactions($owner, $count)
     {
       
