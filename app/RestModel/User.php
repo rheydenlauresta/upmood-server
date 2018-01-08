@@ -40,7 +40,7 @@ class User extends Authenticatable
                     'age'             => request('age'),
                     'birthday'        => request('birthday'),
                     'phonenumber'     => request('phonenumber'),
-                    'image'           => 'default.png',
+                    'image'           => request('image'),
                     'profile_post'    => null,
                     'paid_emoji_set'  => null,
                     'basic_emoji_set' => 'regular',
@@ -63,12 +63,64 @@ class User extends Authenticatable
             'limit' => 1
         ]);
 
-        $record = $record ? $record->toArray() : [];
+        $record = $record ? $record->toArray() : (Object) [];
 
         $data->setAttribute('notification',$notification);
         $data->setAttribute('record', $record);
 
         return $data;
+
+    }
+
+    public function scopeStatus($query)
+    {
+     
+        $user = request()->user();
+
+        $user->status = request('status');
+
+        if(!$user->save()){
+
+            return [
+                'status'   => (int) env('BAD_REQUEST'),
+                'message' => 'something went wrong',
+            ];
+
+        }
+
+        return [
+            'status'  => (int) env('SUCCESS_RESPONSE_CODE'),
+            'message' => 'success',
+            'data'    => [
+                'status' => $user->status
+            ]
+        ];
+
+    }
+
+    public function scopeBasicEmoji($query)
+    {
+     
+        $user = request()->user();
+
+        $user->basic_emoji_set = request('set_name');
+
+        if(!$user->save()){
+
+            return [
+                'status'   => (int) env('BAD_REQUEST'),
+                'message' => 'something went wrong',
+            ];
+
+        }
+
+        return [
+            'status'  => (int) env('SUCCESS_RESPONSE_CODE'),
+            'message' => 'success',
+            'data'    => [
+                'basic_emoji_set' => $user->basic_emoji_set
+            ]
+        ];
 
     }
 

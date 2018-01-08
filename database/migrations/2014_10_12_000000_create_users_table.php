@@ -29,6 +29,7 @@ class CreateUsersTable extends Migration
             $table->string('password')->nullable();
             $table->string('api_token')->nullable();
             $table->string('email')->unique()->nullable();
+            $table->string('country')->nullable();
             $table->integer('record_count')->default(0);
             $table->integer('post_count')->default(0);
             $table->integer('status')->default(0);

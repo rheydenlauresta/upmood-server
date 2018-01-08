@@ -28,6 +28,7 @@ class AuthenticateController extends BaseController
             'facebook_id' => 'required',
             'name'        => 'required',
             'email'       => 'required|email',
+            'image'       => 'required',
         ], 'facebook-login');
 
         if($validator['status'] == 422) return json_encode($validator);

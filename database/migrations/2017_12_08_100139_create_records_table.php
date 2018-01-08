@@ -17,9 +17,13 @@ class CreateRecordsTable extends Migration
             $table->increments('id');
             $table->string('type')->comment('value: automated, manual')->default('automated');
             $table->integer('user_id');
-            $table->integer('resources_id')->comment('old: emoji_id');
             $table->string('stress_level');
             $table->integer('heartbeat_count');
+            $table->string('emotion_value');
+            $table->string('emotion_level');
+            $table->string('longitude');
+            $table->string('latitude');
+            $table->text('ppi');
             $table->timestamps();
         });
     }

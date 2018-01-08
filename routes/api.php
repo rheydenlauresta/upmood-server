@@ -38,6 +38,10 @@ Route::group(['middleware' => 'auth:api'], function (){
 			 	'set' => 'pancake|gummybear|hotdog|pancake|regular'
 			 ]);
 
+		 Route::resource('profile', 'Api\ProfileController', ['only' => [
+		    'update'
+		]]);
+
 		Route::resource('post', 'Api\PostController', ['only' => [
 		    'index', 'store'
 		]]);
@@ -47,6 +51,10 @@ Route::group(['middleware' => 'auth:api'], function (){
 		]]);
 
 		Route::resource('record', 'Api\RecordController', ['only' => [
+		    'index', 'store', 'show'
+		]]);
+
+		Route::resource('group', 'Api\GroupController', ['only' => [
 		    'index', 'store', 'show'
 		]]);
 

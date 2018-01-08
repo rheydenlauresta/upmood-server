@@ -36,11 +36,9 @@ class Record extends Model
 	        $to = substr(request('date'), 11, 10);
     	}
 
-    	return $query->select('records.id','records.type','records.heartbeat_count','records.stress_level',
-                               'resources.id as resource_id','resources.type as resource_type','resources.set_name as resource_set_name',
-                               'resources.filename as resource_filename',
+    	return $query->select('records.id','records.type','records.heartbeat_count','records.stress_level','records.ppi',
+                               'records.emotion_value','records.emotion_level','records.longitude','records.latitude',
                                'records.created_at','records.updated_at')
-                    ->join('resources', 'records.resources_id','=', 'resources.id')
                     ->where('records.user_id', $userID)->where('records.type', 'automated')
                     ->whereRaw('DATE(records.created_at) BETWEEN "'.$from.'" AND "'.$to.'"')
                     ->orderBy('records.id', 'desc')->get();
@@ -53,10 +51,14 @@ class Record extends Model
     	$record = new $this;
     	$user = request()->user();
 
-		$record->user_id         = $user->id;
-		$record->heartbeat_count = request('heartbeat_count');
-		$record->resources_id    = request('resources_id');
-		$record->stress_level    = request('stress_level');
+        $record->user_id         = $user->id;
+        $record->heartbeat_count = request('heartbeat_count');
+        $record->stress_level    = request('stress_level');
+        $record->emotion_value   = request('emotion_value');
+        $record->emotion_level   = request('emotion_level');
+        $record->longitude       = request('longitude');
+        $record->latitude        = request('latitude');
+        $record->ppi             = request('ppi');
 
 		$user->record_count = $user->record_count + 1;
 

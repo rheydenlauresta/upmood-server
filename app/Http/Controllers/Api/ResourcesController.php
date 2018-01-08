@@ -19,11 +19,11 @@ class ResourcesController extends BaseController
 		});
 
 		$data = [
-			'status' => (int) env('SUCCESS_RESPONSE_CODE'),
+			'status'  => (int) env('SUCCESS_RESPONSE_CODE'),
 			'message' => 'success',
-			'module'	=> 'resources-list',
-			'errors' => [],
-			'data'	=> $grouped->toArray()
+			'module'  => 'resources-list',
+			'errors'  => (Object) [],
+			'data'    => $grouped->toArray()
 		];
 
 		if($grouped->count() <= 0){ $data['status'] = (int) env('EMPTY_RESPONSE_CODE'); $data['message'] = 'No Record Found'; }
