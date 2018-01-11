@@ -152,9 +152,9 @@ class User extends Authenticatable
     public function records($filter = null)
     {
         $query = $this->hasMany('App\RestModel\Records')
-                      ->select('records.id','records.type','records.heartbeat_count','records.stress_level','records.ppi',
-                               'records.emotion_value','records.emotion_level','records.longitude','records.latitude',
-                               'records.created_at','records.updated_at')
+                      ->selectraw('records.id, records.type, records.heartbeat_count, records.stress_level, records.ppi, CONCAT(records.emotion_set,"/emoji/",records.emotion_value,".png") as filepath,
+                               records.emotion_value, records.emotion_set, records.emotion_level, records.longitude, records.latitude,
+                               records.created_at')
                       ->orderBy('id', 'DESC');
 
         if(!$filter) return $query->get();

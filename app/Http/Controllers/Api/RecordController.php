@@ -62,6 +62,7 @@ class RecordController extends BaseController
         $validator = $this->validator(request()->all(), [
             'heartbeat_count' => 'required',
             'stress_level'    => 'required',
+            'emotion_set'     => 'required',
             'emotion_value'   => 'required',
             'emotion_level'   => 'required',
             'longitude'       => 'required',

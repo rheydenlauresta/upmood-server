@@ -54,13 +54,15 @@ class Record extends Model
         $record->user_id         = $user->id;
         $record->heartbeat_count = request('heartbeat_count');
         $record->stress_level    = request('stress_level');
+        $record->emotion_set     = request('emotion_set');
         $record->emotion_value   = request('emotion_value');
         $record->emotion_level   = request('emotion_level');
         $record->longitude       = request('longitude');
         $record->latitude        = request('latitude');
         $record->ppi             = request('ppi');
 
-		$user->record_count = $user->record_count + 1;
+        $user->record_count    = $user->record_count + 1;
+        $user->basic_emoji_set = request('emotion_set');
 
 		if(!$record->save() || !$user->save()){
 
@@ -75,7 +77,8 @@ class Record extends Model
 			'status'  => (int) env('SUCCESS_RESPONSE_CODE'),
 			'message' => 'success',
 			'data'    => [
-				'record_count' => $user->record_count,
+                'record_count' => $user->record_count,
+                'filePath'     => request('emotion_set').'/emoji/'.request('emotion_value').'.png',
             ]
         ];
     }

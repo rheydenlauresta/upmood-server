@@ -11,7 +11,7 @@ class Resources extends Model
     public function scopeCollection($query, $type, $mode, $set)
     {
 
-    	$query = $query->selectRaw('id, type, set_name, CONCAT(type,"/",set_name,"/",filename) as filepath');
+    	$query = $query->selectRaw('id, type, emotion, set_name, CONCAT(set_name,"/",type,"/",filename) as filepath');
 
     	if(!$type && !$mode && !$set) return $query->get();
 
