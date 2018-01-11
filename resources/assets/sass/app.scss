@@ -1,9 +1,201 @@
-
-// Fonts
-@import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
-
-// Variables
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700");
 @import "variables";
-
-// Bootstrap
 @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+
+body{
+  color: $text-color;
+  font-size: $font-size-base;
+  font-family: $font-family;
+}
+
+.bg{
+  background: url('../img/bg.png') no-repeat center center fixed;
+  background-size: cover;
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+  min-width: 100%;
+  min-height: 100%;
+}
+
+.center {
+   width: 500px;
+   height: 500px;
+   position: absolute;
+   left: 50%;
+   top: 50%; 
+   margin-left: -250px;
+   margin-top: -250px;
+   text-align: center;
+}
+
+.logo{
+  margin-bottom: 20px;
+}
+
+.login{
+  width: 500px;
+  margin: 0px auto;
+
+  &.reset{
+    h3{
+      margin-bottom: 20px;
+    }
+    p{
+      font-size: 14px;
+    }
+
+    .btn-link{
+      text-align: center;
+      text-decoration: underline;
+    }
+  }
+  
+  .form{
+    width: 364px;
+    margin: 0px auto;
+    margin-top: 20px;
+    position: relative;
+
+    .form-group{
+      position: relative;
+      margin: 20px 0;
+
+      label{
+        font-weight: 400;
+      }
+
+      i.ic{
+        position: absolute;
+      }
+
+      i.ic-email{
+        background: url('../img/ic_email.png') no-repeat; 
+        padding: 6px 8px;
+        top: 40px;
+        left: 12px;
+      }
+
+      i.ic-password{
+        background: url('../img/ic_password.png') no-repeat;
+        padding: 11px 8px;
+        top: 32px;
+        left: 12px;
+      }
+
+      i.ic-error{
+        background: url('../img/ic_error.png') no-repeat;
+        padding: 10px;
+        top: 35px;
+        right: 12px;
+        display: none;
+        transition: 200ms ease-in-out all;
+      }
+
+      i.ic-warn{
+        background: url('../img/ic_warn.png') no-repeat;
+        padding: 10px;
+        position: relative;
+        margin-right: 10px;
+      }
+
+      input.form-control{
+        border-radius: 2px;
+        border: 1px #BCBDBD solid;
+        background: #ffffff;
+        color: #95989A;
+        font-size: 12px;
+        padding-left: 40px;
+        height: 40px;
+      }
+
+      span.decrypt{
+        color: #4183D7;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        right: 10px;
+        position: absolute;
+        top: 35px;
+        cursor: pointer;
+      }
+
+      &.has-error{
+        input.form-control{
+          border: 3px #E74C3C solid;
+        }
+
+        i.ic-error{
+          display: block;
+        }
+      }
+
+      input.form-control::placeholder {
+        color: #95989A;
+        font-size: 12px;
+      }
+
+      .btn-link{
+        color: #FFFFFF;
+        font-weight: 300;
+      }
+
+      .btn{
+        border-radius: 2px;
+        border: 3px #FFFFFF solid;
+        background: transparent;
+        transition: 200ms ease-in-out all;
+        height: 50px;
+        font-size: 16px;
+        
+        &:hover{
+          border: 3px #65CE96 solid;
+          background: #65CE96;
+        }
+      }
+
+      &.alert{
+        border-radius: 5px;
+        align-items: center;
+        font-weight: 300;
+        transition: 300ms ease-in-out all;
+        padding: 10px;
+        display: none;
+        background: #EE8176;
+        border: 1px #D43F2E solid;
+        position: relative;
+
+        &.has-error,
+        &.has-notif{
+          display: flex;
+        }
+        
+        &.notif{
+          border: 1px #FEE78C solid;
+          background: #FAEDB7;
+          
+          p{
+            font-style: italic;
+            color: #1E1E1E;
+          }
+
+          span{
+            color: #E74C3C;
+            position: absolute;
+            right: 10px;
+            opacity: 1;
+            font-size: 16px;
+            font-weight: 400;
+            top: 7px;
+            cursor: pointer;
+          }
+        }
+
+        span.msg{
+          font-style: italic;
+        }
+      }
+
+    }
+  }
+}
