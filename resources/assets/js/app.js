@@ -7,6 +7,7 @@
 
 require('./bootstrap');
 
+
 window.Vue = require('vue');
 
 /**
@@ -15,8 +16,10 @@ window.Vue = require('vue');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('example', require('./components/Example.vue'));
+Vue.component('main-header', require('./components/Header.vue'));
+Vue.component('login', require('./components/Login.vue'));
+Vue.component('passwordreset', require('./components/PasswordReset.vue'));
 
 const app = new Vue({
-    el: '#app'
+    el: '#app',
 });
