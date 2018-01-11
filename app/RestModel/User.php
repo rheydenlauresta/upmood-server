@@ -152,13 +152,10 @@ class User extends Authenticatable
     public function records($filter = null)
     {
         $query = $this->hasMany('App\RestModel\Records')
-                      ->select('records.id','records.type','records.heartbeat_count','records.stress_level',
-                               'resources.id as resource_id','resources.type as resource_type','resources.set_name as resource_set_name',
-                               'resources.filename as resource_filename',
+                      ->select('records.id','records.type','records.heartbeat_count','records.stress_level','records.ppi',
+                               'records.emotion_value','records.emotion_level','records.longitude','records.latitude',
                                'records.created_at','records.updated_at')
-                      ->join('resources', 'records.resources_id','=', 'resources.id')
-                      ->where(['resources.status' => 1, 'resources.deleted' => 0])
-                      ->orderBy('id', 'desc');
+                      ->orderBy('id', 'DESC');
 
         if(!$filter) return $query->get();
 
