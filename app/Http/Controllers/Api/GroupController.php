@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ApiController as BaseController;
 use App\RestModel\Group;
+use App\RestModel\UserGroup;
+use App\RestModel\Connection;
 
 class GroupController extends BaseController
 {
@@ -24,6 +26,41 @@ class GroupController extends BaseController
             'errors'   => (Object) [],
             'data'     => $groups->toArray(),
         ]);
+    }
+
+    /**
+     * Search friend to add in the group.
+     */
+    public function search()
+    {
+        $friends = request()->user()->connectionList();
+
+        return response()->json([
+            'status'   => (int) env('SUCCESS_RESPONSE_CODE'),
+            'message' => 'success',
+            'module'   => 'group-search',
+            'errors'   => (Object) [],
+            'data'     => $friends->toArray(),
+        ]);
+
+    }
+
+    /**
+     * Add friend to the group.
+     */
+    public function addToGroup()
+    {
+        $validator = $this->validator(request()->all(), [
+            'friend_id'          => 'required',
+            'group_id'           => 'required',
+
+        ], 'add-to-group');
+
+        if($validator['status'] == 422) return json_encode($validator);
+
+        $group = UserGroup::store();
+
+        return response()->json(array_merge($validator, $group));
     }
 
     /**
@@ -57,7 +94,6 @@ class GroupController extends BaseController
             'time'              => 'required_if:notification_type,time',
             'minutes'           => 'required_if:notification_type,minutes|nullable|in:5,10,30',
             'emotions'          => 'required_if:notification_type,emotions',
-            'members'           => 'required',
         ], 'store-group');
 
         if($validator['status'] == 422) return json_encode($validator);

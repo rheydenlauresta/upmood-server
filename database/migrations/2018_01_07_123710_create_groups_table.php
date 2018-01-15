@@ -24,7 +24,6 @@ class CreateGroupsTable extends Migration
             $table->string('notification_type')->comment('IN:minutes,live')->nullable();
             $table->string('type_data')->comment('data depending on what notification type')->nullable();
             $table->text('emotions')->comment('Example: pancake,gummybare')->nullable();
-            $table->text('members')->comment('Example: 1,2,3,4,5,6');
             $table->timestamps();
         });
     }
@@ -36,6 +35,6 @@ class CreateGroupsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('group');
+        Schema::dropIfExists('groups');
     }
 }

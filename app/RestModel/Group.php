@@ -31,7 +31,6 @@ class Group extends Model
 		$group->notification_type = request('notification_type');
 		$group->type_data         = request('notification_type') == 'minutes' ? request('minutes') : request('time');
 		$group->emotions          = request('emotions');
-		$group->members           = request('members');
 
 		if(!$group->save()){
 
