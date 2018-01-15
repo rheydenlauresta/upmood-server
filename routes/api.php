@@ -38,7 +38,7 @@ Route::group(['middleware' => 'auth:api'], function (){
 			 	'set' => 'pancake|gummybear|hotdog|pancake|regular'
 			 ]);
 
-		 Route::resource('profile', 'Api\ProfileController', ['only' => [
+		Route::resource('profile', 'Api\ProfileController', ['only' => [
 		    'update'
 		]]);
 
@@ -54,13 +54,14 @@ Route::group(['middleware' => 'auth:api'], function (){
 		    'index', 'store', 'show'
 		]]);
 
+
+		// group routes
+		Route::get('group/search', 'Api\GroupController@search'); // search available friend
+		Route::post('group/addToGroup', 'Api\GroupController@addToGroup'); // add friend in the group
 		Route::resource('group', 'Api\GroupController', ['only' => [
 		    'index', 'store', 'show'
 		]]);
 
-		Route::resource('group', 'Api\GroupController', ['only' => [
-		    'index', 'store', 'show'
-		]]);
 
 	});
 

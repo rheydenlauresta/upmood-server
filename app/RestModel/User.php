@@ -280,9 +280,12 @@ class User extends Authenticatable
     {
 
         $query = $this->hasMany('App\RestModel\Group')
-                    ->selectraw('groups.*, users.id as friend_id, users.name as user_name, users.image as user_image, users.email as user_email')
+                    ->selectraw('groups.*, users.id as friend_id, users.name as user_name, users.image as user_image, users.email as user_email,user_groups.friend_id as user_group_friend_id')
+                    ->leftJoin('user_groups', function($join){
+                        $join->on('user_groups.group_id', '=', 'groups.id');
+                    })
                     ->leftJoin('users', function($join){
-                        $join->on(DB::raw("FIND_IN_SET(users.id, groups.members)"), '>', DB::raw("0"));
+                        $join->on('user_groups.friend_id', '=', 'users.id');
                     });
 
         if($id){
@@ -290,6 +293,20 @@ class User extends Authenticatable
         }
 
         return $query->get()->groupBy('id')->transform(function ($value, $key){
+
+            if($value[0]['user_group_friend_id'] != null){
+
+                $friend_list = collect($value)->transform(function ($value, $key){
+                                    return [
+                                        'id'    => $value->friend_id,
+                                        'name'  => $value->user_name,
+                                        'image' => $value->user_image,
+                                        'email' => $value->user_email,
+                                    ];
+                                });
+            }else{
+                $friend_list = [];
+            }
 
             $data = [
                 'id'                => $value[0]['id'],
@@ -301,20 +318,47 @@ class User extends Authenticatable
                 'notification_type' => $value[0]['notification_type'],
                 'type_data'         => $value[0]['type_data'],
                 'emotions'          => $value[0]['emotions'],
-                'members'           => collect($value)->transform(function ($value, $key){
-                    return [
-                        'id'    => $value->friend_id,
-                        'name'  => $value->user_name,
-                        'image' => $value->user_image,
-                        'email' => $value->user_email,
-                    ];
-                }),
+                'members'           => $friend_list,
             ];
 
             return $data;
 
         })->values();
 
+    }
+
+
+    public function connectionList($id = null)
+    {
+        $query = DB::table('connections')
+                ->selectraw('connections.*, users.name as user_name, users.image as user_image, users.email as user_email')
+
+                ->where(function($qry){
+                    $qry->where('connections.user_id',request()->user()->id);
+                    $qry->orWhere('connections.friend_id',request()->user()->id);
+                })
+                ->leftJoin('user_groups',function($join){
+                    $join->on('user_groups.friend_id','=',DB::raw('CASE '.request()->user()->id.' WHEN connections.user_id THEN connections.friend_id ELSE connections.user_id END'));
+                    $join->where('user_groups.user_id','=',request()->user()->id);
+                })
+                ->where('user_groups.user_id','=',null)
+                ->leftJoin('users', 'users.id', '=', DB::raw('CASE '.request()->user()->id.' WHEN connections.user_id THEN connections.friend_id ELSE connections.user_id END'));           
+
+        return $query->get()->groupBy('id')->transform(function ($value, $key){
+
+            $data = [
+
+                    'id'    => $value[0]->user_id,
+                    'name'  => $value[0]->user_name,
+                    'image' => $value[0]->user_image,
+                    'email' => $value[0]->user_email,
+
+            ];
+
+            return $data;
+
+        })->values();
+    
     }
 
     public function reactions($owner, $count)

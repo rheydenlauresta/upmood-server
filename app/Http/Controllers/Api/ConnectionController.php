@@ -54,5 +54,4 @@ class ConnectionController extends BaseController
     	return json_encode($data);
 
     }
-
 }
