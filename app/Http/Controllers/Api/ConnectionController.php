@@ -48,7 +48,7 @@ class ConnectionController extends BaseController
     		$data['message'] = 'No Record Found';
     	}
 
-    	$data['errors'] = [];
+    	$data['errors'] = (Object) [];
     	$data['data'] = $connection->toArray();
 
     	return json_encode($data);

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddIngroupToConnectionsTable extends Migration
+class AddUserIdToDeviceTokensTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,8 @@ class AddIngroupToConnectionsTable extends Migration
      */
     public function up()
     {
-        Schema::table('connections', function (Blueprint $table) {
-            //
-            $table->integer('ingroup');
-
+        Schema::table('device_tokens', function (Blueprint $table) {
+            $table->integer('user_id');
         });
     }
 
@@ -27,7 +25,7 @@ class AddIngroupToConnectionsTable extends Migration
      */
     public function down()
     {
-        Schema::table('connections', function (Blueprint $table) {
+        Schema::table('device_tokens', function (Blueprint $table) {
             //
         });
     }

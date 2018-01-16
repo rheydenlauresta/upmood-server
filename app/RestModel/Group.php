@@ -49,4 +49,31 @@ class Group extends Model
 
     }
 
+    public function scopeRemove($query)
+    {
+
+        $group = new $this;
+
+        $group->where('user_id',request()->user()->id)
+                  ->where('id',request('id'))
+                  ->delete();
+
+
+        if(!$group){
+
+            return [
+                'status'   => (int) env('BAD_REQUEST'),
+                'message' => 'something went wrong',
+            ];
+
+        }
+
+        return [
+            'status'  => (int) env('SUCCESS_RESPONSE_CODE'),
+            'message' => 'success',
+            'data'    => $group->toArray()
+        ];
+
+    }
+
 }

@@ -43,4 +43,63 @@ class UserGroup extends Model
         ];
 
     }
+
+    public function scopeRemove($query)
+    {
+        if(request('friend_id')){
+            $id = request('friend_id');
+        }else{
+            $id = request('id');
+        }
+
+        $userGroup = new $this;
+
+        $userGroup->where('user_id',request()->user()->id)
+                  ->where('friend_id',$id)
+                  ->delete();
+
+
+        if(!$userGroup){
+
+            return [
+                'status'   => (int) env('BAD_REQUEST'),
+                'message' => 'something went wrong',
+            ];
+
+        }
+
+        return [
+            'status'  => (int) env('SUCCESS_RESPONSE_CODE'),
+            'message' => 'success',
+            'data'    => $userGroup->toArray()
+        ];
+
+    }
+
+    public function scopeGroupDelete($query)
+    {
+
+        $userGroup = new $this;
+
+        $userGroup->where('user_id',request()->user()->id)
+                  ->where('group_id',request('id'))
+                  ->delete();
+
+
+        if(!$userGroup){
+
+            return [
+                'status'   => (int) env('BAD_REQUEST'),
+                'message' => 'something went wrong',
+            ];
+
+        }
+
+        return [
+            'status'  => (int) env('SUCCESS_RESPONSE_CODE'),
+            'message' => 'success',
+            'data'    => $userGroup->toArray()
+        ];
+
+    }
 }
