@@ -19,7 +19,12 @@ window.Vue = require('vue');
 Vue.component('main-header', require('./components/Header.vue'));
 Vue.component('login', require('./components/Login.vue'));
 Vue.component('passwordreset', require('./components/PasswordReset.vue'));
+Vue.component('dashboard', require('./components/Dashboard.vue'));
 
 const app = new Vue({
     el: '#app',
+});
+
+$(document).ready(function(){
+	$('.scrollbar-outer').scrollbar();
 });

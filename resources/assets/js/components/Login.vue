@@ -4,7 +4,7 @@
         <div class="login">
           <img :src="base_url+'img/ic_upmood.png'" class="logo" alt="Upmood Logo"/>
           <div class="form">
-              <form class="form-horizontal" method="POST" :action="base_url+'login'">
+              <form method="post" class="form-horizontal" :action="base_url+'login'">
                   <input type="hidden" name="_token" :value="csrf">
 
                   <!-- Warning Alerts -->
@@ -26,7 +26,7 @@
                         type="email"
                         class="form-control"
                         name="email"
-                        v-model="data.email"
+                        v-model="email"
                         :class="error.email ? 'has-error' : ''"
                         required autofocus
                       > <i class="ic ic-error"></i>
@@ -40,11 +40,11 @@
                         type="password"
                         class="form-control"
                         name="password"
-                        v-model="data.password"
+                        v-model="password"
                         required
                       >
                       <i class="ic ic-error"></i>
-                      <span class="ic decrypt" v-if="data.password.length" @click="togglePassword">{{status}}</span>
+                      <span class="ic decrypt" v-if="password.length" @click="togglePassword">{{status}}</span>
                   </div>
 
                   <div class="form-group text-left">
@@ -52,7 +52,7 @@
                   </div>
 
                   <div class="form-group">
-                      <button @click="submit" type="button" class="btn btn-block"> Log In </button>
+                      <button type="submit" class="btn btn-block"> Log In </button>
                   </div>
               </form>
           </div>
@@ -69,14 +69,13 @@
                 base_url: window.base_url,
                 error: {},
                 warning: {},
-                data:{
-                  email: '',
-                  password: '',
-                },
+                email: '',
+                password: '',
                 status: 'show'
             }
         },
         mounted() {
+          
         },
 
         methods:{
@@ -89,9 +88,7 @@
                 this.status = 'show';
             }
           },
-          submit(){
-              
-          }
+
         }
     }
 </script>
