@@ -20,4 +20,8 @@ Route::get('/reset', function () {
 
 Auth::routes();
 
-Route::get('/', 'HomeController@index');
+// Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/dashboard', 'DashboardController@index');
+Route::get('/userslist', 'DashboardController@usersList');
+
+Route::get('/users','DashboardController@usersStatistics');
