@@ -7,10 +7,10 @@ use App\Dashboard;
 
 class DashboardController extends Controller
 {
-    // public function __construct()
-    // {
-    //     $this->middleware('auth');
-    // }
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     public function index()
     {
@@ -18,7 +18,7 @@ class DashboardController extends Controller
       $countryCount = Dashboard::countryCount();
       $data = ['users_activity'=>$userActivity, 'countries'=>$countryCount];
       // dd($data);
-      return view('home',["usersCount"=>$userActivity, "countries"=>$countryCount]);
+      return view('home',['users_activity'=>$userActivity, 'countries'=>$countryCount]);
       // return json_encode($data);
     }
 

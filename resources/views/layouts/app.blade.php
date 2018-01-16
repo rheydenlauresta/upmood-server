@@ -22,14 +22,14 @@
             <div class="sidenav">
                 <div class="upmood-logo"></div>
                 <ul>
-                    <li><i class="nav-ic ic-dashboard"></i><a href="javascript:;"> Dashboard</a></li>
-                    <li><i class="nav-ic ic-user"></i><a href="javascript:;"> Users</a></li>
-                    <li><i class="nav-ic ic-message"></i><a href="javascript:;"> Messages</a></li>
+                    <li><i class="nav-ic ic-dashboard"></i><a href="{{ url('/') }}"> Dashboard</a></li>
+                    <li><i class="nav-ic ic-user"></i><a href="{{ url('/users') }}"> Users</a></li>
+                    <li><i class="nav-ic ic-message"></i><a href="{{ url('/messages') }}"> Messages</a></li>
                 </ul>
             </div>
             <div class="main-container">
                 <div class="main-header">
-                    <div class="title"><i class="header-ic ic-dashboard-green"></i>Dashboard</div>
+                    <div class="title"></div>
                     <div class="header-right">
                         <div class="notification">
                             <i class="nav-ic ic-notification"></i>

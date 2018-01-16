@@ -4,19 +4,19 @@
                 <div class="col-md-4">
                     <div class="card card-yellow">
                         <span class="card-title">Online Users</span>
-                        <span class="card-value">15,028</span>
+                        <span class="card-value">{{ users.online }}</span>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="card card-red">
                         <span class="card-title">Offline Users</span>
-                        <span class="card-value">236</span>
+                        <span class="card-value">{{ users.offline }}</span>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="card card-blue">
                         <span class="card-title">Registered Users</span>
-                        <span class="card-value">15,264</span>
+                        <span class="card-value">{{ users.registered_users }}</span>
                     </div>
                 </div>
             </div>
@@ -314,14 +314,15 @@
 
 <script>
     export default {
+        props: ['users','countries'],
         data() {
             return {
                 csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                base_url: window.base_url
+                base_url: window.base_url,
             }
         },
         mounted() {
-            
+            $(".main-header > .title").html('<i class="header-ic ic-dashboard-green"></i>Dashboard');
         }
     }
 </script>
