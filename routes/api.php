@@ -56,11 +56,17 @@ Route::group(['middleware' => 'auth:api'], function (){
 
 
 		// group routes
-		Route::get('group/search', 'Api\GroupController@search'); // search available friend
-		Route::post('group/addToGroup', 'Api\GroupController@addToGroup'); // add friend in the group
 		Route::resource('group', 'Api\GroupController', ['only' => [
-		    'index', 'store', 'show'
+		    'index', 'store', 'show', 'update'
 		]]);
+
+
+		Route::resource('devices', 'Api\DeviceTokenController', ['only' => [
+		    'store'
+		]]);
+
+
+		Route::post('testfcm', 'Api\DeviceTokenController@testfcm');
 
 
 	});

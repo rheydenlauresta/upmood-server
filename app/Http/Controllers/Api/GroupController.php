@@ -28,40 +28,7 @@ class GroupController extends BaseController
         ]);
     }
 
-    /**
-     * Search friend to add in the group.
-     */
-    public function search()
-    {
-        $friends = request()->user()->connectionList();
-
-        return response()->json([
-            'status'   => (int) env('SUCCESS_RESPONSE_CODE'),
-            'message' => 'success',
-            'module'   => 'group-search',
-            'errors'   => (Object) [],
-            'data'     => $friends->toArray(),
-        ]);
-
-    }
-
-    /**
-     * Add friend to the group.
-     */
-    public function addToGroup()
-    {
-        $validator = $this->validator(request()->all(), [
-            'friend_id'          => 'required',
-            'group_id'           => 'required',
-
-        ], 'add-to-group');
-
-        if($validator['status'] == 422) return json_encode($validator);
-
-        $group = UserGroup::store();
-
-        return response()->json(array_merge($validator, $group));
-    }
+    
 
     /**
      * Show the form for creating a new resource.
@@ -141,19 +108,86 @@ class GroupController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $module)
     {
-        //
+        $checker = $this->methodCheck($module, [
+           'search', 'remove', 'addToGroup', 'removeToGroup'
+        ], 'group-update');
+
+        if($checker['status'] == 204) return $checker;
+
+        $result = $this->$module();
+
+        return response()->json($result);
+    }
+
+    /**
+     * Search friend to add in the group.
+     */
+    public function search()
+    {
+        $friends = request()->user()->connectionList();
+
+        return response()->json([
+            'status'   => (int) env('SUCCESS_RESPONSE_CODE'),
+            'message' => 'success',
+            'module'   => 'group-search',
+            'errors'   => (Object) [],
+            'data'     => $friends->toArray(),
+        ]);
+
+    }
+
+    /**
+     * Add friend to the group.
+     */
+    public function addToGroup()
+    {
+        $validator = $this->validator(request()->all(), [
+            'friend_id'          => 'required|integer',
+            'group_id'           => 'required|integer',
+
+        ], 'add-to-group');
+
+        if($validator['status'] == 422) return json_encode($validator);
+
+        $group = UserGroup::store();
+
+        return response()->json(array_merge($validator, $group));
+    }
+
+    /**
+     * Remove friend to the group.
+     */
+    public function removeToGroup()
+    {
+        $validator = $this->validator(request()->all(), [
+            'friend_id'          => 'required|integer',
+
+        ], 'remove-to-group');
+
+        if($validator['status'] == 422) return json_encode($validator);
+
+        $group = UserGroup::remove();
+
+        return response()->json(array_merge($validator, $group));
     }
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function remove()
     {
-        //
+        $validator = $this->validator(request()->all(), [
+            'id'          => 'required',
+
+        ], 'remove-group');
+
+        if($validator['status'] == 422) return json_encode($validator);
+
+        $group = Group::remove();
+        $usergroup = UserGroup::groupDelete();
+
+        return response()->json(array_merge($validator, $group));
     }
 }

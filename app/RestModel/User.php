@@ -227,16 +227,38 @@ class User extends Authenticatable
             'friend_id' => (int) request('id'),
         ]);
 
+        // fcm notification
+        $user = User::find(request('id'));
+                            
+        $data = [
+                    "module"=>"Push Notification",
+                    "type"=>"Connect Request",
+                    "type_id"=>"1",
+                    "request_from"=> [
+                                        "id"=>request()->user()->id,
+                                        "name"=>request()->user()->name,
+                                        "image"=>request()->user()->image,
+                                    ],
+                    "request_to"=>  [
+                                        "id"=>$user->id,
+                                        "name"=>$user->name,
+                                    ],
+                ];
+
+        DeviceToken::fcmSend($data, $user->id);
+        // /fcm notification
+
+
         return ['status' => true, 'data' => [] ];
 
     }
 
     public function disconnect($status)
     {
-
         if(!$status) return ['status' => false, 'message' => 'No requests / Not Connected'];
 
         $status->delete();
+        UserGroup::remove();
 
         return [ 'status' => true, 'data' => [] ];
 
@@ -249,6 +271,31 @@ class User extends Authenticatable
         if($status->connection_status != 'Waiting for your confirmation') return ['status' => false, 'message' => 'No Connection Request'];
 
         $status->update(['status' => 1]);
+
+        // fcm notification
+        $user = Connection::where('connections.id',$status->id)
+                            ->join('users','users.id','=',DB::raw('CASE '.request()->user()->id.' WHEN connections.user_id THEN connections.friend_id ELSE connections.user_id END'))
+                            ->first();
+
+        $data = [
+                    "module"=>"Push Notification",
+                    "type"=>"Approved Request",
+                    "type_id"=>"2",
+                    "request_from"=> [
+                        "id"=>$user->id,
+                        "name"=>$user->name,
+                        "image"=>$user->image,
+                    ],
+                    "request_to"=> [
+                        "id"=>request()->user()->id,
+                        "name"=>request()->user()->name,
+                    ],
+                ];
+
+        DeviceToken::fcmSend($data, request()->user()->id);
+
+        // /fcm notification
+
 
         return [ 'status' => true, 'data' => [] ];
     }
@@ -283,6 +330,7 @@ class User extends Authenticatable
                     ->selectraw('groups.*, users.id as friend_id, users.name as user_name, users.image as user_image, users.email as user_email,user_groups.friend_id as user_group_friend_id')
                     ->leftJoin('user_groups', function($join){
                         $join->on('user_groups.group_id', '=', 'groups.id');
+                        $join->where('user_groups.user_id', '=', request()->user()->id);
                     })
                     ->leftJoin('users', function($join){
                         $join->on('user_groups.friend_id', '=', 'users.id');
@@ -331,7 +379,7 @@ class User extends Authenticatable
     public function connectionList($id = null)
     {
         $query = DB::table('connections')
-                ->selectraw('connections.*, users.name as user_name, users.image as user_image, users.email as user_email')
+                ->selectraw('connections.*, users.id as user_friend_id, users.name as user_name, users.image as user_image, users.email as user_email')
 
                 ->where(function($qry){
                     $qry->where('connections.user_id',request()->user()->id);
@@ -348,7 +396,7 @@ class User extends Authenticatable
 
             $data = [
 
-                    'id'    => $value[0]->user_id,
+                    'id'    => $value[0]->user_friend_id,
                     'name'  => $value[0]->user_name,
                     'image' => $value[0]->user_image,
                     'email' => $value[0]->user_email,
