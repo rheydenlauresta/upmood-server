@@ -33,115 +33,12 @@
                                     <th>Average Emotion:</th>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>Philippines</td>
-                                        <td>1000</td>
-                                        <td>3265</td>
-                                        <td>54.65</td>
+                                    <tr v-for='country in countries'>
+                                        <td>{{ country.country }}</td>
+                                        <td>{{ country.online }}</td>
+                                        <td>{{ country.offline }}</td>
+                                        <td></td>
                                     </tr>
-                                    <tr>
-                                        <td>Philippines</td>
-                                        <td>1000</td>
-                                        <td>3265</td>
-                                        <td>54.65</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Philippines</td>
-                                        <td>1000</td>
-                                        <td>3265</td>
-                                        <td>54.65</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Philippines</td>
-                                        <td>1000</td>
-                                        <td>3265</td>
-                                        <td>54.65</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Philippines</td>
-                                        <td>1000</td>
-                                        <td>3265</td>
-                                        <td>54.65</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Philippines</td>
-                                        <td>1000</td>
-                                        <td>3265</td>
-                                        <td>54.65</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Philippines</td>
-                                        <td>1000</td>
-                                        <td>3265</td>
-                                        <td>54.65</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Philippines</td>
-                                        <td>1000</td>
-                                        <td>3265</td>
-                                        <td>54.65</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Philippines</td>
-                                        <td>1000</td>
-                                        <td>3265</td>
-                                        <td>54.65</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Philippines</td>
-                                        <td>1000</td>
-                                        <td>3265</td>
-                                        <td>54.65</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Philippines</td>
-                                        <td>1000</td>
-                                        <td>3265</td>
-                                        <td>54.65</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Philippines</td>
-                                        <td>1000</td>
-                                        <td>3265</td>
-                                        <td>54.65</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Philippines</td>
-                                        <td>1000</td>
-                                        <td>3265</td>
-                                        <td>54.65</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Philippines</td>
-                                        <td>1000</td>
-                                        <td>3265</td>
-                                        <td>54.65</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Philippines</td>
-                                        <td>1000</td>
-                                        <td>3265</td>
-                                        <td>54.65</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Philippines</td>
-                                        <td>1000</td>
-                                        <td>3265</td>
-                                        <td>54.65</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Philippines</td>
-                                        <td>1000</td>
-                                        <td>3265</td>
-                                        <td>54.65</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Philippines</td>
-                                        <td>1000</td>
-                                        <td>3265</td>
-                                        <td>54.65</td>
-                                    </tr>
-                                    
                                 </tbody>
                             </table>
                         </div>
