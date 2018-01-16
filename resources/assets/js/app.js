@@ -20,6 +20,7 @@ Vue.component('main-header', require('./components/Header.vue'));
 Vue.component('login', require('./components/Login.vue'));
 Vue.component('passwordreset', require('./components/PasswordReset.vue'));
 Vue.component('dashboard', require('./components/Dashboard.vue'));
+Vue.component('users-component', require('./components/Users.vue'));
 
 const app = new Vue({
     el: '#app',
