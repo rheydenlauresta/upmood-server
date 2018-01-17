@@ -20,7 +20,7 @@
                                         <option value="gender">Gender</option>
                                     </select>
                                 </div>
-                                <select id="filter-value" name="filter-value" class="form-control half-input"></select>
+                                <select id="filter-value" name="filter-value" class="form-control half-input" disabled></select>
                             </div>
                             <div class="form-group col-md-2">
                                 <label for="sort">Sort By:</label>
@@ -33,7 +33,58 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                       
+                        <div class="advance-filter">
+                            <div class="advance-filter-input row">
+                                <div class="advance-filter-row">
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <label for="" class="col-md-4">Filter By No 2:</label>
+                                            <div class="select-ic ic-filter col-md-6 filter-width">
+                                                <select id="filter" name="filter" class="form-control">
+                                                    <option value="" selected hidden>Select Filter</option>
+                                                    <option value="location">Location</option>
+                                                    <option value="gender">Gender</option>
+                                                </select>
+                                            </div>
+                                            <select id="filter-value" name="filter-value" class="form-control col-md-2 filter-width" disabled></select>
+                                            <a href="javascript:;" class="filter-close"><img :src="base_url+'img/ic_close.png'" alt=""></a>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <label for="" class="col-md-4">Filter By No 3:</label>
+                                            <div class="select-ic ic-filter col-md-6 filter-width">
+                                                <select id="filter" name="filter" class="form-control">
+                                                    <option value="" selected hidden>Select Filter</option>
+                                                    <option value="location">Location</option>
+                                                    <option value="gender">Gender</option>
+                                                </select>
+                                            </div>
+                                            <select id="filter-value" name="filter-value" class="form-control col-md-2 filter-width" disabled></select>
+                                            <a href="javascript:;" class="filter-close"><img :src="base_url+'img/ic_close.png'" alt=""></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="advance-filter-row">
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <label for="" class="col-md-4">Filter By No 4:</label>
+                                            <div class="select-ic ic-filter col-md-6 filter-width">
+                                                <select id="filter" name="filter" class="form-control">
+                                                    <option value="" selected hidden>Select Filter</option>
+                                                    <option value="location">Location</option>
+                                                    <option value="gender">Gender</option>
+                                                </select>
+                                            </div>
+                                            <select id="filter-value" name="filter-value" class="form-control col-md-2 filter-width" disabled></select>
+                                            <a href="javascript:;" class="filter-close"><img :src="base_url+'img/ic_close.png'" alt=""></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                         <div class="row">
                             <div class="col-md-3 col-md-offset-9">
                                 <ul class="filter-right-menu">
                                     <li><a href="javascript:;" class="advance-search">Advance Search</a></li>
@@ -41,7 +92,7 @@
                                 </ul>
                             </div>
                         </div>
-                        <div class="advance-filter">
+                        <div class="scoreboard">
                             <div class="advance-card advance-user col-md-3">
                                 <div class="user-value">5,623</div>
                                 <div class="advance-card-label">User Selected</div>
