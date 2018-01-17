@@ -38,8 +38,7 @@ class DashboardController extends Controller
      public function userCountry()
      {
        $data = Dashboard::getUserCountry();
-
-       return $data;
+       return json_encode($data);
      }
 
 
