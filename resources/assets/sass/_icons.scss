@@ -18,6 +18,33 @@
 	margin-right: 30px;
 }
 
+.input-ic{
+	position: relative;
+	
+	input{
+		padding-left: 40px;
+	}
+}
+
+.select-ic{
+	position: relative;
+	
+	select{
+		padding-left: 45px;
+	}
+
+	&:after{
+		content: '';
+		display: inline-block;
+		height: 23px;
+		width: 1px;
+		background-color: #BCBDBD;
+		position: absolute;
+		top: 5px;
+		left: 40px;
+	}
+}
+
 .ic-notification{
 	background: url('../img/ic_notification.png') no-repeat;
 	top: 17px;
@@ -54,5 +81,52 @@
 	top: 7px;
 }
 
+
+// ICONS FOR INPUTS
+
+.ic-search{
+	&:before{
+		content: '';
+	    background: url(../img/ic_search.png) no-repeat;
+	    top: 7px;
+	    left: 13px;
+	    height: 30px;
+	    width: 30px;
+	    display: inline-block;
+	    position: absolute;	
+	}
+}
+
+// END ICONS FOR INPUTS
+
+// ICONS FOR SELECT INPUTS
+
+.ic-filter{
+	&:before{
+		content: '';
+	    background: url(../img/ic_filter.png) no-repeat;
+	    top: 9px;
+	    left: 10px;
+	    height: 30px;
+	    width: 30px;
+	    display: inline-block;
+	    position: absolute;	
+	}
+}
+
+.ic-sort{
+	&:before{
+		content: '';
+	    background: url(../img/ic_sort.png) no-repeat;
+	    top: 9px;
+    	left: 14px;
+	    height: 30px;
+	    width: 30px;
+	    display: inline-block;
+	    position: absolute;	
+	}
+}
+
+// END ICONS FOR SELECT INPUTS
 
 // END OF ICONS
