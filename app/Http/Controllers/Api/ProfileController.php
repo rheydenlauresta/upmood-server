@@ -48,6 +48,14 @@ class ProfileController extends BaseController
     public function show($id)
     {
         $viewer = User::viewOthers($id);
+
+        return response()->json([
+            'status'   => (int) env('SUCCESS_RESPONSE_CODE'),
+            'message' => 'success',
+            'module'   => 'view-friends',
+            'errors'   => (Object) [],
+            'data'     => $viewer,
+        ]);
     }
 
     /**

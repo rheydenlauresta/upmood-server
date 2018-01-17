@@ -55,10 +55,12 @@ Route::group(['middleware' => 'auth:api'], function (){
 		]]);
 
 
+		Route::get('group/search', 'Api\GroupController@search');
 		Route::resource('group', 'Api\GroupController', ['only' => [
 		    'index', 'store', 'show', 'update'
 		]]);
 
+		Route::get('featured/search', 'Api\FeaturedController@search');
 		Route::resource('featured', 'Api\FeaturedController', ['only' => [
 		    'index', 'store', 'show', 'update'
 		]]);

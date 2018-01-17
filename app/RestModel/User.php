@@ -228,7 +228,7 @@ class User extends Authenticatable
 
         // fcm notification
         $user = User::find(request('id'));
-                            
+        
         $data = [
                     "module"=>"Push Notification",
                     "type"=>"Connect Request",
@@ -268,7 +268,7 @@ class User extends Authenticatable
 
         if($status->connection_status != 'Waiting for your confirmation') return ['status' => false, 'message' => 'No Connection Request'];
 
-        // $status->update(['status' => 1]);
+        $status->update(['status' => 1]);
 
         // fcm notification
         $user = Connection::where('connections.id',$status->id)
@@ -293,7 +293,6 @@ class User extends Authenticatable
         DeviceToken::fcmSend($data, [request()->user()->id]);
 
         // /fcm notification
-
 
         return [ 'status' => true, 'data' => [] ];
     }
@@ -407,6 +406,39 @@ class User extends Authenticatable
     
     }
 
+    public function featuredList($id = null)
+    {
+        $query = DB::table('connections')
+                ->selectraw('connections.*, users.id as user_friend_id, users.name as user_name, users.image as user_image, users.email as user_email')
+
+                ->where(function($qry){
+                    $qry->where('connections.user_id',request()->user()->id);
+                    $qry->orWhere('connections.friend_id',request()->user()->id);
+                })
+                ->leftJoin('features',function($join){
+                    $join->on('features.friend_id','=',DB::raw('CASE '.request()->user()->id.' WHEN connections.user_id THEN connections.friend_id ELSE connections.user_id END'));
+                    $join->where('features.user_id','=',request()->user()->id);
+                })
+                ->where('features.user_id','=',null)
+                ->leftJoin('users', 'users.id', '=', DB::raw('CASE '.request()->user()->id.' WHEN connections.user_id THEN connections.friend_id ELSE connections.user_id END'));           
+
+        return $query->get()->groupBy('id')->transform(function ($value, $key){
+
+            $data = [
+
+                    'id'    => $value[0]->user_friend_id,
+                    'name'  => $value[0]->user_name,
+                    'image' => $value[0]->user_image,
+                    'email' => $value[0]->user_email,
+
+            ];
+
+            return $data;
+
+        })->values();
+    
+    }
+
     public function reactions($owner, $count)
     {
       
@@ -439,7 +471,7 @@ class User extends Authenticatable
             ->join('groups','groups.id','=','user_groups.group_id')
             ->first();
 
-        $record = Records::where('user_id',$id)->latest()->first();
+        $record = Records::where('user_id',$id)->orderBy('id','desc')->first();
 
         $user = User::find($id);
 
@@ -448,21 +480,21 @@ class User extends Authenticatable
             'name'=>$user->name,
             'email'=>$user->email,
             'image'=>$user->image,
-
         ];
 
         if(isset($user_group->my_mood) && $user_group->my_mood != 0){
             if(isset($user_group->emotion) && $user_group->emotion == 1){
                 $data['emotion_value'] = $record->emotion_value;
             }
-            if(isset($user_group->heartbeat) && $user_group->heartbeat == 1){
+            if(isset($user_group->heartbeat) && $user_group->heartbeat == 1 && $record->type == 'automated'){
                 $data['heartbeat_count'] = $record->heartbeat_count;
             }
             if(isset($user_group->stress_level) && $user_group->stress_level == 1){
                 $data['stress_level'] = $record->stress_level;
             }
         }
-        dd($data);
+
+        return $data;
     }
 
 }
