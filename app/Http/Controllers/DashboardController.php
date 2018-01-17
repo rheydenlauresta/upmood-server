@@ -35,5 +35,12 @@ class DashboardController extends Controller
         $res = Dashboard::searchFilter($request);
      }
 
+     public function userCountry()
+     {
+       $data = Dashboard::getUserCountry();
+
+       return $data;
+     }
+
 
 }
