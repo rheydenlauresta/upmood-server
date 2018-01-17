@@ -30,4 +30,23 @@ class Notification extends Model
 
     }
 
+    public function scopeStore($query, $user_id, $type, $content){
+        $notification = new $this;
+
+        $notification->user_id = request()->user()->id;
+        $notification->friend_id = $user_id;
+        $notification->type_id = $type;
+        $notification->content = json_encode($content);
+        $notification->seen = 0;
+
+        if(!$notification->save()){
+
+            return [
+                'status'   => (int) env('BAD_REQUEST'),
+                'message' => 'something went wrong',
+            ];
+
+        }
+    }
+
 }

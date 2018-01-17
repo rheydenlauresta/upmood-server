@@ -69,17 +69,50 @@ class DeviceToken extends Model
 
     public function scopeFcmSend($query, $data, $user_id)
     {
-        $optionBuiler = new OptionsBuilder();
-        $optionBuiler->setTimeToLive(1);
+        // $optionBuiler = new OptionsBuilder();
+        // $optionBuiler->setTimeToLive(1);
+
+        // $dataBuilder = new PayloadDataBuilder();
+        // $dataBuilder->addData($data);
+
+        // $option_builder = $optionBuiler->build();
+        // $data_builder = $dataBuilder->build();
+
+        // $tokens = DeviceToken::whereIn('user_id',$user_id)->pluck('token')->toArray();
+        
+        // foreach($user_id as $key=>$value){
+        //     Notification::store($value, $data['type_id'], $data);
+        // }
+
+        // $res = FCM::sendTo($tokens, $option_builder, $notification = null, $data_builder);
+
+        // return $res->numberSuccess();
+
+        $optionBuilder = new OptionsBuilder();
+        $optionBuilder->setTimeToLive(60*20);
+
+        $notificationBuilder = new PayloadNotificationBuilder('Restaurant reply to your comment');
+        $notificationBuilder->setBody($data)->setSound('default');
 
         $dataBuilder = new PayloadDataBuilder();
         $dataBuilder->addData($data);
 
-        $option_builder = $optionBuiler->build();
-        $data_builder = $dataBuilder->build();
+        $option = $optionBuilder->build();
+        $notification = $notificationBuilder->build();
+        $data = $dataBuilder->build();
 
         $tokens = DeviceToken::whereIn('user_id',$user_id)->pluck('token')->toArray();
 
-        $res = FCM::sendTo($tokens, $option_builder, $notification = null, $data_builder);
+        $downstreamResponse = FCM::sendTo($tokens, $option, $notification, $data);
+        $downstreamResponse->numberSuccess();
+        $downstreamResponse->numberFailure();
+        $downstreamResponse->numberModification();
+        //return Array - you must remove all this tokens in your database
+        $downstreamResponse->tokensToDelete();
+        //return Array (key : oldToken, value : new token - you must change the token in your database )
+        $downstreamResponse->tokensToModify();
+        //return Array - you should try to resend the message to the tokens in the array
+        $downstreamResponse->tokensToRetry();
+
     }
 }

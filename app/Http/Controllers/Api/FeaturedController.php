@@ -122,4 +122,21 @@ class FeaturedController extends BaseController
             'errors'   => (Object) [],
         ]);
     }
+
+    /**
+     * Search friend to add in the group.
+     */
+    public function search()
+    {
+        $friends = request()->user()->featuredList();
+
+        return response()->json([
+            'status'   => (int) env('SUCCESS_RESPONSE_CODE'),
+            'message' => 'success',
+            'module'   => 'group-search',
+            'errors'   => (Object) [],
+            'data'     => $friends->toArray(),
+        ]);
+
+    }
 }
