@@ -4,9 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\ApiController as BaseController;
-use App\RestModel\User;
 
-class ProfileController extends BaseController
+use App\RestModel\Feature;
+
+class FeaturedController extends BaseController
 {
     /**
      * Display a listing of the resource.
@@ -16,6 +17,15 @@ class ProfileController extends BaseController
     public function index()
     {
         //
+        $featuredList = Feature::ListAll();
+
+        return response()->json([
+            'status'   => (int) env('SUCCESS_RESPONSE_CODE'),
+            'message' => 'success',
+            'module'   => 'featured-friends',
+            'errors'   => (Object) [],
+            'data'     => $featuredList,
+        ]);
     }
 
     /**
@@ -36,7 +46,15 @@ class ProfileController extends BaseController
      */
     public function store(Request $request)
     {
-        //
+        $validator = $this->validator(request()->all(), [
+            'friend_id'              => 'required|integer',
+        ], 'featured-friends');
+
+        if($validator['status'] == 422) return json_encode($validator);
+
+        $featured = Feature::store();
+
+        return response()->json(array_merge($validator, $featured));
     }
 
     /**
@@ -47,7 +65,7 @@ class ProfileController extends BaseController
      */
     public function show($id)
     {
-        $viewer = User::viewOthers($id);
+        //
     }
 
     /**
@@ -70,60 +88,38 @@ class ProfileController extends BaseController
      */
     public function update(Request $request, $module)
     {
-        // VALIDATE REQUEST METHOD REQUIREMENTS
-
         $checker = $this->methodCheck($module, [
-            'status', 'basicEmoji'
-        ], 'profile-update');
+           'remove'
+        ], 'featured-update');
 
         if($checker['status'] == 204) return $checker;
 
         $result = $this->$module();
 
         return response()->json($result);
-
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function remove()
     {
         //
-    }
-
-    public function status()
-    {
-        // VALIDATE REQUEST REQUIREMENTS
-
         $validator = $this->validator(request()->all(), [
-            'status'      => 'required|integer|in:0,1,2,3',
-        ], 'change-status');
+            'friend_id'  => 'required',
 
-        if($validator['status'] == 422) return $validator;
+        ], 'remove-featured');
 
-        $status = User::status();
+        if($validator['status'] == 422) return json_encode($validator);
 
-        return array_merge($validator, $status);
-        
-    }
+        $group = Feature::remove();
 
-    public function basicEmoji()
-    {
-        // VALIDATE REQUEST REQUIREMENTS
-
-        $validator = $this->validator(request()->all(), [
-            'set_name'      => 'required',
-        ], 'change-basic-emoji');
-
-        if($validator['status'] == 422) return $validator;
-
-        $emoji = User::basicEmoji();
-
-        return array_merge($validator, $emoji);
-
+        return response()->json([
+            'status'   => (int) env('SUCCESS_RESPONSE_CODE'),
+            'message' => 'success',
+            'module'   => 'removed-featured',
+            'errors'   => (Object) [],
+        ]);
     }
 }

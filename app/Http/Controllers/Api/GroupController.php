@@ -53,10 +53,10 @@ class GroupController extends BaseController
 
         $validator = $this->validator(request()->all(), [
             'name'              => 'required',
-            'emotion'           => 'required|in:0,1',
-            'heartbeat'         => 'required|in:0,1',
-            'stress_level'      => 'required|in:0,1',
-            'my_mood'           => 'required|in:0,1',
+            // 'emotion'           => 'required|in:0,1',
+            // 'heartbeat'         => 'required|in:0,1',
+            // 'stress_level'      => 'required|in:0,1',
+            'my_mood'           => 'required|in:0,1,2',
             'notification_type' => 'required|in:time,minutes,emotions,live',
             'time'              => 'required_if:notification_type,time',
             'minutes'           => 'required_if:notification_type,minutes|nullable|in:5,10,30',

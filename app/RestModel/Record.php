@@ -4,6 +4,7 @@ namespace App\RestModel;
 
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use DateTime;
 
 class Record extends Model
 {
@@ -48,45 +49,6 @@ class Record extends Model
     public function scopeStore($query)
     {
 
-        // fcm notification
-        // $user = User::find(request('id'));
-
-        // $groups = Group::where('user_id',request()->user()->id)->get();
-
-        // foreach ($groups as $key => $value) {
-        //     if($)
-        //     dd($value->toArray());
-        // }
-                            
-        // $data = [
-        //             "module"=>"Push Notification",
-        //             "type"=>"Reaction Send",
-        //             "type_id"=>"4",
-        //             'heartbeat'    => request('heartbeat_count'),
-        //             'post'         => $post->content,
-        //             'emoji'        => [
-        //                 'emoji_id'    => $emoji->id,
-        //                 'emoji_path' => $emoji->type.'/'.$emoji->set_name.'/'.$emoji->filename
-        //             ],
-        //             'reaction'     => [
-        //                 'reaction_id'   => $reaction->id,
-        //                 'reaction_path' => $reaction->type.'/'.$reaction->set_name.'/'.$reaction->filename
-        //             ],
-        //             "request_from"=> [
-        //                 "id"=>request()->user()->id,
-        //                 "name"=>request()->user()->name,
-        //                 "image"=>request()->user()->image,
-        //             ],
-        //             "request_to"=>  [
-        //                 "id"=>$user->id,
-        //                 "name"=>$user->name,
-        //             ],
-        //         ];
-
-
-        // DeviceToken::fcmSend($data, $user->id);
-        // /fcm notification
-
     	$record = new $this;
     	$user = request()->user();
 
@@ -111,6 +73,42 @@ class Record extends Model
             ];
 
     	}
+
+        // fcm notification
+        $groups = Group::where('user_id',request()->user()->id)->get();
+
+        foreach ($groups as $key => $value) {
+
+            $emotions = explode(',',$value->emotions);
+            $user_group = UserGroup::where('group_id',$value->id)
+                                    ->where('user_id',request()->user()->id)
+                                    ->pluck('friend_id')->toArray();
+            $data = [
+                "module"=>"Push Notification",
+                "type"=>"Update Heartbeat and Emoticon",
+                "type_id"=>"3",
+                'heartbeat'    => request('heartbeat_count'),
+                'emotion_set'    => request('emotion_set'),
+                'emotion_value'  => request('emotion_value'),
+                'emotion_level'  => request('emotion_level'),
+                'longitude'  => request('longitude'),
+                'latitude'  => request('latitude'),
+                'ppi'  => request('ppi'),
+                "request_from"=> [
+                    "id"=>request()->user()->id,
+                    "name"=>request()->user()->name,
+                    "image"=>request()->user()->image,
+                ],
+            ]; 
+                
+
+            if($value->notification_type == "live"){
+
+                DeviceToken::fcmSend($data, $user_group);
+            }
+
+        }
+        // /fcm notification
 
     	return [
 			'status'  => (int) env('SUCCESS_RESPONSE_CODE'),

@@ -21,21 +21,43 @@ class DeviceToken extends Model
     public function scopeStore($query)
     {
 
-    	$device = new $this;
+        $device = $this->where('device_id',request('device_id'))->first();
 
-		$device->user_id           = request()->user()->id;
-		$device->device_id         = request('device_id');
-		$device->token             = request('token');
+        if($device != null){
+
+            $device->user_id           = request()->user()->id;
+            $device->device_id         = request('device_id');
+            $device->token             = request('token');
 
 
-		if(!$device->save()){
+            if(!$device->update()){
 
-    		return [
-    			'status'   => (int) env('BAD_REQUEST'),
-                'message' => 'something went wrong',
-            ];
+                return [
+                    'status'   => (int) env('BAD_REQUEST'),
+                    'message' => 'something went wrong',
+                ];
 
-    	}
+            }
+
+        }else{
+            $device = new $this;
+
+            $device->user_id           = request()->user()->id;
+            $device->device_id         = request('device_id');
+            $device->token             = request('token');
+
+
+            if(!$device->save()){
+
+                return [
+                    'status'   => (int) env('BAD_REQUEST'),
+                    'message' => 'something went wrong',
+                ];
+
+            }
+
+        }
+
 
     	return [
 			'status'  => (int) env('SUCCESS_RESPONSE_CODE'),
@@ -56,8 +78,7 @@ class DeviceToken extends Model
         $option_builder = $optionBuiler->build();
         $data_builder = $dataBuilder->build();
 
-        $tokens = DeviceToken::where('user_id',$user_id)->pluck('token')->toArray();
-        // dd($tokens);
+        $tokens = DeviceToken::whereIn('user_id',$user_id)->pluck('token')->toArray();
 
         $res = FCM::sendTo($tokens, $option_builder, $notification = null, $data_builder);
     }
