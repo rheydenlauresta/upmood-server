@@ -39,7 +39,7 @@ Route::group(['middleware' => 'auth:api'], function (){
 			 ]);
 
 		Route::resource('profile', 'Api\ProfileController', ['only' => [
-		    'update'
+		    'show', 'update'
 		]]);
 
 		Route::resource('post', 'Api\PostController', ['only' => [
@@ -55,8 +55,11 @@ Route::group(['middleware' => 'auth:api'], function (){
 		]]);
 
 
-		// group routes
 		Route::resource('group', 'Api\GroupController', ['only' => [
+		    'index', 'store', 'show', 'update'
+		]]);
+
+		Route::resource('featured', 'Api\FeaturedController', ['only' => [
 		    'index', 'store', 'show', 'update'
 		]]);
 

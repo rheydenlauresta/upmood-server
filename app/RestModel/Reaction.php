@@ -84,7 +84,7 @@ class Reaction extends Model
                 ];
 
 
-        DeviceToken::fcmSend($data, $user->id);
+        DeviceToken::fcmSend($data, [$user->id]);
         // /fcm notification
 
     	return [

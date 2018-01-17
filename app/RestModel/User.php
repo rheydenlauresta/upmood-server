@@ -219,7 +219,6 @@ class User extends Authenticatable
 
     public function connect($status)
     {
-      
         if($status) return ['status' => false, 'message' => $status->connection_status];
 
         Connection::create([
@@ -245,9 +244,8 @@ class User extends Authenticatable
                                     ],
                 ];
 
-        DeviceToken::fcmSend($data, $user->id);
+        DeviceToken::fcmSend($data, [$user->id]);
         // /fcm notification
-
 
         return ['status' => true, 'data' => [] ];
 
@@ -270,7 +268,7 @@ class User extends Authenticatable
 
         if($status->connection_status != 'Waiting for your confirmation') return ['status' => false, 'message' => 'No Connection Request'];
 
-        $status->update(['status' => 1]);
+        // $status->update(['status' => 1]);
 
         // fcm notification
         $user = Connection::where('connections.id',$status->id)
@@ -292,7 +290,7 @@ class User extends Authenticatable
                     ],
                 ];
 
-        DeviceToken::fcmSend($data, request()->user()->id);
+        DeviceToken::fcmSend($data, [request()->user()->id]);
 
         // /fcm notification
 
@@ -429,6 +427,42 @@ class User extends Authenticatable
 
         return $query;
 
+    }
+
+    // view and validate other users
+    public function scopeViewOthers($query, $id)
+    {
+        $groups = Group::where('user_id',$id);
+
+        $user_group = UserGroup::where('user_groups.friend_id',request()->user()->id)
+            ->where('user_groups.user_id',$id)
+            ->join('groups','groups.id','=','user_groups.group_id')
+            ->first();
+
+        $record = Records::where('user_id',$id)->latest()->first();
+
+        $user = User::find($id);
+
+        $data = [
+            'id'=>$user->id,
+            'name'=>$user->name,
+            'email'=>$user->email,
+            'image'=>$user->image,
+
+        ];
+
+        if(isset($user_group->my_mood) && $user_group->my_mood != 0){
+            if(isset($user_group->emotion) && $user_group->emotion == 1){
+                $data['emotion_value'] = $record->emotion_value;
+            }
+            if(isset($user_group->heartbeat) && $user_group->heartbeat == 1){
+                $data['heartbeat_count'] = $record->heartbeat_count;
+            }
+            if(isset($user_group->stress_level) && $user_group->stress_level == 1){
+                $data['stress_level'] = $record->stress_level;
+            }
+        }
+        dd($data);
     }
 
 }

@@ -16,6 +16,12 @@ class Group extends Model
     protected $hidden = [
         'updated_at'
     ];
+    public function scopeListAll($query){
+        
+        $query = $this->where('user_id',request()->user()->id);
+
+        return $query;
+    }
 
     public function scopeStore($query)
     {
@@ -24,9 +30,12 @@ class Group extends Model
 
 		$group->user_id           = request()->user()->id;
 		$group->name              = request('name');
-		$group->emotion           = request('emotion');
-		$group->heartbeat         = request('heartbeat');
-		$group->stress_level      = request('stress_level');
+        $group->emotion           = 1;
+        $group->heartbeat         = 1;
+        $group->stress_level      = 1;
+		// $group->emotion           = request('emotion');
+		// $group->heartbeat         = request('heartbeat');
+		// $group->stress_level      = request('stress_level');
 		$group->my_mood           = request('my_mood');
 		$group->notification_type = request('notification_type');
 		$group->type_data         = request('notification_type') == 'minutes' ? request('minutes') : request('time');
