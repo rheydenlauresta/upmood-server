@@ -27,7 +27,7 @@ class DashboardController extends Controller
         $data = Dashboard::getUsers();
         $filter = ['','Activity level','Name','Location','Gender','Age','Current Emotion','Status'];
 
-        return view('userlist',['results' => $data, 'filters'=>$filter]);
+        return view('users',['results' => $data, 'filters'=>$filter]);
      }
 
      public function userFilter(Request $request)
