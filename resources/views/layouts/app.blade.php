@@ -23,7 +23,7 @@
                 <div class="upmood-logo"></div>
                 <ul>
                     <li><i class="nav-ic ic-dashboard"></i><a href="{{ url('/') }}"> Dashboard</a></li>
-                    <li><i class="nav-ic ic-user"></i><a href="{{ url('/users') }}"> Users</a></li>
+                    <li><i class="nav-ic ic-user"></i><a href="{{ url('/userslist') }}"> Users</a></li>
                     <li><i class="nav-ic ic-message"></i><a href="{{ url('/messages') }}"> Messages</a></li>
                 </ul>
             </div>
@@ -36,7 +36,7 @@
                             <div class="notification-count">10</div>
                         </div>
                         <div class="profile"><a class="logout-link" href="javascript:;" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><img src="{{ asset('img/profile-avatar.png') }}" alt=""></a></div>
-                        
+
 
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                             {{ csrf_field() }}

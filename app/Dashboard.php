@@ -30,7 +30,13 @@ class Dashboard extends Model
 
     public static function getUsers()
     {
-        $res = DB::table('users')->paginate(10);
+        $res = DB::table('users as u')
+                    ->selectRaw('MAX(r.id) AS record_id,u.image, u.name, u.gender,
+                                u.age, u.country, r.heartbeat_count, u.profile_post,
+                                if(u.is_online,"online","offline") as active_level,r.emotion_value')
+                    ->leftJoin('records as r','u.id','r.user_id')
+                    ->groupBy('name')
+                    ->paginate(10);
 
         return $res;
     }
@@ -45,5 +51,11 @@ class Dashboard extends Model
                 ->paginate(10);
 
         return $res;
+    }
+
+    public static function getUserCountry()
+    {
+      $res = DB::table('users')->groupBy('country')->get();
+      return $res;
     }
 }
