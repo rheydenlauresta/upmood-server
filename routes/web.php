@@ -25,5 +25,6 @@ Route::get('/dashboard', 'DashboardController@index');
 Route::get('/userslist', 'DashboardController@usersList');
 Route::get('/', 'DashboardController@index');
 Route::get('/users', 'HomeController@users');
+Route::get('/countryFilter', 'DashboardController@userCountry');
 
 Route::get('/users','DashboardController@usersStatistics');
