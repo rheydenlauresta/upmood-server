@@ -55,7 +55,9 @@ class Dashboard extends Model
 
     public static function getUserCountry()
     {
-      $res = DB::table('users')->groupBy('country')->get();
+      $res = DB::table('users')
+                      ->select('country')
+                      ->groupBy('country')->get();
       return $res;
     }
 }
