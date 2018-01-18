@@ -69,50 +69,77 @@ class DeviceToken extends Model
 
     public function scopeFcmSend($query, $data, $user_id)
     {
-        // $optionBuiler = new OptionsBuilder();
-        // $optionBuiler->setTimeToLive(1);
+
+        foreach($user_id as $key=>$value){
+            Notification::store($value, $data['type_id'], $data);
+        }
+
+        // $optionBuilder = new OptionsBuilder();
+        // $optionBuilder->setTimeToLive(60*20);
+
+        // $notificationBuilder = new PayloadNotificationBuilder('my title');
+        // $notificationBuilder->setBody('Hello world')
+        //                     ->setSound('default');
 
         // $dataBuilder = new PayloadDataBuilder();
-        // $dataBuilder->addData($data);
+        // $dataBuilder->addData(['a_data' => 'my_data']);
 
-        // $option_builder = $optionBuiler->build();
-        // $data_builder = $dataBuilder->build();
+        // $option = $optionBuilder->build();
+        // $notification = $notificationBuilder->build();
+        // $data = $dataBuilder->build();
 
-        // $tokens = DeviceToken::whereIn('user_id',$user_id)->pluck('token')->toArray();
-        
-        // foreach($user_id as $key=>$value){
-        //     Notification::store($value, $data['type_id'], $data);
-        // }
+        // $token = "a_registration_from_your_database";
 
-        // $res = FCM::sendTo($tokens, $option_builder, $notification = null, $data_builder);
+        // $res = FCM::sendTo($token, $option, $notification, $data);
 
-        // return $res->numberSuccess();
+        $content = array('data'=>json_encode($data));
 
-        $optionBuilder = new OptionsBuilder();
-        $optionBuilder->setTimeToLive(60*20);
+        $optionBuiler = new OptionsBuilder();
+        $optionBuiler->setTimeToLive(1);
 
-        $notificationBuilder = new PayloadNotificationBuilder('Restaurant reply to your comment');
-        $notificationBuilder->setBody($data)->setSound('default');
+        $notificationBuilder = new PayloadNotificationBuilder($data['module']);
+        $notificationBuilder->setBody($data['type'])
+                            ->setSound('default');
 
         $dataBuilder = new PayloadDataBuilder();
-        $dataBuilder->addData($data);
+        $dataBuilder->addData($content);
 
-        $option = $optionBuilder->build();
-        $notification = $notificationBuilder->build();
-        $data = $dataBuilder->build();
+        $option_builder = $optionBuiler->build();
+        $notificationBuilder = $notificationBuilder->build();
+        $data_builder = $dataBuilder->build();
 
         $tokens = DeviceToken::whereIn('user_id',$user_id)->pluck('token')->toArray();
 
-        $downstreamResponse = FCM::sendTo($tokens, $option, $notification, $data);
-        $downstreamResponse->numberSuccess();
-        $downstreamResponse->numberFailure();
-        $downstreamResponse->numberModification();
-        //return Array - you must remove all this tokens in your database
-        $downstreamResponse->tokensToDelete();
-        //return Array (key : oldToken, value : new token - you must change the token in your database )
-        $downstreamResponse->tokensToModify();
-        //return Array - you should try to resend the message to the tokens in the array
-        $downstreamResponse->tokensToRetry();
+        $res = FCM::sendTo($tokens, $option_builder, $notificationBuilder, $dataBuilder);
 
+        $numberSuccess = $res->numberSuccess();
+        $numberFailure = $res->numberFailure();
+        $numberModification = $res->numberModification();
+
+        $tokensToDelete = $res->tokensToDelete();
+        $tokensToModify = $res->tokensToModify();
+        $tokensToRetry = $res->tokensToRetry();
+        $tokensWithError = $res->tokensWithError();
+
+        $this->fcmLogs($user_id, $numberSuccess, $numberFailure, $numberModification, $tokensToDelete, $tokensToModify, $tokensToRetry, $tokensWithError);
+
+    }
+
+    public function fcmLogs($user_id, $numberSuccess, $numberFailure, $numberModification, $tokensToDelete, $tokensToModify, $tokensToRetry, $tokensWithError){
+
+        foreach($user_id as $key=>$value){
+            $fcmLogs = new FcmLog();
+
+            $fcmLogs->user_id               = request()->user()->id;
+            $fcmLogs->friend_id             = $value;
+            $fcmLogs->numberSuccess         = $numberSuccess;
+            $fcmLogs->numberFailure         = $numberFailure;
+            $fcmLogs->numberModification    = $numberModification;
+            $fcmLogs->tokensToDelete        = json_encode($tokensToDelete);
+            $fcmLogs->tokensToModify        = json_encode($tokensToModify);
+            $fcmLogs->tokensToRetry         = json_encode($tokensToRetry);
+            $fcmLogs->tokensWithError       = json_encode($tokensWithError);
+            $fcmLogs->save();
+        }
     }
 }
