@@ -36,7 +36,7 @@ class ConnectionController extends BaseController
 
     public function connectionList()
     {
-    	$connection = User::find(request()->user()->id)->connections()->simplePaginate(20);
+    	$connection = request()->user()->connections()->simplePaginate(20);
 
     	$data = [];
 

@@ -29,41 +29,6 @@ class DeviceTokenController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-
-    public function testfcm()
-    {
-        $data = [
-                    "module"=>"Push Notification",
-                    "type"=>"Approved Request",
-                    "type_id"=>"1",
-                    "request_from"=> [
-                                        "user_id"=>request()->user()->id,
-                                        "user_name"=>request()->user()->name,
-                                        "user_image"=>request()->user()->image,
-                                    ],
-                    "request_to"=>  [
-                                        "user_id"=>"1",
-                                        "user_name"=>"test",
-                                    ],
-                ];
-
-        $optionBuiler = new OptionsBuilder();
-        $optionBuiler->setTimeToLive(1);
-
-        $dataBuilder = new PayloadDataBuilder();
-        $dataBuilder->addData($data);
-
-        $option_builder = $optionBuiler->build();
-        $data_builder = $dataBuilder->build();
-
-        $tokens = DeviceToken::where('user_id',request()->user()->id)->pluck('token')->toArray();
-
-        $response = FCM::sendTo($tokens, $option_builder, $notification = null, $data_builder);
-
-        // return $response->numberSuccess();
-        // return $response->numberFailure();
-    }
-
     public function create()
     {
         //
@@ -133,5 +98,114 @@ class DeviceTokenController extends BaseController
     public function destroy($id)
     {
         //
+    }
+
+    public function testfcm($tokens)
+    {
+        //
+        $data = [
+            "module" => "Push Notification",
+            "type" => "Connect Request",
+            "type_id" => "1",
+            "request_from" => [
+                "id" => 166,
+                "name" => "Prof. Timothy Hudson",
+                "image" => "default.png",
+            ],
+            "request_to" => [
+                "id" => 91,
+                "name" => "Prof. Junior Shanahan",
+            ],
+        ];
+
+        $optionBuiler = new OptionsBuilder();
+        $optionBuiler->setTimeToLive(1);
+
+        $notificationBuilder = new PayloadNotificationBuilder('test API');
+        $notificationBuilder->setBody('tester')
+                            ->setSound('default');
+
+        $dataBuilder = new PayloadDataBuilder();
+        $dataBuilder->addData($data);
+
+        $option_builder = $optionBuiler->build();
+        $notification_builder = $notificationBuilder->build();
+        $data_builder = $dataBuilder->build();
+
+        // $tokens = DeviceToken::whereIn('user_id',$user_id)->pluck('token')->toArray();
+
+        $res = FCM::sendTo($tokens, $option_builder, $notification_builder, $data_builder);
+
+        return 'Success!!!';
+    }
+
+    public function fcmResponse($fcm_type){
+
+        if($fcm_type == 'connect'){
+
+            $data = [
+                "module" => "Push Notification",
+                "type" => "Connect Request",
+                "type_id" => "1",
+                "request_from" => [
+                    "id" => 166,
+                    "name" => "Prof. Timothy Hudson",
+                    "image" => "default.png",
+                ],
+                "request_to" => [
+                    "id" => 91,
+                    "name" => "Prof. Junior Shanahan",
+                ],
+            ];
+
+            return $data;
+
+        }elseif($fcm_type == 'accept'){
+
+            $data = [
+                "module" => "Push Notification",
+                "type" => "Approved Request",
+                "type_id" => "2",
+                "request_from" => [
+                    "id" => 91,
+                    "name" => "Prof. Junior Shanahan",
+                    "image" => "default.png",
+                ],
+                "request_to" => [
+                    "id" => 166,
+                    "name" => "Prof. Timothy Hudson",
+                ],
+            ];
+
+            return $data;
+
+        }elseif($fcm_type == 'sendReaction'){
+            $data = [
+                "module"=>"Push Notification",
+                "type"=>"Reaction Send",
+                "type_id"=>"4",
+                'heartbeat'    => '90',
+                'post'         => 'Cat again, sitting on a three-legged stool in the pool, and the roof was thatched with fur. It was.',
+                'emoji'        => [
+                    'emoji_id'    => 1,
+                    'emoji_path' => '/emoji/alien/anxious.png',
+                ],
+                'reaction'     => [
+                    'reaction_id'   => '1',
+                    'reaction_path' => '/emoji/alien/anxious.png',
+                ],
+                "request_from" => [
+                    "id" => 166,
+                    "name" => "Prof. Timothy Hudson",
+                    "image" => "default.png",
+                ],
+                "request_to" => [
+                    "id" => 91,
+                    "name" => "Prof. Junior Shanahan",
+                ],
+            ];
+
+            return $data;
+        }
     }
 }

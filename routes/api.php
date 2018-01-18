@@ -19,6 +19,9 @@ Route::group(['middleware' => 'auth:admin-api'], function (){
 
 });
 
+Route::get('testfcm/{token}', 'Api\DeviceTokenController@testfcm');
+
+
 Route::group(['middleware' => 'auth:api'], function (){
 
 	Route::prefix('user')->middleware(['user-access', 'account-status'])->group(function () {
@@ -71,9 +74,7 @@ Route::group(['middleware' => 'auth:api'], function (){
 		]]);
 
 
-		Route::post('testfcm', 'Api\DeviceTokenController@testfcm');
-
-
+		Route::get('fcmresponse/{type?}', 'Api\DeviceTokenController@fcmResponse');
 	});
 
 });

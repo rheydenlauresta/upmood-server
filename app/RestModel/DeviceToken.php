@@ -29,14 +29,11 @@ class DeviceToken extends Model
             $device->device_id         = request('device_id');
             $device->token             = request('token');
 
-
             if(!$device->update()){
-
                 return [
                     'status'   => (int) env('BAD_REQUEST'),
                     'message' => 'something went wrong',
                 ];
-
             }
 
         }else{
@@ -46,18 +43,13 @@ class DeviceToken extends Model
             $device->device_id         = request('device_id');
             $device->token             = request('token');
 
-
             if(!$device->save()){
-
                 return [
                     'status'   => (int) env('BAD_REQUEST'),
                     'message' => 'something went wrong',
                 ];
-
             }
-
         }
-
 
     	return [
 			'status'  => (int) env('SUCCESS_RESPONSE_CODE'),
@@ -74,26 +66,6 @@ class DeviceToken extends Model
             Notification::store($value, $data['type_id'], $data);
         }
 
-        // $optionBuilder = new OptionsBuilder();
-        // $optionBuilder->setTimeToLive(60*20);
-
-        // $notificationBuilder = new PayloadNotificationBuilder('my title');
-        // $notificationBuilder->setBody('Hello world')
-        //                     ->setSound('default');
-
-        // $dataBuilder = new PayloadDataBuilder();
-        // $dataBuilder->addData(['a_data' => 'my_data']);
-
-        // $option = $optionBuilder->build();
-        // $notification = $notificationBuilder->build();
-        // $data = $dataBuilder->build();
-
-        // $token = "a_registration_from_your_database";
-
-        // $res = FCM::sendTo($token, $option, $notification, $data);
-
-        $content = array('data'=>json_encode($data));
-
         $optionBuiler = new OptionsBuilder();
         $optionBuiler->setTimeToLive(1);
 
@@ -102,15 +74,15 @@ class DeviceToken extends Model
                             ->setSound('default');
 
         $dataBuilder = new PayloadDataBuilder();
-        $dataBuilder->addData($content);
+        $dataBuilder->addData($data);
 
         $option_builder = $optionBuiler->build();
-        $notificationBuilder = $notificationBuilder->build();
+        $notification_builder = $notificationBuilder->build();
         $data_builder = $dataBuilder->build();
 
         $tokens = DeviceToken::whereIn('user_id',$user_id)->pluck('token')->toArray();
 
-        $res = FCM::sendTo($tokens, $option_builder, $notificationBuilder, $dataBuilder);
+        $res = FCM::sendTo($tokens, $option_builder, $notification_builder, $data_builder);
 
         $numberSuccess = $res->numberSuccess();
         $numberFailure = $res->numberFailure();

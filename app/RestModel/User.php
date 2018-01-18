@@ -230,19 +230,19 @@ class User extends Authenticatable
         $user = User::find(request('id'));
         
         $data = [
-                    "module"=>"Push Notification",
-                    "type"=>"Connect Request",
-                    "type_id"=>"1",
-                    "request_from"=> [
-                                        "id"=>request()->user()->id,
-                                        "name"=>request()->user()->name,
-                                        "image"=>request()->user()->image,
-                                    ],
-                    "request_to"=>  [
-                                        "id"=>$user->id,
-                                        "name"=>$user->name,
-                                    ],
-                ];
+            "module"=>"Push Notification",
+            "type"=>"Connect Request",
+            "type_id"=>"1",
+            "request_from"=> [
+                                "id"=>request()->user()->id,
+                                "name"=>request()->user()->name,
+                                "image"=>request()->user()->image,
+                            ],
+            "request_to"=>  [
+                                "id"=>$user->id,
+                                "name"=>$user->name,
+                            ],
+        ];
 
         DeviceToken::fcmSend($data, [$user->id]);
         // /fcm notification
@@ -276,19 +276,19 @@ class User extends Authenticatable
                             ->first();
 
         $data = [
-                    "module"=>"Push Notification",
-                    "type"=>"Approved Request",
-                    "type_id"=>"2",
-                    "request_from"=> [
-                        "id"=>$user->id,
-                        "name"=>$user->name,
-                        "image"=>$user->image,
-                    ],
-                    "request_to"=> [
-                        "id"=>request()->user()->id,
-                        "name"=>request()->user()->name,
-                    ],
-                ];
+            "module"=>"Push Notification",
+            "type"=>"Approved Request",
+            "type_id"=>"2",
+            "request_from"=> [
+                "id"=>$user->id,
+                "name"=>$user->name,
+                "image"=>$user->image,
+            ],
+            "request_to"=> [
+                "id"=>request()->user()->id,
+                "name"=>request()->user()->name,
+            ],
+        ];
 
         DeviceToken::fcmSend($data, [request()->user()->id]);
 
@@ -299,16 +299,20 @@ class User extends Authenticatable
 
     public function connections()
     {
-        return $this->hasMany('App\RestModel\Connection')
-                    ->selectRaw('users.id, users.name, users.email, users.image, users.profile_post, users.gender, users.age, users.birthday, users.phonenumber,
-                                 CONCAT(resources.type,"/",resources.set_name,"/",resources.filename) as resource_file, records.heartbeat_count, users.is_online')
-                    ->orWhere('friend_id', request()->user()->id)
-                    ->leftJoin('users', 'users.id', '=', DB::raw('CASE '.request()->user()->id.' WHEN connections.user_id THEN connections.friend_id ELSE connections.user_id END'))
+        return Connection::where(function($qry){
+                        $qry->where('connections.user_id',request()->user()->id);
+                        $qry->orWhere('connections.friend_id', request()->user()->id);
+                    })
+                    ->where('connections.status', 1)
+                    ->leftJoin('users',function($qry){
+                        $qry->on('users.id', '=', DB::raw('CASE '.request()->user()->id.' WHEN connections.user_id THEN connections.friend_id ELSE connections.user_id END'));
+                    })
                     ->leftJoin('records', 'records.user_id', '=', 'users.id')
                     ->leftJoin('resources', 'records.resources_id','=', 'resources.id')
-                    ->where('connections.status', 1)
+                    ->selectRaw('users.id, users.name, users.email, users.image, users.profile_post, users.gender, users.age, users.birthday, users.phonenumber,
+                                 CONCAT(resources.type,"/",resources.set_name,"/",resources.filename) as resource_file, records.heartbeat_count, users.is_online')
                     ->orderBy('records.id', 'DESC')
-                    ->groupBy('users.id');
+                    ->groupBy('connections.id');
     }
 
     public function posts($count)
@@ -387,6 +391,7 @@ class User extends Authenticatable
                     $join->where('user_groups.user_id','=',request()->user()->id);
                 })
                 ->where('user_groups.user_id','=',null)
+                ->where('connections.status','=',1)
                 ->leftJoin('users', 'users.id', '=', DB::raw('CASE '.request()->user()->id.' WHEN connections.user_id THEN connections.friend_id ELSE connections.user_id END'));           
 
         return $query->get()->groupBy('id')->transform(function ($value, $key){
@@ -420,6 +425,7 @@ class User extends Authenticatable
                     $join->where('features.user_id','=',request()->user()->id);
                 })
                 ->where('features.user_id','=',null)
+                ->where('connections.status','=',1)
                 ->leftJoin('users', 'users.id', '=', DB::raw('CASE '.request()->user()->id.' WHEN connections.user_id THEN connections.friend_id ELSE connections.user_id END'));           
 
         return $query->get()->groupBy('id')->transform(function ($value, $key){
