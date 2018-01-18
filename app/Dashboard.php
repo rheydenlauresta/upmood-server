@@ -41,13 +41,18 @@ class Dashboard extends Model
         return $res;
     }
 
-    public static function searchFilter($request)
+    public static function searchFilter($search)
     {
         // select * from users where filter = subFilter
         $res = DB::table('users as u')
+                ->selectRaw('MAX(r.id) AS record_id,u.image, u.name, u.gender,
+                            u.age, u.country, r.heartbeat_count, u.profile_post,
+                            if(u.is_online,"online","offline") as active_level,r.emotion_value')
                 ->leftJoin('records as r', 'u.id','r.user_id')
-                ->where($request->filter, $request->subfilter)
-                ->orWhere('name','like',$request->search,'%')
+                ->where('name','like','%'.$search.'%')
+                // ->where($request->filter, $request->subfilter)
+                // ->orWhere('name','like',$request->search,'%')
+                ->groupBy('name')
                 ->paginate(10);
 
         return $res;
@@ -58,6 +63,26 @@ class Dashboard extends Model
       $res = DB::table('users')
                       ->select('country')
                       ->groupBy('country')->get();
+      return $res;
+    }
+
+    public static function getUserInfo($id)
+    {
+      $res = DB::table('users')
+                ->find($id);
+      return $res;
+    }
+
+    public static function getUserMood($id)
+    {
+      $res = DB::table('records')->where('user_id',$id)->get();
+
+      return $res;
+    }
+
+    public static function getContactForm()
+    {
+      $res = DB::table('contact_message')->get();
       return $res;
     }
 }
