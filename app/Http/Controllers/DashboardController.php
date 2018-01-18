@@ -16,30 +16,53 @@ class DashboardController extends Controller
     {
       $userActivity = Dashboard::userActivityCount();
       $countryCount = Dashboard::countryCount();
-      $data = ['users_activity'=>$userActivity, 'countries'=>$countryCount];
-      // dd($data);
-      return view('home',['users_activity'=>$userActivity, 'countries'=>$countryCount]);
-      // return json_encode($data);
-    }
+      $contactInqueries = Dashboard::getContactForm();
+
+      return view('home',['users_activity'=>$userActivity,
+                            'countries'=>$countryCount,
+                            'inquiries'=>$contactInqueries]);
+      }
 
      public function usersList()
      {
-        $data = Dashboard::getUsers();
-        $filter = ['','Activity level','Name','Location','Gender','Age','Current Emotion','Status'];
+       // $search = Input::get('search');
+       // dd($_GET['search']);
+       if(isset($_GET['search']))
+       {
+         $search = $_GET['search'];
+         $data = Dashboard::searchFilter($search);
 
-        return view('users',['results' => $data, 'filters'=>$filter]);
+         // dd($data);
+       }
+       else {
+         $data = Dashboard::getUsers();
+
+       }
+
+        $country = Dashboard::getUserCountry();
+        $filter = ['','is_active'   =>'Activity level',
+                    'name'          =>'Name',
+                    'country'       =>'Location',
+                    'gender'        =>'Gender',
+                    'age'           =>'Age',
+                    'emotion'       =>'Current Emotion',
+                    'profile_post'  =>'Status'];
+
+        return view('userlist',['results' => $data, 'filters'=>$filter, 'countries'=>$country]);
      }
 
      public function userFilter(Request $request)
      {
         $res = Dashboard::searchFilter($request);
+        return $res;
      }
 
-     public function userCountry()
+     public function userInfo($id)
      {
-       $data = Dashboard::getUserCountry();
-       return json_encode($data);
+       $info = Dashboard::getUserInfo($id);
+       $moodRecords = Dashboard::getUserMood($id);
+
+
+       return view('profile',['info' => $info, 'moods'=>$moodRecords]);
      }
-
-
 }
