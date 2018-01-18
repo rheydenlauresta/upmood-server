@@ -31,6 +31,7 @@ class Notification extends Model
     }
 
     public function scopeStore($query, $user_id, $type, $content){
+        
         $notification = new $this;
 
         $notification->user_id = request()->user()->id;
