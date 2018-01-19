@@ -33,10 +33,26 @@ class Dashboard extends Model
         $res = DB::table('users as u')
                     ->selectRaw('MAX(r.id) AS record_id,u.image, u.name, u.gender,
                                 u.age, u.country, r.heartbeat_count, u.profile_post,
-                                if(u.is_online,"online","offline") as active_level,r.emotion_value')
+                                if(u.is_online,"online","offline") as active_level,
+                                r.emotion_value, r.stress_level,
+                                GROUP_CONCAT(CASE WHEN r.emotion_value = "sad" OR r.emotion_value = "anxious"THEN -3
+                                          			  WHEN r.emotion_value = "happy" OR r.emotion_value = "zen" OR r.emotion_value = "excitement" THEN 3
+                                          			  WHEN r.emotion_value = "pleasant" THEN 1
+                                          			  WHEN r.emotion_value = "unpleasant" OR r.emotion_value = "confused" OR r.emotion_value = "challenged" OR r.emotion_value = "hyped" THEN -1
+                                          			  WHEN r.emotion_value = "calm" THEN 0
+                                          			  ELSE 0 END)as upmood_meter')
                     ->leftJoin('records as r','u.id','r.user_id')
                     ->groupBy('name')
                     ->paginate(10);
+                    //
+                    // foreach($res as $result)
+                    // {
+                    //   $data->upmood[] = $result->upmood_meter;
+                    //   $data->name[] = $result->name;
+                    // }
+
+                    // dd($res);
+
 
         return $res;
     }
@@ -47,11 +63,20 @@ class Dashboard extends Model
         $res = DB::table('users as u')
                 ->selectRaw('MAX(r.id) AS record_id,u.image, u.name, u.gender,
                             u.age, u.country, r.heartbeat_count, u.profile_post,
-                            if(u.is_online,"online","offline") as active_level,r.emotion_value')
+                            if(u.is_online,"online","offline") as active_level,
+                            r.emotion_value, r.stress_level,
+                            GROUP_CONCAT(CASE WHEN r.emotion_value = "sad" OR r.emotion_value = "anxious"THEN -3
+                                              WHEN r.emotion_value = "happy" OR r.emotion_value = "zen" OR r.emotion_value = "excitement" THEN 3
+                                              WHEN r.emotion_value = "pleasant" THEN 1
+                                              WHEN r.emotion_value = "unpleasant" OR r.emotion_value = "confused" OR r.emotion_value = "challenged" OR r.emotion_value = "hyped" THEN -1
+                                              WHEN r.emotion_value = "calm" THEN 0
+                                              ELSE 0 END)as upmood_meter
+                            ')
                 ->leftJoin('records as r', 'u.id','r.user_id')
                 ->where('name','like','%'.$search.'%')
                 // ->where($request->filter, $request->subfilter)
-                // ->orWhere('name','like',$request->search,'%')
+                ->orWhere('profile_post','like','%'.$search.'%')
+                ->orWhere('emotion_value','like','%'.$search.'%')
                 ->groupBy('name')
                 ->paginate(10);
 

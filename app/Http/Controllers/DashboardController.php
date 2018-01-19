@@ -25,30 +25,20 @@ class DashboardController extends Controller
 
      public function usersList()
      {
-       // $search = Input::get('search');
-       // dd($_GET['search']);
+
        if(isset($_GET['search']))
        {
          $search = $_GET['search'];
          $data = Dashboard::searchFilter($search);
-
-         // dd($data);
        }
        else {
          $data = Dashboard::getUsers();
-
        }
 
+        // dd($data);
         $country = Dashboard::getUserCountry();
-        $filter = ['','is_active'   =>'Activity level',
-                    'name'          =>'Name',
-                    'country'       =>'Location',
-                    'gender'        =>'Gender',
-                    'age'           =>'Age',
-                    'emotion'       =>'Current Emotion',
-                    'profile_post'  =>'Status'];
 
-        return view('userlist',['results' => $data, 'filters'=>$filter, 'countries'=>$country]);
+        return view('userslist',['results' => $data, 'countries'=>$country]);
      }
 
      public function userFilter(Request $request)

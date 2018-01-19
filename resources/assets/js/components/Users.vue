@@ -3,7 +3,7 @@
         <div class="users-table-wrapper">
             <div class="row">
                 <div class="filter-wrapper">
-                    <form method="post" action="">
+                    <form method="get" action="">
                         <div class="basic-filter">
                             <div class="form-group col-md-6">
                                 <label for="search">Search:</label>
@@ -16,8 +16,14 @@
                                 <div class="select-ic ic-filter half-input">
                                     <select id="filter" name="filter" class="form-control">
                                         <option value="" selected hidden>Select Filter</option>
-                                        <option value="location">Location</option>
+                                        <option value="is_online">Active Level</option>
+                                        <option value="name">Name</option>
+                                        <option value="contry">Location</option>
                                         <option value="gender">Gender</option>
+                                        <option value="age">Age</option>
+                                        <option value="emotion">Current Emotion</option>
+                                        <option value="profile_post">Status</option>
+
                                     </select>
                                 </div>
                                 <select id="filter-value" name="filter-value" class="form-control half-input" disabled></select>
@@ -33,7 +39,7 @@
                                 </div>
                             </div>
                         </div>
-                       
+
                         <div class="advance-filter">
                             <div class="advance-filter-input row">
                                 <div class="advance-filter-row">
@@ -128,7 +134,7 @@
                         <th>Gender</th>
                         <th>Age</th>
                         <th>Current Emotion</th>
-                        <th>Sindex</th>
+                        <th>Stress Level</th>
                         <th>BPM</th>
                         <th>Status</th>
                         <th>Upmood Meter</th>
@@ -141,13 +147,14 @@
                             <td>{{ user.name }}</td>
                             <td>{{ user.gender }}</td>
                             <td>{{ user.age }}</td>
-                            <td></td>
+                            <td>{{user.emotion_value}}</td>
+                            <td>{{user.stress_level}}</td>
                             <td>{{ user.heartbeat_count }}</td>
-                            <td></td>
-                            <td>"Breathe in deeply to bring your mind home to your body"</td>
-                            <td>Calm</td>
-                            <td>Philippines</td>
-                            <td v-if="user.active_level = 'online'"><span class="status-online">{{ user.active_level }}</span></td>
+                            <td>{{ user.profile_post }}</td>
+                            <td>{{ user.upmood_meter}}</td>
+                            <td>{{ user.country }}</td>
+
+                            <td v-if="user.active_level == 'online'"><span class="status-online">{{ user.active_level }}</span></td>
                             <td v-else><span class="status-offline">{{ user.active_level }}</span></td>
                         </tr>
                     </tbody>
@@ -155,7 +162,7 @@
                 <div class="pagination">
                     <a class="prev" :href="results.prev_page_url">Prev</a>
                     <div class="pagination-number">
-                        
+
                     </div>
                     <a class="next" :href="results.next_page_url">Next</a>
                 </div>
