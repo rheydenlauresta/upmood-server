@@ -34,8 +34,8 @@ class Notification extends Model
         
         $notification = new $this;
 
-        $notification->user_id = request()->user()->id;
-        $notification->friend_id = $user_id;
+        $notification->user_id = $user_id;
+        $notification->friend_id = request()->user()->id;
         $notification->type_id = $type;
         $notification->content = json_encode($content);
         $notification->seen = 0;
