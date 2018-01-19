@@ -59,29 +59,29 @@ class Reaction extends Model
         $post = Post::find(request('post_id'));
                             
         $data = [
-                    "module"=>"Push Notification",
-                    "type"=>"Reaction Send",
-                    "type_id"=>"4",
-                    'heartbeat'    => request('heartbeat_count'),
-                    'post'         => $post->content,
-                    'emoji'        => [
-                        'emoji_id'    => $emoji->id,
-                        'emoji_path' => $emoji->type.'/'.$emoji->set_name.'/'.$emoji->filename
-                    ],
-                    'reaction'     => [
-                        'reaction_id'   => $reaction->id,
-                        'reaction_path' => $reaction->type.'/'.$reaction->set_name.'/'.$reaction->filename
-                    ],
-                    "request_from"=> [
-                        "id"=>request()->user()->id,
-                        "name"=>request()->user()->name,
-                        "image"=>request()->user()->image,
-                    ],
-                    "request_to"=>  [
-                        "id"=>$user->id,
-                        "name"=>$user->name,
-                    ],
-                ];
+            "module"=>"Push Notification",
+            "type"=>"Reaction Send",
+            "type_id"=>"4",
+            'heartbeat'    => request('heartbeat_count'),
+            'post'         => $post->content,
+            'emoji'        => [
+                'emoji_id'    => $emoji->id,
+                'emoji_path' => $emoji->type.'/'.$emoji->set_name.'/'.$emoji->filename
+            ],
+            'reaction'     => [
+                'reaction_id'   => $reaction->id,
+                'reaction_path' => $reaction->type.'/'.$reaction->set_name.'/'.$reaction->filename
+            ],
+            "request_from"=> [
+                "id"=>request()->user()->id,
+                "name"=>request()->user()->name,
+                "image"=>request()->user()->image,
+            ],
+            "request_to"=>  [
+                "id"=>$user->id,
+                "name"=>$user->name,
+            ],
+        ];
 
 
         DeviceToken::fcmSend($data, [$user->id]);
