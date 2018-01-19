@@ -105,48 +105,14 @@
                         <div class="scrollbar-outer dashboard-inquiries-table">
                             <table class="table table-stripe">
                                 <tbody>
-                                    <tr>
+                                    <tr v-for="inquire in inquiries">
                                         <div class="listview-row">
-                                            <div class="listview-title">lorem</div>
-                                            <div class="listview-time">few mins ago.</div>
-                                            <p class="listview-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam......</p>
+                                            <div class="listview-title">{{inquire.type}}</div>
+                                            <div class="listview-time">{{inquire.created_at}}</div>
+                                            <p class="listview-content">{{inquire.content}}</p>
                                         </div>
                                     </tr>
-                                     <tr>
-                                        <div class="listview-row">
-                                            <div class="listview-title">lorem</div>
-                                            <div class="listview-time">20 mins ago.</div>
-                                            <p class="listview-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam......</p>
-                                        </div>
-                                    </tr>
-                                     <tr>
-                                        <div class="listview-row">
-                                            <div class="listview-title">lorem</div>
-                                            <div class="listview-time">1 hour ago.</div>
-                                            <p class="listview-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam......</p>
-                                        </div>
-                                    </tr>
-                                     <tr>
-                                        <div class="listview-row">
-                                            <div class="listview-title">lorem</div>
-                                            <div class="listview-time">1 hour ago.</div>
-                                            <p class="listview-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam......</p>
-                                        </div>
-                                    </tr>
-                                     <tr>
-                                        <div class="listview-row">
-                                            <div class="listview-title">lorem</div>
-                                            <div class="listview-time">20 mins ago.</div>
-                                            <p class="listview-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam......</p>
-                                        </div>
-                                    </tr>
-                                     <tr>
-                                        <div class="listview-row">
-                                            <div class="listview-title">lorem</div>
-                                            <div class="listview-time">20 mins ago.</div>
-                                            <p class="listview-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam......</p>
-                                        </div>
-                                    </tr>
+                                     
                                 </tbody>
                             </table>
                         </div>
@@ -211,7 +177,7 @@
 
 <script>
     export default {
-        props: ['users','countries'],
+        props: ['users','countries','inquiries'],
         data() {
             return {
                 csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
