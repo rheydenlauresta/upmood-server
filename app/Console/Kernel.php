@@ -22,10 +22,25 @@ class Kernel extends ConsoleKernel
      * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
      */
+
+
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')
         //          ->hourly();
+
+        // group minutes
+        // $schedule->call(function () {
+        //     DB::table('groups')->where('notification_type','=','minutes')->where('type_data','=',5)->where('is_online','=',1);
+        // })->everyFiveMinutes();
+
+        // $schedule->call(function () {
+        //     DB::table('groups')->where('notification_type','=','minutes')->where('type_data','=',10)->where('is_online','=',1);
+        // })->everyTenMinutes();
+
+        // $schedule->call(function () {
+        //     DB::table('groups')->where('notification_type','=','minutes')->where('type_data','=',30)->where('is_online','=',1);
+        // })->everyThirtyMinutes();
     }
 
     /**

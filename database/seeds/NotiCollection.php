@@ -46,7 +46,7 @@ class NotiCollection extends Seeder
     			$content = [
 					'module'       => 'Push Notification',
 					'type'         => 'Approved Request',
-					'type_id'      => 1,
+					'type_id'      => 2,
 					'request_from' => [
 						'user_id'    => $friend_id->id,
 						'user_name'  => $friend_id->name,

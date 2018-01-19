@@ -19,7 +19,7 @@ Route::group(['middleware' => 'auth:admin-api'], function (){
 
 });
 
-Route::get('testfcm/{token}', 'Api\DeviceTokenController@testfcm');
+Route::get('testfcm/{module}/{userid}/{friendid}/{token}', 'Api\DeviceTokenController@testfcm');
 
 
 Route::group(['middleware' => 'auth:api'], function (){
