@@ -9,7 +9,8 @@ use App\RestModel\DeviceToken;
 use LaravelFCM\Message\OptionsBuilder;
 use LaravelFCM\Message\PayloadDataBuilder;
 use LaravelFCM\Message\PayloadNotificationBuilder;
-
+use App\RestModel\Notification;
+use DB;
 use FCM;
 
 class DeviceTokenController extends BaseController
@@ -100,23 +101,36 @@ class DeviceTokenController extends BaseController
         //
     }
 
-    public function testfcm($tokens)
+    public function testfcm($module, $user_id, $friend_id, $tokens)
     {
         //
-        $data = [
-            "module" => "Push Notification",
-            "type" => "Connect Request",
-            "type_id" => "1",
-            "request_from" => [
-                "id" => 166,
-                "name" => "Prof. Timothy Hudson",
-                "image" => "default.png",
-            ],
-            "request_to" => [
-                "id" => 91,
-                "name" => "Prof. Junior Shanahan",
-            ],
-        ];
+        // $test = DB::table('groups')
+        //     ->selectraw('groups.id as group_id,groups.name as group_name,user_groups.friend_id,user_groups.user_id as userToNoti,users.name,users.email,users.image')
+        //     ->join('user_groups',function($query){
+        //         $query->on('user_groups.group_id','=','groups.id');
+        //     })
+        //     ->join('users',function($query){
+        //         $query->on('user_groups.friend_id','=','users.id');
+        //         $query->where('');
+        //     })
+        //     // ->join('record','records.user_id','=',)
+        //     ->where('notification_type','=','minutes')
+        //     ->where('type_data','=',10)
+        //     ->get();
+
+        // dd($test->toArray());
+
+        $data = $this->fcmResponse($module);
+
+        $notification = new Notification;
+
+        $notification->user_id = $user_id;
+        $notification->friend_id = $friend_id;
+        $notification->type_id = $data['type_id'];
+        $notification->content = json_encode($data);
+        $notification->seen = 0;
+
+        $notification->save();
 
         $optionBuiler = new OptionsBuilder();
         $optionBuiler->setTimeToLive(1);
