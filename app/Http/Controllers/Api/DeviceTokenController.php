@@ -105,20 +105,48 @@ class DeviceTokenController extends BaseController
     {
         //
         // $test = DB::table('groups')
-        //     ->selectraw('groups.id as group_id,groups.name as group_name,user_groups.friend_id,user_groups.user_id as userToNoti,users.name,users.email,users.image')
+        //     ->selectraw('user_groups.user_id as userToNoti,groups.id as group_id,groups.name as group_name,user_groups.friend_id,groups.emotion,groups.stress_level,groups.heartbeat,groups.my_mood,user_groups.user_id as user_id,users.name,users.email,users.image,records.heartbeat_count,records.stress_level,records.emotion_value,records.type')
         //     ->join('user_groups',function($query){
         //         $query->on('user_groups.group_id','=','groups.id');
         //     })
         //     ->join('users',function($query){
         //         $query->on('user_groups.friend_id','=','users.id');
-        //         $query->where('');
+        //         $query->where('users.is_online',1);
         //     })
-        //     // ->join('record','records.user_id','=',)
+        //     ->leftJoin('records',function($qry){
+        //         $qry->on('records.user_id', '=', 'users.id')->where('records.id','=',DB::raw('(select max(records.id) from records where records.user_id = users.id)'));
+        //     })
+        //     ->leftJoin('resources', 'records.resources_id','=', 'resources.id')
         //     ->where('notification_type','=','minutes')
         //     ->where('type_data','=',10)
         //     ->get();
 
-        // dd($test->toArray());
+        // foreach ($test as $key => $value) {
+        //     # code...
+        //     $data = [
+        //         'id'=>$value->user_id,
+        //         'name'=>$value->name,
+        //         'email'=>$value->email,
+        //         'image'=>$value->image,
+        //     ];
+
+        //     if(isset($value->my_mood) && $value->my_mood != 0){
+        //         if(isset($value->emotion) && $value->emotion == 1){
+        //             $data['emotion_value'] = $value->emotion_value;
+        //         }
+        //         if(isset($value->heartbeat) && $value->heartbeat == 1 && $value->type == 'automated'){
+        //             $data['heartbeat_count'] = $value->heartbeat_count;
+        //         }
+        //         if(isset($value->stress_level) && $value->stress_level == 1){
+        //             $data['stress_level'] = $value->stress_level;
+        //         }
+        //     }
+
+        //     dd($data);
+        // }
+        //     dd('no notif');
+
+
 
         $data = $this->fcmResponse($module);
 

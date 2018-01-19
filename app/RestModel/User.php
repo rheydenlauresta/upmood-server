@@ -299,6 +299,7 @@ class User extends Authenticatable
 
     public function connections()
     {
+
         return Connection::where(function($qry){
                         $qry->where('connections.user_id',request()->user()->id);
                         $qry->orWhere('connections.friend_id', request()->user()->id);
@@ -307,12 +308,14 @@ class User extends Authenticatable
                     ->leftJoin('users',function($qry){
                         $qry->on('users.id', '=', DB::raw('CASE '.request()->user()->id.' WHEN connections.user_id THEN connections.friend_id ELSE connections.user_id END'));
                     })
-                    ->leftJoin('records', 'records.user_id', '=', 'users.id')
+                    ->leftJoin('records',function($qry){
+                        $qry->on('records.user_id', '=', 'users.id')->where('records.id','=',DB::raw('(select max(records.id) from records where records.user_id = users.id)'));
+                    })
                     ->leftJoin('resources', 'records.resources_id','=', 'resources.id')
                     ->selectRaw('users.id, users.name, users.email, users.image, users.profile_post, users.gender, users.age, users.birthday, users.phonenumber,
-                                 CONCAT(resources.type,"/",resources.set_name,"/",resources.filename) as resource_file, records.heartbeat_count, users.is_online')
-                    ->orderBy('records.id', 'DESC')
-                    ->groupBy('connections.id');
+                                 CONCAT(resources.type,"/",resources.set_name,"/",resources.filename) as resource_file, records.heartbeat_count,users.is_online')
+                    ->orderBy('records.id','DESC')
+                    ->groupBy('records.user_id');
     }
 
     public function posts($count)
