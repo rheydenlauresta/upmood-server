@@ -3,7 +3,7 @@
         <div class="users-table-wrapper">
             <div class="row">
                 <div class="filter-wrapper">
-                    <form method="get" action="">
+                    <form method="get" action="" class="formfilters">
                         <div class="basic-filter">
                             <div class="form-group col-md-6">
                                 <label for="search">Search:</label>
@@ -43,11 +43,11 @@
                         <div class="advance-filter">
                             <div class="advance-filter-input row">
                                 <div class="advance-filter-row">
-                                    <div class="col-md-5">
+                                    <div class="col-md-5" id="advancefilter1">
                                         <div class="form-group">
                                             <label for="" class="col-md-4">Filter By No 2:</label>
                                             <div class="select-ic ic-filter col-md-6 filter-width">
-                                                <select id="filter" name="filter" class="form-control">
+                                                <select id="filter" name="advancefilter[]" class="form-control">
                                                     <option value="" selected hidden>Select Filter</option>
                                                     <option value="location">Location</option>
                                                     <option value="gender">Gender</option>
@@ -57,11 +57,11 @@
                                             <a href="javascript:;" class="filter-close"><img :src="base_url+'img/ic_close.png'" alt=""></a>
                                         </div>
                                     </div>
-                                    <div class="col-md-5">
+                                    <div class="col-md-5" id="advancefilter2">
                                         <div class="form-group">
                                             <label for="" class="col-md-4">Filter By No 3:</label>
                                             <div class="select-ic ic-filter col-md-6 filter-width">
-                                                <select id="filter" name="filter" class="form-control">
+                                                <select id="filter" name="advancefilter[]" class="form-control">
                                                     <option value="" selected hidden>Select Filter</option>
                                                     <option value="location">Location</option>
                                                     <option value="gender">Gender</option>
@@ -72,12 +72,14 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="advance-filter-input row">
                                 <div class="advance-filter-row">
-                                    <div class="col-md-5">
+                                    <div class="col-md-5" id="advancefilter3">
                                         <div class="form-group">
                                             <label for="" class="col-md-4">Filter By No 4:</label>
                                             <div class="select-ic ic-filter col-md-6 filter-width">
-                                                <select id="filter" name="filter" class="form-control">
+                                                <select id="filter" name="advancefilter[]" class="form-control">
                                                     <option value="" selected hidden>Select Filter</option>
                                                     <option value="location">Location</option>
                                                     <option value="gender">Gender</option>
@@ -91,10 +93,16 @@
                             </div>
                         </div>
                          <div class="row">
-                            <div class="col-md-3 col-md-offset-9">
+                            <div class="col-md-3 col-md-offset-9" id="advance-filter-menu">
                                 <ul class="filter-right-menu">
-                                    <li><a href="javascript:;" class="advance-search">Advance Search</a></li>
+                                    <li><a href="javascript:;" class="advance-search" v-on:click="OpenAdvanceFilter">Advance Search</a></li>
                                     <li><a href="javascript:;" class="advance-search">Clear Fields</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-md-4 col-md-offset-8" id="advance-filter-menu-open">
+                                <ul class="filter-right-menu">
+                                    <li><a href="javascript:;" class="advance-search" v-on:click="AddAdvanceFilter">+ Add Another Filter Fields</a></li>
+                                    <li><a href="javascript:;" class="advance-search" v-on:click="CloseAdvanceFilter">Close Advance Filter</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -178,6 +186,7 @@
             return {
                 csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                 base_url: window.base_url,
+                advance_filter: 1
             }
         },
         mounted() {
@@ -192,14 +201,14 @@
                 var path = this.results.path;
                 var limit = 5;
                 var numberstring = "";
-                if (counter <= 0){
-                    counter = 1;
-                }
                 if (counter >= (lastpage - limit)+1){
                     counter = (lastpage - limit)+1;
                 }
+                if (counter <= 0){
+                    counter = 1;
+                }
                 for (var i = 0 ; i < limit ; i++){
-                    if (i <= lastpage){
+                    if (i < lastpage){
                         if (current == counter){
                             numberstring += '<a class="active" href="' + path + '?page=' + counter +   '">' + counter + '</a>';
                         }
@@ -210,6 +219,20 @@
                     }
                 }
                 $(".pagination-number").html(numberstring);
+            },
+            OpenAdvanceFilter(){
+                $(".advance-filter").show();
+                $("#advance-filter-menu-open").show();
+                $("#advance-filter-menu").hide();
+            },
+            CloseAdvanceFilter(){
+                $(".advance-filter").hide();
+                $("#advance-filter-menu-open").hide();
+                $("#advance-filter-menu").show();
+            },
+            AddAdvanceFilter(){
+                this.advance_filter = this.advance_filter + 1;
+                $("#advancefilter" + this.advance_filter).show();
             }
         }
     }
