@@ -8,40 +8,44 @@
                             <div class="form-group col-md-6">
                                 <label for="search">Search:</label>
                                 <div class="input-ic ic-search">
-                                    <input placeholder="e.g. Name, Emotions or Status" type="text" class="form-control" name="search" id="search">
+                                    <input v-model="formdata.search" placeholder="e.g. Name, Emotions or Status" type="text" class="form-control" name="search" id="search">
                                 </div>
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="filter">Filter By:</label>
                                 <div class="select-ic ic-filter half-input">
-                                    <select id="filter" name="filter" class="form-control">
+                                    <select v-model="formdata.filter" id="filter" name="filter" class="form-control">
                                         <option value="" selected hidden>Select Filter</option>
-                                        <option value="is_online">Active Level</option>
-                                        <option value="name">Name</option>
-                                        <option value="contry">Location</option>
+                                        <option value="active">Active Level</option>
+                                        <!-- <option value="name">Name</option> -->
+                                        <option value="location">Location</option>
                                         <option value="gender">Gender</option>
                                         <option value="age">Age</option>
                                         <option value="emotion">Current Emotion</option>
-                                        <option value="profile_post">Status</option>
+                                        <!-- <option value="profile_post">Status</option> -->
 
                                     </select>
                                 </div>
-                                <select id="filter-value" name="filter-value" class="form-control half-input" disabled></select>
+                                <select v-model="formdata.filterValue" id="filter-value" name="filter-value" class="form-control half-input" :disabled="disableFilterValue" >
+                                    <option v-for="n in filterOptions" :value="n.value">
+                                        {{n.text}}
+                                    </option>
+                                </select>
                             </div>
                             <div class="form-group col-md-2">
                                 <label for="sort">Sort By:</label>
                                 <div class="select-ic ic-sort">
-                                    <select id="sort" name="sort" class="form-control">
+                                    <select id="sort" name="sort" class="form-control" v-model="sortValue" >
                                         <option value="" selected hidden>Select Filter</option>
-                                        <option value="location">Location</option>
-                                        <option value="gender">Gender</option>
+                                        <option value="name">Name</option>
+                                        <!-- <option v-for="choice in sort" :value="choice"  >{{choice}}</option> -->
                                     </select>
                                 </div>
                             </div>
                         </div>
 
                         <div class="advance-filter">
-                            <div class="advance-filter-input row">
+                            <div class="advance-filter-input row" v-if="adv_filter_toggle">
                                 <div class="advance-filter-row">
                                     <div class="col-md-5" id="advancefilter1">
                                         <div class="form-group">
@@ -95,8 +99,10 @@
                          <div class="row">
                             <div class="col-md-3 col-md-offset-9" id="advance-filter-menu">
                                 <ul class="filter-right-menu">
+
                                     <li><a href="javascript:;" class="advance-search" v-on:click="OpenAdvanceFilter">Advance Search</a></li>
-                                    <li><a href="javascript:;" class="advance-search">Clear Fields</a></li>
+                                    <li><a href="javascript:;" class="advance-search" v-on:click="clearFields()">Clear Fields</a></li>
+
                                 </ul>
                             </div>
                             <div class="col-md-4 col-md-offset-8" id="advance-filter-menu-open">
@@ -108,14 +114,14 @@
                         </div>
                         <div class="scoreboard">
                             <div class="advance-card advance-user col-md-3">
-                                <div class="user-value">5,623</div>
+                                <div class="user-value">{{recordData.total}}</div>
                                 <div class="advance-card-label">User Selected</div>
                             </div>
                             <div class="advance-card advance-gender col-md-3">
                                 <div class="gender-value">
                                     <div class="col-md-6 male">
                                         <span>Male</span>
-                                        <div class="male-value">265</div>
+                                        <div class="male-value">{{ maleRatio }}</div>
                                     </div>
                                     <div class="col-md-6 female">
                                         <span>Female</span>
@@ -150,16 +156,16 @@
                         <th>Active Level</th>
                     </thead>
                     <tbody>
-                        <tr v-for="user in results.data">
+                        <tr v-for="user in recordData.data">
                             <td><div class="table-profile-image"><img :src="base_url+'img/profile-avatar.png'" alt=""></div></td>
                             <td>{{ user.name }}</td>
                             <td>{{ user.gender }}</td>
                             <td>{{ user.age }}</td>
-                            <td>{{user.emotion_value}}</td>
-                            <td>{{user.stress_level}}</td>
+                            <td>{{ user.emotion_value }}</td>
+                            <td>{{ user.stress_level }}</td>
                             <td>{{ user.heartbeat_count }}</td>
                             <td>{{ user.profile_post }}</td>
-                            <td>{{ user.upmood_meter}}</td>
+                            <td>{{ user.upmood_meter }}</td>
                             <td>{{ user.country }}</td>
 
                             <td v-if="user.active_level == 'online'"><span class="status-online">{{ user.active_level }}</span></td>
@@ -168,11 +174,11 @@
                     </tbody>
                 </table>
                 <div class="pagination">
-                    <a class="prev" :href="results.prev_page_url">Prev</a>
+                    <a v-on:click="preventPrev($event)" class="prev" :href="recordData.prev_page_url">Prev</a>
                     <div class="pagination-number">
 
                     </div>
-                    <a class="next" :href="results.next_page_url">Next</a>
+                    <a v-on:click="preventNext($event)" class="next" :href="recordData.next_page_url">Next</a>
                 </div>
             </div>
         </div>
@@ -181,34 +187,109 @@
 
 <script>
     export default {
-        props: ['results','filters'],
+        props: ['results','countries'],
         data() {
             return {
                 csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                 base_url: window.base_url,
-                advance_filter: 1
+
+                advance_filter: 1,
+
+                adv_filter_toggle: false,
+                disableFilterValue: true,
+
+                formdata: {
+                    search: '',
+                    filter: '',
+                    filterValue: '',
+                    page: 1
+                },
+
+                maleRatio: 0,
+                femaleRatio: 0,
+
+                recordData: this.results,
+
+                sortValue: '',
+                sort: '',
+
+                filterOptions: [],
+
+                active: [
+                    {value:'1',text:'online'},
+                    {value:'0',text:'offline'},
+                    {value:'',text:'all'}
+                ],
+                gender: [
+                    {value:'male',text:'male'},
+                    {value:'female',text:'female'},
+                ],
+                age: [
+                    {value:['16','20'],text:'16 - 20'},
+                    {value:['21','25'],text:'21 - 25'},
+                    {value:['26','30'],text:'26 - 30'},
+                    {value:['31','35'],text:'31 - 35'},
+                    {value:['36','40'],text:'36 - 40'},
+                    {value:['41','45'],text:'41 - 45'},
+                ],
+                emotion: [
+                ]
+            }
+        },
+        watch: {
+            'formdata.search': function (val) {
+                this.formdata.page = 1
+                this.getAxios()
+            },
+            'formdata.filter': function (val) {
+                this.filterOptions = this[val];
+                this.disableFilterValue = false;
+            },
+            'formdata.filterValue': function (val) {
+
+                this.getAxios()
+
             }
         },
         mounted() {
             $(".main-header > .title").html('<i class="header-ic ic-user-green"></i>Users');
             this.generatePaginationNumbers();
+            
+        },
+        computed:{
+            location(){
+                let location=[];
+
+                $.each(this.countries, function(k,v){
+                // console.log(v.country)
+                    location.push({value:v.country, text:v.country})
+                })
+
+                return location
+            }
+
         },
         methods: {
             generatePaginationNumbers(){
-                var current = this.results.current_page;
-                var counter = this.results.current_page;
-                var lastpage = this.results.last_page;
-                var path = this.results.path;
+                var current = this.recordData.current_page;
+                var counter = this.recordData.current_page;
+                var lastpage = this.recordData.last_page;
+                var path = this.recordData.path;
+
                 var limit = 5;
                 var numberstring = "";
-                if (counter >= (lastpage - limit)+1){
-                    counter = (lastpage - limit)+1;
-                }
+
                 if (counter <= 0){
                     counter = 1;
                 }
+
+                if(limit >= lastpage){
+                    limit = lastpage;
+                }
+
                 for (var i = 0 ; i < limit ; i++){
-                    if (i < lastpage){
+                    if (i <= lastpage ){
+
                         if (current == counter){
                             numberstring += '<a class="active" href="' + path + '?page=' + counter +   '">' + counter + '</a>';
                         }
@@ -220,6 +301,7 @@
                 }
                 $(".pagination-number").html(numberstring);
             },
+
             OpenAdvanceFilter(){
                 $(".advance-filter").show();
                 $("#advance-filter-menu-open").show();
@@ -233,7 +315,49 @@
             AddAdvanceFilter(){
                 this.advance_filter = this.advance_filter + 1;
                 $("#advancefilter" + this.advance_filter).show();
-            }
+            },
+
+            searchFilters(){
+                let vue = this;
+
+                axios.post(base_url+'usersfilter' , this.formdata).then(function (response) {
+                    console.log(response)
+                    vue.recordData = response['data'];
+                    vue.recordData.current_page = vue.formdata.page;
+                    vue.generatePaginationNumbers();
+
+                }).catch(function (error) {
+                });
+            },
+
+            preventNext(event) {
+                if(this.formdata.page != this.recordData.last_page){
+                    this.formdata.page = (this.formdata.page + 1);
+                    this.searchFilters();
+                }
+                event.preventDefault()
+            },
+
+            preventPrev(event) {
+                if(this.formdata.page != 1){
+                    this.formdata.page = (this.formdata.page - 1);
+                    this.searchFilters();
+                }
+                event.preventDefault()
+            },
+
+            clearFields(){
+                this.formdata.search = '',
+                this.formdata.filter = '',
+                this.formdata.filterValue = '',
+                this.formdata.page = 1
+            },
+
+            getAxios: _.debounce(
+                function () {
+                    this.searchFilters()
+                },500
+            )
         }
     }
 </script>

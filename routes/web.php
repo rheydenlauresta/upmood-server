@@ -21,10 +21,17 @@ Route::get('/reset', function () {
 Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('home');
-Route::get('/dashboard', 'DashboardController@index');
-Route::get('/userslist', 'DashboardController@usersList');
-Route::get('/', 'DashboardController@index');
-Route::get('/users', 'HomeController@users');
-Route::get('/countryFilter', 'DashboardController@userCountry');
 
+Route::get('/dashboard', 'DashboardController@index');
+
+Route::get('/userslist', 'DashboardController@usersList');
+
+Route::post('/usersfilter', 'DashboardController@userFilter');
+
+Route::get('/countryFilter', 'DashboardController@userCountry');
 Route::get('/users','DashboardController@usersStatistics');
+
+
+Route::get('/', 'DashboardController@index');
+
+// Route::get('/user', 'HomeController@users');

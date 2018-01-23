@@ -272,7 +272,7 @@ class User extends Authenticatable
 
         // fcm notification
         $user = Connection::where('connections.id',$status->id)
-                            ->join('users','users.id','=',DB::raw('CASE '.request()->user()->id.' WHEN connections.user_id THEN connections.friend_id ELSE connections.user_id END'))
+                            ->join('users','users.id','=',DB::raw('CASE '.request()->user()->id.' WHEN connections.friend_id THEN connections.user_id ELSE connections.friend_id END'))
                             ->first();
 
         $data = [
@@ -287,10 +287,11 @@ class User extends Authenticatable
             "request_to"=> [
                 "id"=>request()->user()->id,
                 "name"=>request()->user()->name,
+                "image"=>request()->user()->image,
             ],
         ];
 
-        DeviceToken::fcmSend($data, [request()->user()->id]);
+        DeviceToken::fcmSend($data, [$user->id]);
 
         // /fcm notification
 
