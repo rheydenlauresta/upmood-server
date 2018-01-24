@@ -22,16 +22,12 @@ Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('home');
 
+// dashboard
 Route::get('/dashboard', 'DashboardController@index');
 
-Route::get('/userslist', 'DashboardController@usersList');
-
-Route::post('/usersfilter', 'DashboardController@userFilter');
-
-Route::get('/countryFilter', 'DashboardController@userCountry');
-Route::get('/users','DashboardController@usersStatistics');
+// user
+Route::get('/userslist', 'UsersController@usersList');
+Route::post('/usersfilter', 'UsersController@userFilter');
 
 
 Route::get('/', 'DashboardController@index');
-
-// Route::get('/user', 'HomeController@users');

@@ -43730,79 +43730,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    props: ['users', 'countries', 'inquiries'],
+    props: ['users', 'countries', 'messages'],
     data: function data() {
         return {
             csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
@@ -43891,7 +43821,44 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
-      _vm._m(1)
+      _c("div", { staticClass: "col-md-6" }, [
+        _c("div", { staticClass: "dashboard-panel" }, [
+          _c("div", { staticClass: "panel-title" }, [
+            _vm._v("Account Cancellation")
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "scrollbar-outer dashboard-cancellation-table" },
+            [
+              _c("table", { staticClass: "table table-stripe" }, [
+                _c(
+                  "tbody",
+                  _vm._l(_vm.messages, function(accountCancellation) {
+                    return _c("tr", [
+                      accountCancellation.type == "account_cancellation"
+                        ? _c("div", { staticClass: "listview-row" }, [
+                            _c("div", { staticClass: "listview-title" }, [
+                              _vm._v(_vm._s(accountCancellation.type))
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "listview-time" }, [
+                              _vm._v(_vm._s(accountCancellation.created_at))
+                            ]),
+                            _vm._v(" "),
+                            _c("p", { staticClass: "listview-content" }, [
+                              _vm._v(_vm._s(accountCancellation.content))
+                            ])
+                          ])
+                        : _vm._e()
+                    ])
+                  })
+                )
+              ])
+            ]
+          )
+        ])
+      ])
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "row row-break" }, [
@@ -43908,21 +43875,23 @@ var render = function() {
               _c("table", { staticClass: "table table-stripe" }, [
                 _c(
                   "tbody",
-                  _vm._l(_vm.inquiries, function(inquire) {
+                  _vm._l(_vm.messages, function(inquire) {
                     return _c("tr", [
-                      _c("div", { staticClass: "listview-row" }, [
-                        _c("div", { staticClass: "listview-title" }, [
-                          _vm._v(_vm._s(inquire.type))
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "listview-time" }, [
-                          _vm._v(_vm._s(inquire.created_at))
-                        ]),
-                        _vm._v(" "),
-                        _c("p", { staticClass: "listview-content" }, [
-                          _vm._v(_vm._s(inquire.content))
-                        ])
-                      ])
+                      inquire.type == "inquiries"
+                        ? _c("div", { staticClass: "listview-row" }, [
+                            _c("div", { staticClass: "listview-title" }, [
+                              _vm._v(_vm._s(inquire.type))
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "listview-time" }, [
+                              _vm._v(_vm._s(inquire.created_at))
+                            ]),
+                            _vm._v(" "),
+                            _c("p", { staticClass: "listview-content" }, [
+                              _vm._v(_vm._s(inquire.content))
+                            ])
+                          ])
+                        : _vm._e()
                     ])
                   })
                 )
@@ -43932,7 +43901,42 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
-      _vm._m(2)
+      _c("div", { staticClass: "col-md-6" }, [
+        _c("div", { staticClass: "dashboard-panel" }, [
+          _c("div", { staticClass: "panel-title" }, [_vm._v("Upmood Reports")]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "scrollbar-outer dashboard-reports-table" },
+            [
+              _c("table", { staticClass: "table table-stripe" }, [
+                _c(
+                  "tbody",
+                  _vm._l(_vm.messages, function(report) {
+                    return _c("tr", [
+                      report.type == "reports"
+                        ? _c("div", { staticClass: "listview-row" }, [
+                            _c("div", { staticClass: "listview-title" }, [
+                              _vm._v(_vm._s(report.type))
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "listview-time" }, [
+                              _vm._v(_vm._s(report.created_at))
+                            ]),
+                            _vm._v(" "),
+                            _c("p", { staticClass: "listview-content" }, [
+                              _vm._v(_vm._s(report.content))
+                            ])
+                          ])
+                        : _vm._e()
+                    ])
+                  })
+                )
+              ])
+            ]
+          )
+        ])
+      ])
     ])
   ])
 }
@@ -43949,260 +43953,6 @@ var staticRenderFns = [
       _c("th", [_vm._v("Offline:")]),
       _vm._v(" "),
       _c("th", [_vm._v("Average Emotion:")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-6" }, [
-      _c("div", { staticClass: "dashboard-panel" }, [
-        _c("div", { staticClass: "panel-title" }, [
-          _vm._v("Account Cancellation")
-        ]),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "scrollbar-outer dashboard-cancellation-table" },
-          [
-            _c("table", { staticClass: "table table-stripe" }, [
-              _c("tbody", [
-                _c("tr", [
-                  _c("div", { staticClass: "listview-row" }, [
-                    _c("div", { staticClass: "listview-title" }, [
-                      _vm._v("lorem")
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "listview-time" }, [
-                      _vm._v("few mins ago.")
-                    ]),
-                    _vm._v(" "),
-                    _c("p", { staticClass: "listview-content" }, [
-                      _vm._v(
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam......"
-                      )
-                    ])
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("tr", [
-                  _c("div", { staticClass: "listview-row" }, [
-                    _c("div", { staticClass: "listview-title" }, [
-                      _vm._v("lorem")
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "listview-time" }, [
-                      _vm._v("20 mins ago.")
-                    ]),
-                    _vm._v(" "),
-                    _c("p", { staticClass: "listview-content" }, [
-                      _vm._v(
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam......"
-                      )
-                    ])
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("tr", [
-                  _c("div", { staticClass: "listview-row" }, [
-                    _c("div", { staticClass: "listview-title" }, [
-                      _vm._v("lorem")
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "listview-time" }, [
-                      _vm._v("1 hour ago.")
-                    ]),
-                    _vm._v(" "),
-                    _c("p", { staticClass: "listview-content" }, [
-                      _vm._v(
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam......"
-                      )
-                    ])
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("tr", [
-                  _c("div", { staticClass: "listview-row" }, [
-                    _c("div", { staticClass: "listview-title" }, [
-                      _vm._v("lorem")
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "listview-time" }, [
-                      _vm._v("1 hour ago.")
-                    ]),
-                    _vm._v(" "),
-                    _c("p", { staticClass: "listview-content" }, [
-                      _vm._v(
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam......"
-                      )
-                    ])
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("tr", [
-                  _c("div", { staticClass: "listview-row" }, [
-                    _c("div", { staticClass: "listview-title" }, [
-                      _vm._v("lorem")
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "listview-time" }, [
-                      _vm._v("20 mins ago.")
-                    ]),
-                    _vm._v(" "),
-                    _c("p", { staticClass: "listview-content" }, [
-                      _vm._v(
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam......"
-                      )
-                    ])
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("tr", [
-                  _c("div", { staticClass: "listview-row" }, [
-                    _c("div", { staticClass: "listview-title" }, [
-                      _vm._v("lorem")
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "listview-time" }, [
-                      _vm._v("20 mins ago.")
-                    ]),
-                    _vm._v(" "),
-                    _c("p", { staticClass: "listview-content" }, [
-                      _vm._v(
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam......"
-                      )
-                    ])
-                  ])
-                ])
-              ])
-            ])
-          ]
-        )
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-6" }, [
-      _c("div", { staticClass: "dashboard-panel" }, [
-        _c("div", { staticClass: "panel-title" }, [_vm._v("Upmood Reports")]),
-        _vm._v(" "),
-        _c("div", { staticClass: "scrollbar-outer dashboard-reports-table" }, [
-          _c("table", { staticClass: "table table-stripe" }, [
-            _c("tbody", [
-              _c("tr", [
-                _c("div", { staticClass: "listview-row" }, [
-                  _c("div", { staticClass: "listview-title" }, [
-                    _vm._v("lorem")
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "listview-time" }, [
-                    _vm._v("few mins ago.")
-                  ]),
-                  _vm._v(" "),
-                  _c("p", { staticClass: "listview-content" }, [
-                    _vm._v(
-                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam......"
-                    )
-                  ])
-                ])
-              ]),
-              _vm._v(" "),
-              _c("tr", [
-                _c("div", { staticClass: "listview-row" }, [
-                  _c("div", { staticClass: "listview-title" }, [
-                    _vm._v("lorem")
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "listview-time" }, [
-                    _vm._v("20 mins ago.")
-                  ]),
-                  _vm._v(" "),
-                  _c("p", { staticClass: "listview-content" }, [
-                    _vm._v(
-                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam......"
-                    )
-                  ])
-                ])
-              ]),
-              _vm._v(" "),
-              _c("tr", [
-                _c("div", { staticClass: "listview-row" }, [
-                  _c("div", { staticClass: "listview-title" }, [
-                    _vm._v("lorem")
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "listview-time" }, [
-                    _vm._v("1 hour ago.")
-                  ]),
-                  _vm._v(" "),
-                  _c("p", { staticClass: "listview-content" }, [
-                    _vm._v(
-                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam......"
-                    )
-                  ])
-                ])
-              ]),
-              _vm._v(" "),
-              _c("tr", [
-                _c("div", { staticClass: "listview-row" }, [
-                  _c("div", { staticClass: "listview-title" }, [
-                    _vm._v("lorem")
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "listview-time" }, [
-                    _vm._v("1 hour ago.")
-                  ]),
-                  _vm._v(" "),
-                  _c("p", { staticClass: "listview-content" }, [
-                    _vm._v(
-                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam......"
-                    )
-                  ])
-                ])
-              ]),
-              _vm._v(" "),
-              _c("tr", [
-                _c("div", { staticClass: "listview-row" }, [
-                  _c("div", { staticClass: "listview-title" }, [
-                    _vm._v("lorem")
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "listview-time" }, [
-                    _vm._v("20 mins ago.")
-                  ]),
-                  _vm._v(" "),
-                  _c("p", { staticClass: "listview-content" }, [
-                    _vm._v(
-                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam......"
-                    )
-                  ])
-                ])
-              ]),
-              _vm._v(" "),
-              _c("tr", [
-                _c("div", { staticClass: "listview-row" }, [
-                  _c("div", { staticClass: "listview-title" }, [
-                    _vm._v("lorem")
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "listview-time" }, [
-                    _vm._v("20 mins ago.")
-                  ]),
-                  _vm._v(" "),
-                  _c("p", { staticClass: "listview-content" }, [
-                    _vm._v(
-                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam......"
-                    )
-                  ])
-                ])
-              ])
-            ])
-          ])
-        ])
-      ])
     ])
   }
 ]
@@ -44455,9 +44205,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    props: ['results', 'countries'],
+    props: ['results', 'countries', 'emotions'],
     data: function data() {
         return {
             csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
@@ -44465,30 +44221,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             advance_filter: 1,
 
-            adv_filter_toggle: false,
             disableFilterValue: true,
 
             formdata: {
                 search: '',
                 filter: '',
                 filterValue: '',
+                sortValue: '',
                 page: 1
             },
 
             maleRatio: 0,
             femaleRatio: 0,
+            countryCount: 0,
 
             recordData: this.results,
-
-            sortValue: '',
-            sort: '',
 
             filterOptions: [],
 
             active: [{ value: '1', text: 'online' }, { value: '0', text: 'offline' }, { value: '', text: 'all' }],
             gender: [{ value: 'male', text: 'male' }, { value: 'female', text: 'female' }],
-            age: [{ value: ['16', '20'], text: '16 - 20' }, { value: ['21', '25'], text: '21 - 25' }, { value: ['26', '30'], text: '26 - 30' }, { value: ['31', '35'], text: '31 - 35' }, { value: ['36', '40'], text: '36 - 40' }, { value: ['41', '45'], text: '41 - 45' }],
-            emotion: []
+            age: [{ value: ['16', '20'], text: '16 - 20' }, { value: ['21', '25'], text: '21 - 25' }, { value: ['26', '30'], text: '26 - 30' }, { value: ['31', '35'], text: '31 - 35' }, { value: ['36', '40'], text: '36 - 40' }, { value: ['41', '45'], text: '41 - 45' }]
         };
     },
 
@@ -44503,12 +44256,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         'formdata.filterValue': function formdataFilterValue(val) {
 
+            this.formdata.page = 1;
+            this.getAxios();
+        },
+        'formdata.sortValue': function formdataSortValue(val) {
+
+            this.formdata.page = 1;
             this.getAxios();
         }
     },
     mounted: function mounted() {
         $(".main-header > .title").html('<i class="header-ic ic-user-green"></i>Users');
         this.generatePaginationNumbers();
+        this.searchFilters();
     },
 
     computed: {
@@ -44516,11 +44276,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var location = [];
 
             $.each(this.countries, function (k, v) {
-                // console.log(v.country)
                 location.push({ value: v.country, text: v.country });
             });
 
             return location;
+        },
+        emotion: function emotion() {
+            var emotion = [];
+
+            $.each(this.emotions, function (k, v) {
+                emotion.push({ value: v.emotion_value, text: v.emotion_value });
+            });
+
+            return emotion;
         }
     },
     methods: {
@@ -44532,17 +44300,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             var limit = 5;
             var numberstring = "";
+            if (counter >= lastpage - limit + 1) {
+                counter = lastpage - limit + 1;
+            }
 
             if (counter <= 0) {
                 counter = 1;
             }
 
-            if (limit >= lastpage) {
-                limit = lastpage;
-            }
-
             for (var i = 0; i < limit; i++) {
-                if (i <= lastpage) {
+                if (i < lastpage) {
 
                     if (current == counter) {
                         numberstring += '<a class="active" href="' + path + '?page=' + counter + '">' + counter + '</a>';
@@ -44554,27 +44321,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
             $(".pagination-number").html(numberstring);
         },
-        OpenAdvanceFilter: function OpenAdvanceFilter() {
-            $(".advance-filter").show();
-            $("#advance-filter-menu-open").show();
-            $("#advance-filter-menu").hide();
-        },
-        CloseAdvanceFilter: function CloseAdvanceFilter() {
-            $(".advance-filter").hide();
-            $("#advance-filter-menu-open").hide();
-            $("#advance-filter-menu").show();
-        },
-        AddAdvanceFilter: function AddAdvanceFilter() {
-            this.advance_filter = this.advance_filter + 1;
-            $("#advancefilter" + this.advance_filter).show();
-        },
         searchFilters: function searchFilters() {
             var vue = this;
 
             axios.post(base_url + 'usersfilter', this.formdata).then(function (response) {
-                console.log(response);
-                vue.recordData = response['data'];
+                vue.recordData = response['data']['content'];
                 vue.recordData.current_page = vue.formdata.page;
+                vue.maleRatio = response['data']['counts'].maleRatio;
+                vue.femaleRatio = response['data']['counts'].femaleRatio;
+                vue.countryCount = response['data']['counts'].countryCount;
                 vue.generatePaginationNumbers();
             }).catch(function (error) {});
         },
@@ -44593,7 +44348,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             event.preventDefault();
         },
         clearFields: function clearFields() {
+            this.disableFilterValue = true;
             this.formdata.search = '', this.formdata.filter = '', this.formdata.filterValue = '', this.formdata.page = 1;
+        },
+        OpenAdvanceFilter: function OpenAdvanceFilter() {
+            $(".advance-filter").show();
+            $("#advance-filter-menu-open").show();
+            $("#advance-filter-menu").hide();
+        },
+        CloseAdvanceFilter: function CloseAdvanceFilter() {
+            $(".advance-filter").hide();
+            $("#advance-filter-menu-open").hide();
+            $("#advance-filter-menu").show();
+        },
+        AddAdvanceFilter: function AddAdvanceFilter() {
+            this.advance_filter = this.advance_filter + 1;
+            $("#advancefilter" + this.advance_filter).show();
         },
 
 
@@ -44787,8 +44557,8 @@ var render = function() {
                           {
                             name: "model",
                             rawName: "v-model",
-                            value: _vm.sortValue,
-                            expression: "sortValue"
+                            value: _vm.formdata.sortValue,
+                            expression: "formdata.sortValue"
                           }
                         ],
                         staticClass: "form-control",
@@ -44803,9 +44573,13 @@ var render = function() {
                                 var val = "_value" in o ? o._value : o.value
                                 return val
                               })
-                            _vm.sortValue = $event.target.multiple
-                              ? $$selectedVal
-                              : $$selectedVal[0]
+                            _vm.$set(
+                              _vm.formdata,
+                              "sortValue",
+                              $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            )
                           }
                         }
                       },
@@ -44818,6 +44592,18 @@ var render = function() {
                         _vm._v(" "),
                         _c("option", { attrs: { value: "name" } }, [
                           _vm._v("Name")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "emotion_value" } }, [
+                          _vm._v("Current Emotion")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "profile_post" } }, [
+                          _vm._v("Status")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "country" } }, [
+                          _vm._v("Location")
                         ])
                       ]
                     )
@@ -44826,101 +44612,97 @@ var render = function() {
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "advance-filter" }, [
-                _vm.adv_filter_toggle
-                  ? _c("div", { staticClass: "advance-filter-input row" }, [
-                      _c("div", { staticClass: "advance-filter-row" }, [
-                        _c(
-                          "div",
-                          {
-                            staticClass: "col-md-5",
-                            attrs: { id: "advancefilter1" }
-                          },
-                          [
-                            _c("div", { staticClass: "form-group" }, [
-                              _c(
-                                "label",
-                                { staticClass: "col-md-4", attrs: { for: "" } },
-                                [_vm._v("Filter By No 2:")]
-                              ),
-                              _vm._v(" "),
-                              _vm._m(0),
-                              _vm._v(" "),
-                              _c("select", {
-                                staticClass:
-                                  "form-control col-md-2 filter-width",
+                _c("div", { staticClass: "advance-filter-input row" }, [
+                  _c("div", { staticClass: "advance-filter-row" }, [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "col-md-5",
+                        attrs: { id: "advancefilter1" }
+                      },
+                      [
+                        _c("div", { staticClass: "form-group" }, [
+                          _c(
+                            "label",
+                            { staticClass: "col-md-4", attrs: { for: "" } },
+                            [_vm._v("Filter By No 2:")]
+                          ),
+                          _vm._v(" "),
+                          _vm._m(0),
+                          _vm._v(" "),
+                          _c("select", {
+                            staticClass: "form-control col-md-2 filter-width",
+                            attrs: {
+                              id: "filter-value",
+                              name: "filter-value",
+                              disabled: ""
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "a",
+                            {
+                              staticClass: "filter-close",
+                              attrs: { href: "javascript:;" }
+                            },
+                            [
+                              _c("img", {
                                 attrs: {
-                                  id: "filter-value",
-                                  name: "filter-value",
-                                  disabled: ""
+                                  src: _vm.base_url + "img/ic_close.png",
+                                  alt: ""
                                 }
-                              }),
-                              _vm._v(" "),
-                              _c(
-                                "a",
-                                {
-                                  staticClass: "filter-close",
-                                  attrs: { href: "javascript:;" }
-                                },
-                                [
-                                  _c("img", {
-                                    attrs: {
-                                      src: _vm.base_url + "img/ic_close.png",
-                                      alt: ""
-                                    }
-                                  })
-                                ]
-                              )
-                            ])
-                          ]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "div",
-                          {
-                            staticClass: "col-md-5",
-                            attrs: { id: "advancefilter2" }
-                          },
-                          [
-                            _c("div", { staticClass: "form-group" }, [
-                              _c(
-                                "label",
-                                { staticClass: "col-md-4", attrs: { for: "" } },
-                                [_vm._v("Filter By No 3:")]
-                              ),
-                              _vm._v(" "),
-                              _vm._m(1),
-                              _vm._v(" "),
-                              _c("select", {
-                                staticClass:
-                                  "form-control col-md-2 filter-width",
+                              })
+                            ]
+                          )
+                        ])
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        staticClass: "col-md-5",
+                        attrs: { id: "advancefilter2" }
+                      },
+                      [
+                        _c("div", { staticClass: "form-group" }, [
+                          _c(
+                            "label",
+                            { staticClass: "col-md-4", attrs: { for: "" } },
+                            [_vm._v("Filter By No 3:")]
+                          ),
+                          _vm._v(" "),
+                          _vm._m(1),
+                          _vm._v(" "),
+                          _c("select", {
+                            staticClass: "form-control col-md-2 filter-width",
+                            attrs: {
+                              id: "filter-value",
+                              name: "filter-value",
+                              disabled: ""
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "a",
+                            {
+                              staticClass: "filter-close",
+                              attrs: { href: "javascript:;" }
+                            },
+                            [
+                              _c("img", {
                                 attrs: {
-                                  id: "filter-value",
-                                  name: "filter-value",
-                                  disabled: ""
+                                  src: _vm.base_url + "img/ic_close.png",
+                                  alt: ""
                                 }
-                              }),
-                              _vm._v(" "),
-                              _c(
-                                "a",
-                                {
-                                  staticClass: "filter-close",
-                                  attrs: { href: "javascript:;" }
-                                },
-                                [
-                                  _c("img", {
-                                    attrs: {
-                                      src: _vm.base_url + "img/ic_close.png",
-                                      alt: ""
-                                    }
-                                  })
-                                ]
-                              )
-                            ])
-                          ]
-                        )
-                      ])
-                    ])
-                  : _vm._e(),
+                              })
+                            ]
+                          )
+                        ])
+                      ]
+                    )
+                  ])
+                ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "advance-filter-input row" }, [
                   _c("div", { staticClass: "advance-filter-row" }, [
@@ -45067,15 +44849,25 @@ var render = function() {
                   { staticClass: "advance-card advance-gender col-md-3" },
                   [
                     _c("div", { staticClass: "gender-value" }, [
-                      _c("div", { staticClass: "col-md-6 male" }, [
-                        _c("span", [_vm._v("Male")]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "male-value" }, [
-                          _vm._v(_vm._s(_vm.maleRatio))
-                        ])
-                      ]),
+                      _vm.formdata.filterValue != "female"
+                        ? _c("div", { staticClass: "col-md-6 male" }, [
+                            _c("span", [_vm._v("Male")]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "male-value" }, [
+                              _vm._v(_vm._s(_vm.maleRatio))
+                            ])
+                          ])
+                        : _vm._e(),
                       _vm._v(" "),
-                      _vm._m(3)
+                      _vm.formdata.filterValue != "male"
+                        ? _c("div", { staticClass: "col-md-6 female" }, [
+                            _c("span", [_vm._v("Female")]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "female-value" }, [
+                              _vm._v(_vm._s(_vm.femaleRatio))
+                            ])
+                          ])
+                        : _vm._e()
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "advance-card-label" }, [
@@ -45084,16 +44876,46 @@ var render = function() {
                   ]
                 ),
                 _vm._v(" "),
-                _vm._m(4),
+                _vm.formdata.filter == "location"
+                  ? _c(
+                      "div",
+                      { staticClass: "advance-card advance-country col-md-3" },
+                      [
+                        _c("div", { staticClass: "country-value" }, [
+                          _vm._v(_vm._s(_vm.formdata.filterValue))
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "advance-card-label" }, [
+                          _vm._v("Country")
+                        ])
+                      ]
+                    )
+                  : _vm._e(),
                 _vm._v(" "),
-                _vm._m(5)
+                _vm.formdata.filter != "location"
+                  ? _c(
+                      "div",
+                      { staticClass: "advance-card advance-country col-md-3" },
+                      [
+                        _c("div", { staticClass: "country-value" }, [
+                          _vm._v(_vm._s(_vm.countryCount))
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "advance-card-label" }, [
+                          _vm._v("No. of Location")
+                        ])
+                      ]
+                    )
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm._m(3)
               ])
             ]
           )
         ]),
         _vm._v(" "),
         _c("table", { staticClass: "table table-stripe users-table" }, [
-          _vm._m(6),
+          _vm._m(4),
           _vm._v(" "),
           _c(
             "tbody",
@@ -45266,26 +45088,6 @@ var staticRenderFns = [
         )
       ]
     )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-6 female" }, [
-      _c("span", [_vm._v("Female")]),
-      _vm._v(" "),
-      _c("div", { staticClass: "female-value" }, [_vm._v("952")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "advance-card advance-country col-md-3" }, [
-      _c("div", { staticClass: "country-value" }, [_vm._v("Philippines")]),
-      _vm._v(" "),
-      _c("div", { staticClass: "advance-card-label" }, [_vm._v("Country")])
-    ])
   },
   function() {
     var _vm = this

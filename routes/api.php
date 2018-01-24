@@ -73,6 +73,10 @@ Route::group(['middleware' => 'auth:api'], function (){
 		    'store'
 		]]);
 
+		Route::resource('messages', 'Api\MessagesController', ['only' => [
+		    'index', 'store', 'update'
+		]]);
+
 
 		Route::get('fcmresponse/{type?}', 'Api\DeviceTokenController@fcmResponse');
 	});

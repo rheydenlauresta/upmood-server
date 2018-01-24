@@ -20,7 +20,9 @@ class NotificationController extends BaseController
 
 		$connection['method'] = 'mark-as-seen';
 		$connection['errors'] = (Object) [];
-		$connection['data']   = (Object) [];
+		$connection['data']   = [
+            'notification_count' => $this->notificationCount(),
+        ];
 
     	return json_encode($connection);
 
@@ -51,6 +53,11 @@ class NotificationController extends BaseController
 
 		return json_encode($data);
 
+    }
+
+    public function notificationCount()
+    {
+        return Notification::where('user_id', request()->user()->id)->where('seen',0)->count();
     }
 
 }
