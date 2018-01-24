@@ -28,38 +28,8 @@ class Dashboard extends Model
         return $res;
     }
 
-    public static function getUsers()
+    public static function searchFilter($data)
     {
-        $res = DB::table('users as u')
-                    ->selectRaw('MAX(r.id) AS record_id,u.image, u.name, u.gender,
-                                u.age, u.country, r.heartbeat_count, u.profile_post,
-                                if(u.is_online,"online","offline") as active_level,
-                                r.emotion_value, r.stress_level,
-                                GROUP_CONCAT(CASE WHEN r.emotion_value = "sad" OR r.emotion_value = "anxious"THEN -3
-                                          			  WHEN r.emotion_value = "happy" OR r.emotion_value = "zen" OR r.emotion_value = "excitement" THEN 3
-                                          			  WHEN r.emotion_value = "pleasant" THEN 1
-                                          			  WHEN r.emotion_value = "unpleasant" OR r.emotion_value = "confused" OR r.emotion_value = "challenged" OR r.emotion_value = "hyped" THEN -1
-                                          			  WHEN r.emotion_value = "calm" THEN 0
-                                          			  ELSE 0 END)as upmood_meter')
-                    ->leftJoin('records as r','u.id','r.user_id')
-                    ->groupBy('name')
-                    ->paginate(10);
-                    //
-                    // foreach($res as $result)
-                    // {
-                    //   $data->upmood[] = $result->upmood_meter;
-                    //   $data->name[] = $result->name;
-                    // }
-
-                    // dd($res);
-
-
-        return $res;
-    }
-
-    public static function searchFilter($search)
-    {
-        // select * from users where filter = subFilter
         $res = DB::table('users as u')
                 ->selectRaw('MAX(r.id) AS record_id,u.image, u.name, u.gender,
                             u.age, u.country, r.heartbeat_count, u.profile_post,
@@ -72,12 +42,31 @@ class Dashboard extends Model
                                               WHEN r.emotion_value = "calm" THEN 0
                                               ELSE 0 END)as upmood_meter
                             ')
-                ->leftJoin('records as r', 'u.id','r.user_id')
-                ->where('name','like','%'.$search.'%')
-                // ->where($request->filter, $request->subfilter)
-                ->orWhere('profile_post','like','%'.$search.'%')
-                ->orWhere('emotion_value','like','%'.$search.'%')
-                ->groupBy('name')
+                ->leftJoin('records as r',function($qry){
+                    $qry->on('r.user_id', '=', 'u.id')->where('r.id','=',DB::raw('(select max(records.id) from records where records.user_id = u.id)'));
+                });
+                if(isset($data['search']) && $data['search'] != '' && $data['search'] != null){
+                  $res = $res->where(function($qry) use($data){
+                    $qry->where('name','like','%'.$data['search'].'%')
+                        ->orWhere('profile_post','like','%'.$data['search'].'%')
+                        ->orWhere('emotion_value','like','%'.$data['search'].'%');
+                  });
+                }
+                if(isset($data['filterValue']) && $data['filterValue'] != '' && $data['filterValue'] != null){
+                  if($data['filter'] == 'age'){
+                    $res = $res->where(function($qry) use($data){
+                      $qry->whereBetween('age',$data['filterValue']);
+                    });
+                  }else{
+
+                    $res = $res->where(function($qry) use($data){
+                      $qry->where('gender','like',$data['filterValue']);
+                      $qry->orWhere('is_online','like',$data['filterValue']);
+                      $qry->orWhere('country','like',$data['filterValue']);
+                    });
+                  }
+                }
+                $res = $res->groupBy('name')
                 ->paginate(10);
 
         return $res;
@@ -87,6 +76,7 @@ class Dashboard extends Model
     {
       $res = DB::table('users')
                       ->select('country')
+                      ->whereNotNull('country')
                       ->groupBy('country')->get();
       return $res;
     }

@@ -63,14 +63,14 @@ class Reaction extends Model
             "type"=>"Reaction Send",
             "type_id"=>"4",
             'heartbeat'    => request('heartbeat_count'),
-            'post'         => $post->content,
+            'post'         => @$post->content,
             'emoji'        => [
                 'emoji_id'    => $emoji->id,
-                'emoji_path' => $emoji->type.'/'.$emoji->set_name.'/'.$emoji->filename
+                'emoji_path' => $emoji->set_name.'/'.$emoji->type.'/'.$emoji->filename
             ],
             'reaction'     => [
                 'reaction_id'   => $reaction->id,
-                'reaction_path' => $reaction->type.'/'.$reaction->set_name.'/'.$reaction->filename
+                'reaction_path' => $reaction->set_name.'/'.$reaction->type.'/'.$reaction->filename
             ],
             "request_from"=> [
                 "id"=>request()->user()->id,

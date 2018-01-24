@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
+
 use App\Dashboard;
 
 class DashboardController extends Controller
@@ -26,24 +28,20 @@ class DashboardController extends Controller
      public function usersList()
      {
 
-       if(isset($_GET['search']))
-       {
-         $search = $_GET['search'];
-         $data = Dashboard::searchFilter($search);
-       }
-       else {
-         $data = Dashboard::getUsers();
-       }
+        $data = Input::all();
 
-        // dd($data);
+        $result = Dashboard::searchFilter($data);
         $country = Dashboard::getUserCountry();
 
-        return view('userslist',['results' => $data, 'countries'=>$country]);
+        return view('userslist',['results' => $result, 'countries'=>$country->toArray()]);
      }
 
      public function userFilter(Request $request)
      {
-        $res = Dashboard::searchFilter($request);
+        $data = Input::all();
+
+        $res = Dashboard::searchFilter($data);
+
         return $res;
      }
 

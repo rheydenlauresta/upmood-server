@@ -19,8 +19,8 @@ class NotificationController extends BaseController
     	$connection = Notification::checkAndMark(explode(',', $id));
 
 		$connection['method'] = 'mark-as-seen';
-		$connection['errors'] = [];
-		$connection['data']   = [];
+		$connection['errors'] = (Object) [];
+		$connection['data']   = (Object) [];
 
     	return json_encode($connection);
 
@@ -46,7 +46,7 @@ class NotificationController extends BaseController
 		    return $value;
 		});
 
-		$data['errors'] = [];
+		$data['errors'] = (Object) [];
 		$data['data'] = $notification->toArray();
 
 		return json_encode($data);
