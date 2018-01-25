@@ -21,6 +21,7 @@ Vue.component('login', require('./components/Login.vue'));
 Vue.component('passwordreset', require('./components/PasswordReset.vue'));
 Vue.component('dashboard', require('./components/Dashboard.vue'));
 Vue.component('users-component', require('./components/Users.vue'));
+Vue.component('messages-component', require('./components/Messages.vue'));
 
 const app = new Vue({
     el: '#app',
@@ -28,4 +29,17 @@ const app = new Vue({
 
 $(document).ready(function(){
 	$('.scrollbar-outer').scrollbar();
+});
+
+$(window).on('resize', function(){
+      if ($(".messages-wrapper").length){
+      	var wrapper_width = $(".messages-wrapper").css('width').replace('px','');
+        var nav = $(".messages-nav").css('width').replace('px','');
+        var list = $(".messages-list").css('width').replace('px','');
+        var new_width = parseInt(wrapper_width) - (parseInt(nav) + parseInt(list));
+        $(".messages-content").css('width',new_width + "px");
+
+        var nav_height = $(".messages-nav").css('height');
+        $(".messages-content").css('height',nav_height);
+      }
 });

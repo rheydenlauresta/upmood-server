@@ -292,12 +292,7 @@ body{
   }
 
   .main-content{
-    margin: 0 auto;
-    width: 1230px;
-    padding-left: 50px;
-    padding-right: 50px;
-    color: #000;
-    box-sizing: border-box;
+    
   }
 }
 
@@ -342,6 +337,7 @@ body{
 }
 
 .dashboard-wrapper{
+  @extend .main-content-container;
   margin-top: 40px;
 
   .row{
@@ -533,6 +529,7 @@ body{
 }
 
 .users-wrapper{
+  @extend .main-content-container;
   margin-top: 40px;
 
   .users-table-wrapper{
@@ -961,4 +958,175 @@ body{
 
 #advancefilter3{
   display: none;
+}
+
+.messages-wrapper{
+  position:relative;
+  min-width: 1230px;
+
+    .messages-nav{
+        background-color: #1D232A;
+        position: fixed;
+        width: 282px;
+        height: 100%;
+        z-index: 9999;
+        padding: 15px;
+
+        .compose{
+          @extend .content-center;
+          width: 230px;
+          color: #fff;
+          font-size: 16px;
+          font-weight: 300;
+          padding: 15px;
+          margin-bottom: 15px;
+        }
+
+        .menu-list{
+            @extend .content-center;
+            width: 230px;
+            list-style: none;
+            padding: 0px;
+
+            li{
+              transition: 0.2s ease-out all;
+              padding: 10px;
+              padding-left: 15px;
+
+              &.seperator{
+                @extend .content-center;
+                height: 1px;
+                width: 100%;
+                padding: 0px;
+                background-color: #FFFFFF;
+                width: 201px;
+                margin-top: 15px;
+                margin-bottom: 15px;
+                opacity: 0.5;
+
+
+
+                  &:hover{
+                    background-color: #fff;
+                  }
+              }
+
+              &:hover{
+                  background-color: #699BD5;
+              }
+
+              a{
+                display: inline-block;
+                width: 100%;
+                color: #fff;
+                font-size: 14px;
+                font-weight: 400;
+                text-decoration: none;
+
+                &:hover{
+                  text-decoration: none;
+                }
+              }
+            }
+
+        }
+
+    }
+
+    .messages-list{
+      position: relative;
+      top: 0px;
+      left: 282px;
+      width: 500px;
+
+      .messages-search-wrapper{
+           padding: 15px 20px 15px 20px;
+
+           &:before{
+              top: 21px;
+              left: 52px;
+          }
+
+          .messages-search{
+            @extend .content-center;
+            width: 420px;
+            border-radius: 50px;
+            border: 1px solid lighten(#BCBDBD,15%);
+            box-shadow: none;
+        }
+      }
+
+      .messages-row-wrapper{
+
+          ul.message-row-menu{
+              list-style: none;
+              padding: 0px;
+
+              .messages-row{
+                  color: #1E1E1E;
+                  padding: 20px;
+                  padding-left: 30px;
+
+                      .message-header{
+
+                          .col-md-6{
+                            padding-left: 0px;
+                          }
+
+                          .image-wrapper{
+                              height: 46px;
+                              width: 46px;
+                              border-radius: 150px;
+                              overflow: hidden;
+
+                              img{
+                                  height: 100%;
+                                  width: 100%;
+                                  object-fit: cover;
+                              }
+                          }
+
+                          .name{
+                            font-weight: 600;
+                            font-size: 16px;
+                          }
+
+                          .subject{
+                            font-weight: 400;
+                            font-size: 14px;
+                          }
+
+                          .time{
+                            color: #9B9B9B;
+                            font-size: 11px;
+                            font-weight: 300;
+                          }
+
+                  }
+
+                  .message-glance{
+                    margin-top: 15px;
+                    text-align: justify;
+                    color: #AFAFAF;
+                    font-weight: 300;
+                    font-size: 12px;
+                  }
+
+                  &.active{
+                    background-color: #fff;
+                    box-shadow: 0px 6px 9px rgba(0,0,0,0.16);
+                  }
+              }
+          }
+      }
+    }
+
+    .messages-content{
+      min-width: 447px;
+      height: 100%;
+      background-color: #fff;
+      position: absolute;
+      top: 0px;
+      left: 782px;
+    }
 }

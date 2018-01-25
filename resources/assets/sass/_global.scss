@@ -1,5 +1,17 @@
 // GLOBAL CSS
 
+// BUTTONS
+
+.btn-success{
+	background-color: $success-color !important;
+
+	&:hover{
+		background-color: darken($success-color,5%) !important;
+	}
+}
+
+// END FOR BUTTONS
+
 .content-center{
 	display: block;
 	margin: 0 auto;
@@ -12,5 +24,18 @@
 
 .row-break{
 	margin-bottom: 20px;
+}
+
+.main-content-container{
+	margin: 0 auto;
+    width: 1230px;
+    padding-left: 50px;
+    padding-right: 50px;
+    color: #000;
+    box-sizing: border-box;
+}
+
+input::placeholder{
+	color: #95989A !important;
 }
 // END OF GLOBAL CSS
