@@ -35,17 +35,19 @@
                             <div class="form-group col-md-2">
                                 <label for="sort">Sort By:</label>
                                 <div class="select-ic ic-sort">
-                                    <select id="sort" name="sort" class="form-control" v-model="sortValue" >
+                                    <select v-model="formdata.sortValue"  id="sort" name="sort" class="form-control" >
                                         <option value="" selected hidden>Select Filter</option>
                                         <option value="name">Name</option>
-                                        <!-- <option v-for="choice in sort" :value="choice"  >{{choice}}</option> -->
+                                        <option value="emotion_value">Current Emotion</option>
+                                        <option value="profile_post">Status</option>
+                                        <option value="country">Location</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
 
                         <div class="advance-filter">
-                            <div class="advance-filter-input row" v-if="adv_filter_toggle">
+                            <div class="advance-filter-input row">
                                 <div class="advance-filter-row">
                                     <div class="col-md-5" id="advancefilter1">
                                         <div class="form-group">
@@ -119,20 +121,24 @@
                             </div>
                             <div class="advance-card advance-gender col-md-3">
                                 <div class="gender-value">
-                                    <div class="col-md-6 male">
+                                    <div class="col-md-6 male"  v-if="formdata.filterValue != 'female'">
                                         <span>Male</span>
                                         <div class="male-value">{{ maleRatio }}</div>
                                     </div>
-                                    <div class="col-md-6 female">
+                                    <div class="col-md-6 female"  v-if="formdata.filterValue != 'male'">
                                         <span>Female</span>
-                                        <div class="female-value">952</div>
+                                        <div class="female-value">{{ femaleRatio }}</div>
                                     </div>
                                 </div>
                                 <div class="advance-card-label">Gender</div>
                             </div>
-                            <div class="advance-card advance-country col-md-3">
-                                <div class="country-value">Philippines</div>
+                            <div class="advance-card advance-country col-md-3" v-if="formdata.filter == 'location'">
+                                <div class="country-value">{{ formdata.filterValue }}</div>
                                 <div class="advance-card-label">Country</div>
+                            </div>
+                            <div class="advance-card advance-country col-md-3" v-if="formdata.filter != 'location'">
+                                <div class="country-value">{{ countryCount }}</div>
+                                <div class="advance-card-label">No. of Location</div>
                             </div>
                             <div class="advance-card advance-meter col-md-3">
                                 <div class="meter-value">Calm</div>
@@ -187,7 +193,7 @@
 
 <script>
     export default {
-        props: ['results','countries'],
+        props: ['results','countries','emotions'],
         data() {
             return {
                 csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
@@ -195,23 +201,21 @@
 
                 advance_filter: 1,
 
-                adv_filter_toggle: false,
                 disableFilterValue: true,
 
                 formdata: {
                     search: '',
                     filter: '',
                     filterValue: '',
+                    sortValue: '',
                     page: 1
                 },
 
                 maleRatio: 0,
                 femaleRatio: 0,
+                countryCount: 0,
 
                 recordData: this.results,
-
-                sortValue: '',
-                sort: '',
 
                 filterOptions: [],
 
@@ -231,8 +235,6 @@
                     {value:['31','35'],text:'31 - 35'},
                     {value:['36','40'],text:'36 - 40'},
                     {value:['41','45'],text:'41 - 45'},
-                ],
-                emotion: [
                 ]
             }
         },
@@ -247,6 +249,13 @@
             },
             'formdata.filterValue': function (val) {
 
+                this.formdata.page = 1
+                this.getAxios()
+
+            },
+            'formdata.sortValue': function (val) {
+
+                this.formdata.page = 1
                 this.getAxios()
 
             }
@@ -254,18 +263,27 @@
         mounted() {
             $(".main-header > .title").html('<i class="header-ic ic-user-green"></i>Users');
             this.generatePaginationNumbers();
-            
+            this.searchFilters();
         },
         computed:{
             location(){
                 let location=[];
 
                 $.each(this.countries, function(k,v){
-                // console.log(v.country)
                     location.push({value:v.country, text:v.country})
                 })
 
                 return location
+            },
+
+            emotion(){
+                let emotion=[];
+
+                $.each(this.emotions, function(k,v){
+                    emotion.push({value:v.emotion_value, text:v.emotion_value})
+                })
+
+                return emotion
             }
 
         },
@@ -278,17 +296,16 @@
 
                 var limit = 5;
                 var numberstring = "";
+                if (counter >= (lastpage - limit)+1){
+                    counter = (lastpage - limit)+1;
+                }
 
                 if (counter <= 0){
                     counter = 1;
                 }
 
-                if(limit >= lastpage){
-                    limit = lastpage;
-                }
-
                 for (var i = 0 ; i < limit ; i++){
-                    if (i <= lastpage ){
+                    if (i < lastpage ){
 
                         if (current == counter){
                             numberstring += '<a class="active" href="' + path + '?page=' + counter +   '">' + counter + '</a>';
@@ -302,28 +319,15 @@
                 $(".pagination-number").html(numberstring);
             },
 
-            OpenAdvanceFilter(){
-                $(".advance-filter").show();
-                $("#advance-filter-menu-open").show();
-                $("#advance-filter-menu").hide();
-            },
-            CloseAdvanceFilter(){
-                $(".advance-filter").hide();
-                $("#advance-filter-menu-open").hide();
-                $("#advance-filter-menu").show();
-            },
-            AddAdvanceFilter(){
-                this.advance_filter = this.advance_filter + 1;
-                $("#advancefilter" + this.advance_filter).show();
-            },
-
             searchFilters(){
                 let vue = this;
 
                 axios.post(base_url+'usersfilter' , this.formdata).then(function (response) {
-                    console.log(response)
-                    vue.recordData = response['data'];
+                    vue.recordData = response['data']['content'];
                     vue.recordData.current_page = vue.formdata.page;
+                    vue.maleRatio = response['data']['counts'].maleRatio;
+                    vue.femaleRatio = response['data']['counts'].femaleRatio;
+                    vue.countryCount = response['data']['counts'].countryCount;
                     vue.generatePaginationNumbers();
 
                 }).catch(function (error) {
@@ -347,10 +351,27 @@
             },
 
             clearFields(){
+                this.disableFilterValue = true;
                 this.formdata.search = '',
                 this.formdata.filter = '',
                 this.formdata.filterValue = '',
                 this.formdata.page = 1
+
+            },
+
+            OpenAdvanceFilter(){
+                $(".advance-filter").show();
+                $("#advance-filter-menu-open").show();
+                $("#advance-filter-menu").hide();
+            },
+            CloseAdvanceFilter(){
+                $(".advance-filter").hide();
+                $("#advance-filter-menu-open").hide();
+                $("#advance-filter-menu").show();
+            },
+            AddAdvanceFilter(){
+                this.advance_filter = this.advance_filter + 1;
+                $("#advancefilter" + this.advance_filter).show();
             },
 
             getAxios: _.debounce(

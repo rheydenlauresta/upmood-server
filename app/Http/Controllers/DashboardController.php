@@ -18,32 +18,12 @@ class DashboardController extends Controller
     {
       $userActivity = Dashboard::userActivityCount();
       $countryCount = Dashboard::countryCount();
-      $contactInqueries = Dashboard::getContactForm();
+      $contactMessages = Dashboard::getContactForm();
 
       return view('home',['users_activity'=>$userActivity,
                             'countries'=>$countryCount,
-                            'inquiries'=>$contactInqueries]);
+                            'messages'=>$contactMessages]);
       }
-
-     public function usersList()
-     {
-
-        $data = Input::all();
-
-        $result = Dashboard::searchFilter($data);
-        $country = Dashboard::getUserCountry();
-
-        return view('userslist',['results' => $result, 'countries'=>$country->toArray()]);
-     }
-
-     public function userFilter(Request $request)
-     {
-        $data = Input::all();
-
-        $res = Dashboard::searchFilter($data);
-
-        return $res;
-     }
 
      public function userInfo($id)
      {

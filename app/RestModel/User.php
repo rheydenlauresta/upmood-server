@@ -247,7 +247,7 @@ class User extends Authenticatable
         DeviceToken::fcmSend($data, [$user->id]);
         // /fcm notification
 
-        return ['status' => true, 'data' => [] ];
+        return ['status' => true, 'data' => (Object) [] ];
 
     }
 
@@ -258,7 +258,7 @@ class User extends Authenticatable
         $status->delete();
         UserGroup::remove();
 
-        return [ 'status' => true, 'data' => [] ];
+        return [ 'status' => true, 'data' => (Object) [] ];
 
     }
 
@@ -295,7 +295,7 @@ class User extends Authenticatable
 
         // /fcm notification
 
-        return [ 'status' => true, 'data' => [] ];
+        return [ 'status' => true, 'data' => (Object) [] ];
     }
 
     public function connections()

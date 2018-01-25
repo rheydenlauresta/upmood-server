@@ -50,46 +50,11 @@
                         <div class="scrollbar-outer dashboard-cancellation-table">
                             <table class="table table-stripe">
                                 <tbody>
-                                    <tr>
-                                        <div class="listview-row">
-                                            <div class="listview-title">lorem</div>
-                                            <div class="listview-time">few mins ago.</div>
-                                            <p class="listview-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam......</p>
-                                        </div>
-                                    </tr>
-                                     <tr>
-                                        <div class="listview-row">
-                                            <div class="listview-title">lorem</div>
-                                            <div class="listview-time">20 mins ago.</div>
-                                            <p class="listview-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam......</p>
-                                        </div>
-                                    </tr>
-                                     <tr>
-                                        <div class="listview-row">
-                                            <div class="listview-title">lorem</div>
-                                            <div class="listview-time">1 hour ago.</div>
-                                            <p class="listview-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam......</p>
-                                        </div>
-                                    </tr>
-                                     <tr>
-                                        <div class="listview-row">
-                                            <div class="listview-title">lorem</div>
-                                            <div class="listview-time">1 hour ago.</div>
-                                            <p class="listview-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam......</p>
-                                        </div>
-                                    </tr>
-                                     <tr>
-                                        <div class="listview-row">
-                                            <div class="listview-title">lorem</div>
-                                            <div class="listview-time">20 mins ago.</div>
-                                            <p class="listview-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam......</p>
-                                        </div>
-                                    </tr>
-                                     <tr>
-                                        <div class="listview-row">
-                                            <div class="listview-title">lorem</div>
-                                            <div class="listview-time">20 mins ago.</div>
-                                            <p class="listview-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam......</p>
+                                    <tr v-for="accountCancellation in messages">
+                                        <div class="listview-row" v-if="accountCancellation.type == 'account_cancellation'">
+                                            <div class="listview-title">{{accountCancellation.type}}</div>
+                                            <div class="listview-time">{{accountCancellation.created_at}}</div>
+                                            <p class="listview-content">{{accountCancellation.content}}</p>
                                         </div>
                                     </tr>
                                 </tbody>
@@ -105,8 +70,8 @@
                         <div class="scrollbar-outer dashboard-inquiries-table">
                             <table class="table table-stripe">
                                 <tbody>
-                                    <tr v-for="inquire in inquiries">
-                                        <div class="listview-row">
+                                    <tr v-for="inquire in messages">
+                                        <div class="listview-row" v-if="inquire.type == 'inquiries'">
                                             <div class="listview-title">{{inquire.type}}</div>
                                             <div class="listview-time">{{inquire.created_at}}</div>
                                             <p class="listview-content">{{inquire.content}}</p>
@@ -124,46 +89,11 @@
                         <div class="scrollbar-outer dashboard-reports-table">
                             <table class="table table-stripe">
                                 <tbody>
-                                    <tr>
-                                        <div class="listview-row">
-                                            <div class="listview-title">lorem</div>
-                                            <div class="listview-time">few mins ago.</div>
-                                            <p class="listview-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam......</p>
-                                        </div>
-                                    </tr>
-                                     <tr>
-                                        <div class="listview-row">
-                                            <div class="listview-title">lorem</div>
-                                            <div class="listview-time">20 mins ago.</div>
-                                            <p class="listview-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam......</p>
-                                        </div>
-                                    </tr>
-                                     <tr>
-                                        <div class="listview-row">
-                                            <div class="listview-title">lorem</div>
-                                            <div class="listview-time">1 hour ago.</div>
-                                            <p class="listview-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam......</p>
-                                        </div>
-                                    </tr>
-                                     <tr>
-                                        <div class="listview-row">
-                                            <div class="listview-title">lorem</div>
-                                            <div class="listview-time">1 hour ago.</div>
-                                            <p class="listview-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam......</p>
-                                        </div>
-                                    </tr>
-                                     <tr>
-                                        <div class="listview-row">
-                                            <div class="listview-title">lorem</div>
-                                            <div class="listview-time">20 mins ago.</div>
-                                            <p class="listview-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam......</p>
-                                        </div>
-                                    </tr>
-                                     <tr>
-                                        <div class="listview-row">
-                                            <div class="listview-title">lorem</div>
-                                            <div class="listview-time">20 mins ago.</div>
-                                            <p class="listview-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam......</p>
+                                    <tr v-for="report in messages">
+                                        <div class="listview-row" v-if="report.type == 'reports'">
+                                            <div class="listview-title">{{report.type}}</div>
+                                            <div class="listview-time">{{report.created_at}}</div>
+                                            <p class="listview-content">{{report.content}}</p>
                                         </div>
                                     </tr>
                                 </tbody>
@@ -177,7 +107,7 @@
 
 <script>
     export default {
-        props: ['users','countries','inquiries'],
+        props: ['users','countries','messages'],
         data() {
             return {
                 csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
