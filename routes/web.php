@@ -29,5 +29,11 @@ Route::get('/dashboard', 'DashboardController@index');
 Route::get('/userslist', 'UsersController@usersList');
 Route::post('/usersfilter', 'UsersController@userFilter');
 
+// messages
+
+Route::get('/messages', function () {
+    return view('messages');
+});
+
 
 Route::get('/', 'DashboardController@index');
