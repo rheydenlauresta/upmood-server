@@ -8,7 +8,7 @@
                             <div class="form-group col-md-6">
                                 <label for="search">Search:</label>
                                 <div class="input-ic ic-search">
-                                    <input v-model="formdata.search" placeholder="e.g. Name, Emotions or Status" type="text" class="form-control" name="search" id="search">
+                                    <input v-model="formdata.search" placeholder="e.g. Name, Emotions or Status" type="text" class="form-control" name="search" id="search" @keypress="searchFilters()">
                                 </div>
                             </div>
                             <div class="form-group col-md-4">
@@ -19,7 +19,7 @@
                                         <option v-for="(item,key) in filters"  v-if="checkFilterSelected(item.value,formdata.filter)"  :value="item.value">{{item.text}}</option>
                                     </select>
                                 </div>
-                                <select v-model="formdata.filterValue" id="filter-value" name="filter-value" class="form-control half-input" :disabled="disableFilterValue" >
+                                <select v-model="formdata.filterValue" id="filter-value" name="filter-value" class="form-control half-input" :disabled="disableFilterValue" @change="searchFilters()">
                                     <option v-for="item in filterOptions" v-if="":value="item.value">
                                         {{item.text}}
                                     </option>
@@ -28,7 +28,7 @@
                             <div class="form-group col-md-2">
                                 <label for="sort">Sort By:</label>
                                 <div class="select-ic ic-sort">
-                                    <select v-model="formdata.sortValue" id="sort" name="sort" class="form-control" >
+                                    <select v-model="formdata.sortValue" id="sort" name="sort" class="form-control" @change="searchFilters()">
                                         <option value="" selected hidden>Select Filter</option>
                                         <option value="name">Name</option>
                                         <option value="emotion_value">Current Emotion</option>
@@ -39,82 +39,7 @@
                             </div>
                         </div>
 
-                        <!-- <div class="advance-filter">
-                            <div class="advance-filter-input row">
-                                <div class="advance-filter-row">
-                                    <div class="col-md-5" id="advancefilter1">
-                                        <div class="form-group">
-                                            <label for="" class="col-md-4">Filter By No 2:</label>
-                                            <div class="select-ic ic-filter col-md-6 filter-width">
-                                                <select v-model="formdata.filter2" id="filter" name="advancefilter[]" class="form-control">
-                                                    <option value="" selected hidden>Select Filter</option>
-                                                    <option v-for="n in filters" :value="n.value">
-                                                        {{n.text}}
-                                                    </option>
-                                                </select>
-                                            </div>
-                                            <select v-model="formdata.filterValue2" id="filter-value" name="filter-value" class="form-control col-md-2 filter-width" :disabled="disableFilterValue2">
-                                                <option v-for="n in filterOptions2" :value="n.value">
-                                                    {{n.text}}
-                                                </option>
-                                            </select>
-                                            <a href="javascript:;" class="filter-close" v-on:click="RemoveAdvanceFilter()"><img :src="base_url+'img/ic_close.png'" alt=""></a>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-5" id="advancefilter2">
-                                        <div class="form-group">
-                                            <label for="" class="col-md-4">Filter By No 3:</label>
-                                            <div class="select-ic ic-filter col-md-6 filter-width">
-                                                <select v-model="formdata.filter3" id="filter" name="advancefilter[]" class="form-control">
-                                                    <option v-for="n in filters" :value="n.value">
-                                                        {{n.text}}
-                                                    </option>
-                                                </select>
-                                            </div>
-                                            <select v-model="formdata.filterValue3" id="filter-value" name="filter-value" class="form-control col-md-2 filter-width" :disabled="disableFilterValue3">
-                                                <option v-for="n in filterOptions3" :value="n.value">
-                                                    {{n.text}}
-                                                </option>
-                                            </select>
-                                            <a href="javascript:;" class="filter-close" v-on:click="RemoveAdvanceFilter()"><img :src="base_url+'img/ic_close.png'" alt=""></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="advance-filter-input row">
-                                <div class="advance-filter-row">
-                                    <div class="col-md-5" id="advancefilter3">
-                                        <div class="form-group">
-                                            <label for="" class="col-md-4">Filter By No 4:</label>
-                                            <div class="select-ic ic-filter col-md-6 filter-width">
-                                                <option v-for="n in filters" :value="n.value">
-                                                    {{n.text}}
-                                                </option>
-                                            </div>
-                                            <select v-model="formdata.filterValue4" id="filter-value" name="filter-value" class="form-control col-md-2 filter-width" :disabled="disableFilterValue4">
-                                                <option v-for="n in filterOptions4" :value="n.value">
-                                                    {{n.text}}
-                                                </option>
-                                            </select>
-                                            <a href="javascript:;" class="filter-close" v-on:click="RemoveAdvanceFilter()"><img :src="base_url+'img/ic_close.png'" alt=""></a>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-5" id="advancefilter4">
-                                        <div class="form-group">
-                                            <label for="" class="col-md-4">Filter By No 5:</label>
-                                            <div class="select-ic ic-filter col-md-6 filter-width">
-                                                <option v-for="n in filters" :value="n.value">
-                                                    {{n.text}}
-                                                </option>
-                                            </div>
-                                            <select id="filter-value" name="filter-value" class="form-control col-md-2 filter-width" disabled></select>
-                                            <a href="javascript:;" class="filter-close"><img :src="base_url+'img/ic_close.png'" alt=""></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
+                        <!-- <div class="row">
                             <div class="col-md-3 col-md-offset-9" id="advance-filter-menu">
                                 <ul class="filter-right-menu">
 
@@ -130,24 +55,24 @@
                                 </ul>
                             </div>
                         </div> -->
-                        <div class="advance-filter" v-if="advanceFilter.length > 0" >
+                        <div class="advance-filter" v-if="formdata.advanceFilter.length > 0" >
                             <div class="advance-filter-input row">
                                 <div class="advance-filter-row">
-                                    <div class="col-md-5" v-for="advance in advanceFilter" >
+                                    <div class="col-md-5" v-for="(advance,key) in formdata.advanceFilter" >
                                         <div class="form-group">
-                                            <label for="" class="col-md-4">Filter By No {{advance.id}}:</label>
+                                            <label for="" class="col-md-4">Filter By:</label>
                                             <div class="select-ic ic-filter col-md-6 filter-width">
                                                 <select id="filter" class="form-control" @change="selectAdvanceFilter(advance)" v-model="advance.selectedFilter">
                                                     <option value="" selected hidden>Select Filter</option>
                                                     <option v-for="(item,key) in filters"  v-if="checkFilterSelected(item.value,advance.selectedFilter)"  :value="item.value">{{item.text}}</option>
                                                 </select>
                                             </div>
-                                            <select id="filter-value" name="filter-value" class="form-control col-md-2 filter-width" >
+                                            <select v-model="advance.filterValues" id="filter-value" name="filter-value" class="form-control col-md-2 filter-width" @change="searchFilters()">
                                                 <option v-for="item in advance.advanceFilterValues" :value="item.value">
                                                     {{item.text}}
                                                 </option>
                                             </select>
-                                            <a href="javascript:;" class="filter-close"><img :src="base_url+'img/ic_close.png'" alt=""></a>
+                                            <a href="javascript:;" class="filter-close" @click='RemoveAdvanceFilter()'><img :src="base_url+'img/ic_close.png'" alt=""></a>
                                         </div>
                                     </div>
                                 </div>
@@ -156,7 +81,7 @@
                         <div class="row">
                             <div class="col-md-4 col-md-offset-8" id="advance-filter-menu-open">
                                 <ul class="filter-right-menu">
-                                    <li><a href="javascript:;" class="advance-search" @click="addFilter" >{{ advanceFilter.length <= 0 ? 'Advance Search' : '+ Add Another Filter Fields' }}</a></li>
+                                    <li><a href="javascript:;" class="advance-search" @click="addFilter" >{{ formdata.advanceFilter.length <= 0 ? 'Advance Search' : '+ Add Another Filter Fields' }}</a></li>
                                     <li><a href="javascript:;" class="advance-search" v-on:click="clearFields()">Clear Fields</a></li>
                                 </ul>
                             </div>
@@ -258,6 +183,7 @@
                     filter: '',
                     filterValue: '',
                     sortValue: '',
+                    advanceFilter: [],
                     page: 1
                 },
 
@@ -268,7 +194,6 @@
 
                 recordData: this.results,
 
-                advanceFilter: [],
                 filterSelected: [],
                 filterOptions: [],
 
@@ -285,10 +210,12 @@
                     {value:'0',text:'offline'},
                     {value:'',text:'all'}
                 ],
+
                 gender: [
                     {value:'male',text:'male'},
                     {value:'female',text:'female'},
                 ],
+
                 age: [
                     {value:['16','20'],text:'16 - 20'},
                     {value:['21','25'],text:'21 - 25'},
@@ -300,26 +227,7 @@
             }
         },
         watch: {
-            'formdata.search': function (val) {
-                this.formdata.page = 1
-                window.history.pushState({},"",this.searchUrl+'search='+val+'&')
-                
-                this.getAxios()
-            },
-            'formdata.filter': function (val) {
-                this.filterOptions = this[val];
-                this.disableFilterValue = false;
-            },
 
-            'formdata.filterValue': function (val) {
-                this.formdata.page = 1
-                this.getAxios()
-            },
-
-            'formdata.sortValue': function (val) {
-                this.formdata.page = 1
-                this.getAxios()
-            },
         },
         mounted() {
             $(".main-header > .title").html('<i class="header-ic ic-user-green"></i>Users');
@@ -345,7 +253,7 @@
                 })
 
                 return emotion
-            }
+            },
         },
         methods: {
             selectAdvanceFilter(data,filter = null){
@@ -366,7 +274,6 @@
                 }else{
                     var duplicateId = this.filterSelected.find(item => item.id === 0);
                     var removeSelected = this.filterSelected.indexOf(duplicateId);
-                    console.log(duplicateId)
 
                     if(removeSelected != -1){
                         this.filterSelected.splice(removeSelected,1);
@@ -377,11 +284,13 @@
                         value : filter
                     })
 
-                }
+                    this.filterOptions = this[filter];
+                    this.disableFilterValue = false;
+                }  
             },
 
             addFilter(){
-                this.advanceFilter.push({
+                this.formdata.advanceFilter.push({
                     id: this.advance_filter_id,
                     selectedFilter: '', 
                     advanceFilterValues: '', 
@@ -389,6 +298,7 @@
 
                 this.advance_filter_id = this.advance_filter_id + 1;
             },
+
 
             checkFilterSelected(data,elem){
                 length = this.filterSelected.length;
@@ -425,10 +335,10 @@
                     if (i < lastpage ){
 
                         if (current == counter){
-                            numberstring += '<a class="active" href="' + path + '?page=' + counter +   '">' + counter + '</a>';
+                            numberstring += '<a class="active" href="' + path + '?page=' + counter +   '" @click="preventPage($event)">' + counter + '</a>';
                         }
                         else{
-                            numberstring += '<a href="' + path + '?page=' + counter +   '">' + counter + '</a>';
+                            numberstring += '<a href="' + path + '?page=' + counter +   '" @click="preventPage($event)">' + counter + '</a>';
                         }
                         counter += 1;
                     }
@@ -436,12 +346,28 @@
                 $(".pagination-number").html(numberstring);
             },
 
-            filtertUrl(){
+            updateData(){
 
             },
 
             searchFilters(){
                 let vue = this;
+
+                let filter = vue.formdata;
+                if(filter.advanceFilter.length != 0 ){
+                    filter.advanceFilterValues = JSON.stringify(filter.advanceFilter);
+                }
+
+                if(filter.filter  == 'age'){
+                    filter.ageValue = JSON.stringify(filter.filterValue);
+                }
+
+                let data = {
+                        query:filter
+                    }
+
+                vue.formdata.page = 1
+                vue.$router.push(data);
 
                 axios.get(base_url+'usersfilter?'+window.location.href.split('?')[1]).then(function (response) {
                     vue.recordData = response['data']['content'];
@@ -472,20 +398,23 @@
                 event.preventDefault()
             },
 
+            preventPage(event){
+alert();
+                event.preventDefault()
+            },
+
             clearFields(){
-                this.disableFilterValue = true;
+                this.filterSelected = [];
+                this.filterOptions = [];
+                this.formdata.advanceFilter = [];
+                this.formdata.sortValue = '';
                 this.formdata.search = '';
                 this.formdata.filter = '';
-                this.formdata.filter2 = '';
-                this.formdata.filter3 = '';
-                this.formdata.filter4 = '';
-                this.formdata.filter5 = '';
                 this.formdata.filterValue = '';
-                this.formdata.filterValue2 = '';
-                this.formdata.filterValue3 = '';
-                this.formdata.filterValue4 = '',
-                this.formdata.filterValue5 = '';
                 this.formdata.page = 1
+                this.disableFilterValue = true;
+
+                this.searchFilters()
             },
 
             up_meter: function(val){
@@ -505,28 +434,9 @@
                 }
             },
 
-            OpenAdvanceFilter(){
-                $(".advance-filter").show();
-                $("#advance-filter-menu-open").show();
-                $("#advance-filter-menu").hide();
+            RemoveAdvanceFilter(){
+                alert(this)
             },
-
-            CloseAdvanceFilter(){
-                $(".advance-filter").hide();
-                $("#advance-filter-menu-open").hide();
-                $("#advance-filter-menu").show();
-            },
-
-            // RemoveAdvanceFilter(){
-            //     alert(this)
-            //     $(this).parent('col-md-5').hide()
-            // },
-
-            getAxios: _.debounce(
-                function () {
-                    this.searchFilters()
-                },500
-            )
         }
     }
 </script>
