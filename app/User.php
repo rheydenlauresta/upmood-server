@@ -21,19 +21,27 @@ class User extends Authenticatable
     public static function searchFilter($data)
     {
         $query = DB::table('users as u')
-                ->selectRaw('MAX(r.id) AS record_id,u.image, u.name, u.gender,
+                ->selectRaw('u.image, u.name, u.gender,
                             u.age, u.country, r.heartbeat_count, u.profile_post,
                             if(u.is_online,"online","offline") as active_level,
                             r.emotion_value, r.stress_level,
-                            GROUP_CONCAT(CASE WHEN r.emotion_value = "sad" OR r.emotion_value = "anxious"THEN -3
-                                              WHEN r.emotion_value = "happy" OR r.emotion_value = "zen" OR r.emotion_value = "excitement" THEN 3
-                                              WHEN r.emotion_value = "pleasant" THEN 1
-                                              WHEN r.emotion_value = "unpleasant" OR r.emotion_value = "confused" OR r.emotion_value = "challenged" OR r.emotion_value = "hyped" THEN -1
-                                              WHEN r.emotion_value = "calm" THEN 0
-                                              ELSE 0 END)as upmood_meter
+                            SUM(CASE WHEN up_meter.emotion_value = "sad" OR up_meter.emotion_value = "anxious"THEN -3
+                            WHEN up_meter.emotion_value = "happy" OR up_meter.emotion_value = "zen" OR up_meter.emotion_value = "excitement" THEN 3
+                            WHEN up_meter.emotion_value = "pleasant" OR up_meter.emotion_value = "calm" THEN 1
+                            WHEN up_meter.emotion_value = "unpleasant" OR up_meter.emotion_value = "confused" OR up_meter.emotion_value = "challenged" OR up_meter.emotion_value = "hyped" THEN -1
+                            WHEN up_meter.emotion_value = "loading" THEN 0
+                            ELSE 0 END) / SUM(CASE WHEN up_meter.emotion_value = "sad" OR up_meter.emotion_value = "anxious"THEN 3
+                            WHEN up_meter.emotion_value = "happy" OR up_meter.emotion_value = "zen" OR up_meter.emotion_value = "excitement" THEN 3
+                            WHEN up_meter.emotion_value = "pleasant" OR up_meter.emotion_value = "calm" THEN 1
+                            WHEN up_meter.emotion_value = "unpleasant" OR up_meter.emotion_value = "confused" OR up_meter.emotion_value = "challenged" OR up_meter.emotion_value = "hyped" THEN 1
+                            WHEN up_meter.emotion_value = "loading" THEN 0
+                            ELSE 0 END) * 100 as upmood_meter 
                             ')
                 ->leftJoin('records as r',function($qry){
                     $qry->on('r.user_id', '=', 'u.id')->where('r.id','=',DB::raw('(select max(records.id) from records where records.user_id = u.id)'));
+                })
+                ->leftJoin('records as up_meter',function($qry){
+                    $qry->on('up_meter.user_id', '=', 'u.id');
                 });
 
         $res = User::filters($query, $data)->groupBy('name')
@@ -45,12 +53,26 @@ class User extends Authenticatable
     public static function advCardCounts($data){
 
         $query = DB::table('users as u')
-                ->selectRaw('MAX(r.id) AS record_id,u.image, u.name, u.gender,
+                ->selectRaw('u.image, u.name, u.gender,
                             u.age, u.country, r.heartbeat_count, u.profile_post,
                             if(u.is_online,"online","offline") as active_level,
-                            r.emotion_value, r.stress_level, COUNT( CASE WHEN gender = "male" THEN 1 END ) as maleRatio, COUNT( CASE WHEN gender = "female" THEN 1 END ) as femaleRatio,  COUNT(DISTINCT country) as countryCount')
+                            r.emotion_value, r.stress_level, COUNT( CASE WHEN gender = "male" THEN 1 END ) as maleRatio, COUNT( CASE WHEN gender = "female" THEN 1 END ) as femaleRatio,  COUNT(DISTINCT country) as countryCount,
+                            SUM(CASE WHEN up_meter.emotion_value = "sad" OR up_meter.emotion_value = "anxious"THEN -3
+                            WHEN up_meter.emotion_value = "happy" OR up_meter.emotion_value = "zen" OR up_meter.emotion_value = "excitement" THEN 3
+                            WHEN up_meter.emotion_value = "pleasant" OR up_meter.emotion_value = "calm" THEN 1
+                            WHEN up_meter.emotion_value = "unpleasant" OR up_meter.emotion_value = "confused" OR up_meter.emotion_value = "challenged" OR up_meter.emotion_value = "hyped" THEN -1
+                            WHEN up_meter.emotion_value = "loading" THEN 0
+                            ELSE 0 END) / SUM(CASE WHEN up_meter.emotion_value = "sad" OR up_meter.emotion_value = "anxious"THEN 3
+                            WHEN up_meter.emotion_value = "happy" OR up_meter.emotion_value = "zen" OR up_meter.emotion_value = "excitement" THEN 3
+                            WHEN up_meter.emotion_value = "pleasant" OR up_meter.emotion_value = "calm" THEN 1
+                            WHEN up_meter.emotion_value = "unpleasant" OR up_meter.emotion_value = "confused" OR up_meter.emotion_value = "challenged" OR up_meter.emotion_value = "hyped" THEN 1
+                            WHEN up_meter.emotion_value = "loading" THEN 0
+                            ELSE 0 END) * 100 as upmood_meter')
                 ->leftJoin('records as r',function($qry){
                     $qry->on('r.user_id', '=', 'u.id')->where('r.id','=',DB::raw('(select max(records.id) from records where records.user_id = u.id)'));
+                })
+                ->leftJoin('records as up_meter',function($qry){
+                    $qry->on('up_meter.user_id', '=', 'u.id');
                 });
 
         $res = User::filters($query, $data)->first();
@@ -59,14 +81,14 @@ class User extends Authenticatable
     }
 
     public static function filters($query, $data){
-        if(isset($data['search']) && $data['search'] != '' && $data['search'] != null){
+        if(isset($data['search']) && $data['search'] != ''){
             $query = $query->where(function($qry) use($data){
                 $qry->where('name','like','%'.$data['search'].'%')
                     ->orWhere('profile_post','like','%'.$data['search'].'%')
-                    ->orWhere('emotion_value','like','%'.$data['search'].'%');
+                    ->orWhere('r.emotion_value','like','%'.$data['search'].'%');
             });
         }
-        if(isset($data['filterValue']) && $data['filterValue'] != '' && $data['filterValue'] != null){
+        if(isset($data['filterValue']) && $data['filterValue'] != ''){
             if($data['filter'] == 'age'){
                 $query = $query->where(function($qry) use($data){
                     $qry->whereBetween('age',$data['filterValue']);
@@ -76,7 +98,67 @@ class User extends Authenticatable
                     $qry->where('gender','like',$data['filterValue']);
                     $qry->orWhere('is_online','like',$data['filterValue']);
                     $qry->orWhere('country','like',$data['filterValue']);
-                    $qry->orWhere('emotion_value','like',$data['filterValue']);
+                    $qry->orWhere('r.emotion_value','like',$data['filterValue']);
+                });
+            }
+        }
+
+        if(isset($data['filterValue2']) && $data['filterValue2'] != ''){
+            if($data['filter2'] == 'age'){
+                $query = $query->where(function($qry) use($data){
+                    $qry->whereBetween('age',$data['filterValue2']);
+                });
+            }else{
+                $query = $query->where(function($qry) use($data){
+                    $qry->where('gender','like',$data['filterValue2']);
+                    $qry->orWhere('is_online','like',$data['filterValue2']);
+                    $qry->orWhere('country','like',$data['filterValue2']);
+                    $qry->orWhere('r.emotion_value','like',$data['filterValue2']);
+                });
+            }
+        }
+
+        if(isset($data['filterValue3']) && $data['filterValue3'] != ''){
+            if($data['filter3'] == 'age'){
+                $query = $query->where(function($qry) use($data){
+                    $qry->whereBetween('age',$data['filterValue3']);
+                });
+            }else{
+                $query = $query->where(function($qry) use($data){
+                    $qry->where('gender','like',$data['filterValue3']);
+                    $qry->orWhere('is_online','like',$data['filterValue3']);
+                    $qry->orWhere('country','like',$data['filterValue3']);
+                    $qry->orWhere('r.emotion_value','like',$data['filterValue3']);
+                });
+            }
+        }
+
+        if(isset($data['filterValue4']) && $data['filterValue4'] != ''){
+            if($data['filter4'] == 'age'){
+                $query = $query->where(function($qry) use($data){
+                    $qry->whereBetween('age',$data['filterValue4']);
+                });
+            }else{
+                $query = $query->where(function($qry) use($data){
+                    $qry->where('gender','like',$data['filterValue4']);
+                    $qry->orWhere('is_online','like',$data['filterValue4']);
+                    $qry->orWhere('country','like',$data['filterValue4']);
+                    $qry->orWhere('r.emotion_value','like',$data['filterValue4']);
+                });
+            }
+        }
+
+        if(isset($data['filterValue5']) && $data['filterValue5'] != ''){
+            if($data['filter5'] == 'age'){
+                $query = $query->where(function($qry) use($data){
+                    $qry->whereBetween('age',$data['filterValue5']);
+                });
+            }else{
+                $query = $query->where(function($qry) use($data){
+                    $qry->where('gender','like',$data['filterValue5']);
+                    $qry->orWhere('is_online','like',$data['filterValue5']);
+                    $qry->orWhere('country','like',$data['filterValue5']);
+                    $qry->orWhere('r.emotion_value','like',$data['filterValue5']);
                 });
             }
         }

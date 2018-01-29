@@ -27,7 +27,7 @@ Route::get('/dashboard', 'DashboardController@index');
 
 // user
 Route::get('/userslist', 'UsersController@usersList');
-Route::post('/usersfilter', 'UsersController@userFilter');
+Route::get('/usersfilter', 'UsersController@userFilter');
 
 // messages
 
