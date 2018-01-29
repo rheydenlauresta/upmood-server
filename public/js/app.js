@@ -1072,7 +1072,7 @@ module.exports = Cancel;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(11);
-module.exports = __webpack_require__(54);
+module.exports = __webpack_require__(57);
 
 
 /***/ }),
@@ -1101,6 +1101,7 @@ Vue.component('login', __webpack_require__(42));
 Vue.component('passwordreset', __webpack_require__(45));
 Vue.component('dashboard', __webpack_require__(48));
 Vue.component('users-component', __webpack_require__(51));
+Vue.component('messages-component', __webpack_require__(54));
 
 var app = new Vue({
   el: '#app'
@@ -1108,6 +1109,19 @@ var app = new Vue({
 
 $(document).ready(function () {
   $('.scrollbar-outer').scrollbar();
+});
+
+$(window).on('resize', function () {
+  if ($(".messages-wrapper").length) {
+    var wrapper_width = $(".messages-wrapper").css('width').replace('px', '');
+    var nav = $(".messages-nav").css('width').replace('px', '');
+    var list = $(".messages-list").css('width').replace('px', '');
+    var new_width = parseInt(wrapper_width) - (parseInt(nav) + parseInt(list));
+    $(".messages-content").css('width', new_width + "px");
+
+    var nav_height = $(".messages-nav").css('height');
+    $(".messages-content").css('height', nav_height);
+  }
 });
 
 /***/ }),
@@ -44211,6 +44225,54 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['results', 'countries', 'emotions'],
@@ -44218,8 +44280,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
             base_url: window.base_url,
+            searchUrl: window.base_url + 'userslist?',
 
             advance_filter: 1,
+            advance_filter_id: 1,
 
             disableFilterValue: true,
 
@@ -44234,10 +44298,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             maleRatio: 0,
             femaleRatio: 0,
             countryCount: 0,
+            avgUpmoodmeter: '',
 
             recordData: this.results,
 
+            advanceFilter: [],
+            filterSelected: [],
             filterOptions: [],
+
+            filters: [{ value: 'active', text: 'Active Level' }, { value: 'location', text: 'Location' }, { value: 'gender', text: 'Gender' }, { value: 'age', text: 'Age' }, { value: 'emotion', text: 'Current Emotion' }],
 
             active: [{ value: '1', text: 'online' }, { value: '0', text: 'offline' }, { value: '', text: 'all' }],
             gender: [{ value: 'male', text: 'male' }, { value: 'female', text: 'female' }],
@@ -44248,19 +44317,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     watch: {
         'formdata.search': function formdataSearch(val) {
             this.formdata.page = 1;
+            window.history.pushState({}, "", this.searchUrl + 'search=' + val + '&');
+
             this.getAxios();
         },
         'formdata.filter': function formdataFilter(val) {
             this.filterOptions = this[val];
             this.disableFilterValue = false;
         },
-        'formdata.filterValue': function formdataFilterValue(val) {
 
+        'formdata.filterValue': function formdataFilterValue(val) {
             this.formdata.page = 1;
             this.getAxios();
         },
-        'formdata.sortValue': function formdataSortValue(val) {
 
+        'formdata.sortValue': function formdataSortValue(val) {
             this.formdata.page = 1;
             this.getAxios();
         }
@@ -44292,6 +44363,65 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     methods: {
+        selectAdvanceFilter: function selectAdvanceFilter(data) {
+            var filter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+            if (data != null) {
+                data.advanceFilterValues = this[data.selectedFilter];
+
+                var duplicateId = this.filterSelected.find(function (item) {
+                    return item.id === data.id;
+                });
+                var removeSelected = this.filterSelected.indexOf(duplicateId);
+
+                if (removeSelected != -1) {
+                    this.filterSelected.splice(removeSelected, 1);
+                }
+
+                this.filterSelected.push({
+                    id: data.id,
+                    value: data.selectedFilter
+                });
+            } else {
+                var duplicateId = this.filterSelected.find(function (item) {
+                    return item.id === 0;
+                });
+                var removeSelected = this.filterSelected.indexOf(duplicateId);
+                console.log(duplicateId);
+
+                if (removeSelected != -1) {
+                    this.filterSelected.splice(removeSelected, 1);
+                }
+
+                this.filterSelected.push({
+                    id: 0,
+                    value: filter
+                });
+            }
+        },
+        addFilter: function addFilter() {
+            this.advanceFilter.push({
+                id: this.advance_filter_id,
+                selectedFilter: '',
+                advanceFilterValues: ''
+            });
+
+            this.advance_filter_id = this.advance_filter_id + 1;
+        },
+        checkFilterSelected: function checkFilterSelected(data, elem) {
+            length = this.filterSelected.length;
+
+            for (var i = 0; i < length; i++) {
+
+                if (elem != data) {
+                    if (this.filterSelected[i].value == data) {
+
+                        return false;
+                    }
+                }
+            }
+            return true;
+        },
         generatePaginationNumbers: function generatePaginationNumbers() {
             var current = this.recordData.current_page;
             var counter = this.recordData.current_page;
@@ -44321,15 +44451,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
             $(".pagination-number").html(numberstring);
         },
+        filtertUrl: function filtertUrl() {},
         searchFilters: function searchFilters() {
             var vue = this;
 
-            axios.post(base_url + 'usersfilter', this.formdata).then(function (response) {
+            axios.get(base_url + 'usersfilter?' + window.location.href.split('?')[1]).then(function (response) {
                 vue.recordData = response['data']['content'];
                 vue.recordData.current_page = vue.formdata.page;
                 vue.maleRatio = response['data']['counts'].maleRatio;
                 vue.femaleRatio = response['data']['counts'].femaleRatio;
                 vue.countryCount = response['data']['counts'].countryCount;
+                vue.avgUpmoodmeter = response['data']['counts'].upmood_meter;
                 vue.generatePaginationNumbers();
             }).catch(function (error) {});
         },
@@ -44349,8 +44481,37 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         clearFields: function clearFields() {
             this.disableFilterValue = true;
-            this.formdata.search = '', this.formdata.filter = '', this.formdata.filterValue = '', this.formdata.page = 1;
+            this.formdata.search = '';
+            this.formdata.filter = '';
+            this.formdata.filter2 = '';
+            this.formdata.filter3 = '';
+            this.formdata.filter4 = '';
+            this.formdata.filter5 = '';
+            this.formdata.filterValue = '';
+            this.formdata.filterValue2 = '';
+            this.formdata.filterValue3 = '';
+            this.formdata.filterValue4 = '', this.formdata.filterValue5 = '';
+            this.formdata.page = 1;
         },
+
+
+        up_meter: function up_meter(val) {
+            if (val == null) {
+                return "No Record Found";
+            }
+            if (val <= -61) {
+                return 'Sad';
+            } else if (val <= -21) {
+                return 'Unpleasant';
+            } else if (val <= 20) {
+                return 'Calm';
+            } else if (val <= 60) {
+                return 'Pleasant';
+            } else if (val <= 100) {
+                return 'Happy';
+            }
+        },
+
         OpenAdvanceFilter: function OpenAdvanceFilter() {
             $(".advance-filter").show();
             $("#advance-filter-menu-open").show();
@@ -44361,11 +44522,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             $("#advance-filter-menu-open").hide();
             $("#advance-filter-menu").show();
         },
-        AddAdvanceFilter: function AddAdvanceFilter() {
-            this.advance_filter = this.advance_filter + 1;
-            $("#advancefilter" + this.advance_filter).show();
-        },
 
+
+        // RemoveAdvanceFilter(){
+        //     alert(this)
+        //     $(this).parent('col-md-5').hide()
+        // },
 
         getAxios: _.debounce(function () {
             this.searchFilters();
@@ -44448,23 +44610,28 @@ var render = function() {
                         staticClass: "form-control",
                         attrs: { id: "filter", name: "filter" },
                         on: {
-                          change: function($event) {
-                            var $$selectedVal = Array.prototype.filter
-                              .call($event.target.options, function(o) {
-                                return o.selected
-                              })
-                              .map(function(o) {
-                                var val = "_value" in o ? o._value : o.value
-                                return val
-                              })
-                            _vm.$set(
-                              _vm.formdata,
-                              "filter",
-                              $event.target.multiple
-                                ? $$selectedVal
-                                : $$selectedVal[0]
-                            )
-                          }
+                          change: [
+                            function($event) {
+                              var $$selectedVal = Array.prototype.filter
+                                .call($event.target.options, function(o) {
+                                  return o.selected
+                                })
+                                .map(function(o) {
+                                  var val = "_value" in o ? o._value : o.value
+                                  return val
+                                })
+                              _vm.$set(
+                                _vm.formdata,
+                                "filter",
+                                $event.target.multiple
+                                  ? $$selectedVal
+                                  : $$selectedVal[0]
+                              )
+                            },
+                            function($event) {
+                              _vm.selectAdvanceFilter(null, _vm.formdata.filter)
+                            }
+                          ]
                         }
                       },
                       [
@@ -44474,26 +44641,20 @@ var render = function() {
                           [_vm._v("Select Filter")]
                         ),
                         _vm._v(" "),
-                        _c("option", { attrs: { value: "active" } }, [
-                          _vm._v("Active Level")
-                        ]),
-                        _vm._v(" "),
-                        _c("option", { attrs: { value: "location" } }, [
-                          _vm._v("Location")
-                        ]),
-                        _vm._v(" "),
-                        _c("option", { attrs: { value: "gender" } }, [
-                          _vm._v("Gender")
-                        ]),
-                        _vm._v(" "),
-                        _c("option", { attrs: { value: "age" } }, [
-                          _vm._v("Age")
-                        ]),
-                        _vm._v(" "),
-                        _c("option", { attrs: { value: "emotion" } }, [
-                          _vm._v("Current Emotion")
-                        ])
-                      ]
+                        _vm._l(_vm.filters, function(item, key) {
+                          return _vm.checkFilterSelected(
+                            item.value,
+                            _vm.formdata.filter
+                          )
+                            ? _c(
+                                "option",
+                                { domProps: { value: item.value } },
+                                [_vm._v(_vm._s(item.text))]
+                              )
+                            : _vm._e()
+                        })
+                      ],
+                      2
                     )
                   ]),
                   _vm._v(" "),
@@ -44534,11 +44695,11 @@ var render = function() {
                         }
                       }
                     },
-                    _vm._l(_vm.filterOptions, function(n) {
-                      return _c("option", { domProps: { value: n.value } }, [
+                    _vm._l(_vm.filterOptions, function(item) {
+                      return _c("option", { domProps: { value: item.value } }, [
                         _vm._v(
                           "\n                                    " +
-                            _vm._s(n.text) +
+                            _vm._s(item.text) +
                             "\n                                "
                         )
                       ])
@@ -44611,154 +44772,165 @@ var render = function() {
                 ])
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "advance-filter" }, [
-                _c("div", { staticClass: "advance-filter-input row" }, [
-                  _c("div", { staticClass: "advance-filter-row" }, [
-                    _c(
-                      "div",
-                      {
-                        staticClass: "col-md-5",
-                        attrs: { id: "advancefilter1" }
-                      },
-                      [
-                        _c("div", { staticClass: "form-group" }, [
-                          _c(
-                            "label",
-                            { staticClass: "col-md-4", attrs: { for: "" } },
-                            [_vm._v("Filter By No 2:")]
-                          ),
-                          _vm._v(" "),
-                          _vm._m(0),
-                          _vm._v(" "),
-                          _c("select", {
-                            staticClass: "form-control col-md-2 filter-width",
-                            attrs: {
-                              id: "filter-value",
-                              name: "filter-value",
-                              disabled: ""
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c(
-                            "a",
-                            {
-                              staticClass: "filter-close",
-                              attrs: { href: "javascript:;" }
-                            },
-                            [
-                              _c("img", {
-                                attrs: {
-                                  src: _vm.base_url + "img/ic_close.png",
-                                  alt: ""
-                                }
-                              })
-                            ]
-                          )
-                        ])
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      {
-                        staticClass: "col-md-5",
-                        attrs: { id: "advancefilter2" }
-                      },
-                      [
-                        _c("div", { staticClass: "form-group" }, [
-                          _c(
-                            "label",
-                            { staticClass: "col-md-4", attrs: { for: "" } },
-                            [_vm._v("Filter By No 3:")]
-                          ),
-                          _vm._v(" "),
-                          _vm._m(1),
-                          _vm._v(" "),
-                          _c("select", {
-                            staticClass: "form-control col-md-2 filter-width",
-                            attrs: {
-                              id: "filter-value",
-                              name: "filter-value",
-                              disabled: ""
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c(
-                            "a",
-                            {
-                              staticClass: "filter-close",
-                              attrs: { href: "javascript:;" }
-                            },
-                            [
-                              _c("img", {
-                                attrs: {
-                                  src: _vm.base_url + "img/ic_close.png",
-                                  alt: ""
-                                }
-                              })
-                            ]
-                          )
-                        ])
-                      ]
-                    )
+              _vm.advanceFilter.length > 0
+                ? _c("div", { staticClass: "advance-filter" }, [
+                    _c("div", { staticClass: "advance-filter-input row" }, [
+                      _c(
+                        "div",
+                        { staticClass: "advance-filter-row" },
+                        _vm._l(_vm.advanceFilter, function(advance) {
+                          return _c("div", { staticClass: "col-md-5" }, [
+                            _c("div", { staticClass: "form-group" }, [
+                              _c(
+                                "label",
+                                { staticClass: "col-md-4", attrs: { for: "" } },
+                                [
+                                  _vm._v(
+                                    "Filter By No " + _vm._s(advance.id) + ":"
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                {
+                                  staticClass:
+                                    "select-ic ic-filter col-md-6 filter-width"
+                                },
+                                [
+                                  _c(
+                                    "select",
+                                    {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: advance.selectedFilter,
+                                          expression: "advance.selectedFilter"
+                                        }
+                                      ],
+                                      staticClass: "form-control",
+                                      attrs: { id: "filter" },
+                                      on: {
+                                        change: [
+                                          function($event) {
+                                            var $$selectedVal = Array.prototype.filter
+                                              .call(
+                                                $event.target.options,
+                                                function(o) {
+                                                  return o.selected
+                                                }
+                                              )
+                                              .map(function(o) {
+                                                var val =
+                                                  "_value" in o
+                                                    ? o._value
+                                                    : o.value
+                                                return val
+                                              })
+                                            _vm.$set(
+                                              advance,
+                                              "selectedFilter",
+                                              $event.target.multiple
+                                                ? $$selectedVal
+                                                : $$selectedVal[0]
+                                            )
+                                          },
+                                          function($event) {
+                                            _vm.selectAdvanceFilter(advance)
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    [
+                                      _c(
+                                        "option",
+                                        {
+                                          attrs: {
+                                            value: "",
+                                            selected: "",
+                                            hidden: ""
+                                          }
+                                        },
+                                        [_vm._v("Select Filter")]
+                                      ),
+                                      _vm._v(" "),
+                                      _vm._l(_vm.filters, function(item, key) {
+                                        return _vm.checkFilterSelected(
+                                          item.value,
+                                          advance.selectedFilter
+                                        )
+                                          ? _c(
+                                              "option",
+                                              {
+                                                domProps: { value: item.value }
+                                              },
+                                              [_vm._v(_vm._s(item.text))]
+                                            )
+                                          : _vm._e()
+                                      })
+                                    ],
+                                    2
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "select",
+                                {
+                                  staticClass:
+                                    "form-control col-md-2 filter-width",
+                                  attrs: {
+                                    id: "filter-value",
+                                    name: "filter-value"
+                                  }
+                                },
+                                _vm._l(advance.advanceFilterValues, function(
+                                  item
+                                ) {
+                                  return _c(
+                                    "option",
+                                    { domProps: { value: item.value } },
+                                    [
+                                      _vm._v(
+                                        "\n                                                " +
+                                          _vm._s(item.text) +
+                                          "\n                                            "
+                                      )
+                                    ]
+                                  )
+                                })
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "a",
+                                {
+                                  staticClass: "filter-close",
+                                  attrs: { href: "javascript:;" }
+                                },
+                                [
+                                  _c("img", {
+                                    attrs: {
+                                      src: _vm.base_url + "img/ic_close.png",
+                                      alt: ""
+                                    }
+                                  })
+                                ]
+                              )
+                            ])
+                          ])
+                        })
+                      )
+                    ])
                   ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "advance-filter-input row" }, [
-                  _c("div", { staticClass: "advance-filter-row" }, [
-                    _c(
-                      "div",
-                      {
-                        staticClass: "col-md-5",
-                        attrs: { id: "advancefilter3" }
-                      },
-                      [
-                        _c("div", { staticClass: "form-group" }, [
-                          _c(
-                            "label",
-                            { staticClass: "col-md-4", attrs: { for: "" } },
-                            [_vm._v("Filter By No 4:")]
-                          ),
-                          _vm._v(" "),
-                          _vm._m(2),
-                          _vm._v(" "),
-                          _c("select", {
-                            staticClass: "form-control col-md-2 filter-width",
-                            attrs: {
-                              id: "filter-value",
-                              name: "filter-value",
-                              disabled: ""
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c(
-                            "a",
-                            {
-                              staticClass: "filter-close",
-                              attrs: { href: "javascript:;" }
-                            },
-                            [
-                              _c("img", {
-                                attrs: {
-                                  src: _vm.base_url + "img/ic_close.png",
-                                  alt: ""
-                                }
-                              })
-                            ]
-                          )
-                        ])
-                      ]
-                    )
-                  ])
-                ])
-              ]),
+                : _vm._e(),
               _vm._v(" "),
               _c("div", { staticClass: "row" }, [
                 _c(
                   "div",
                   {
-                    staticClass: "col-md-3 col-md-offset-9",
-                    attrs: { id: "advance-filter-menu" }
+                    staticClass: "col-md-4 col-md-offset-8",
+                    attrs: { id: "advance-filter-menu-open" }
                   },
                   [
                     _c("ul", { staticClass: "filter-right-menu" }, [
@@ -44768,9 +44940,17 @@ var render = function() {
                           {
                             staticClass: "advance-search",
                             attrs: { href: "javascript:;" },
-                            on: { click: _vm.OpenAdvanceFilter }
+                            on: { click: _vm.addFilter }
                           },
-                          [_vm._v("Advance Search")]
+                          [
+                            _vm._v(
+                              _vm._s(
+                                _vm.advanceFilter.length <= 0
+                                  ? "Advance Search"
+                                  : "+ Add Another Filter Fields"
+                              )
+                            )
+                          ]
                         )
                       ]),
                       _vm._v(" "),
@@ -44787,41 +44967,6 @@ var render = function() {
                             }
                           },
                           [_vm._v("Clear Fields")]
-                        )
-                      ])
-                    ])
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    staticClass: "col-md-4 col-md-offset-8",
-                    attrs: { id: "advance-filter-menu-open" }
-                  },
-                  [
-                    _c("ul", { staticClass: "filter-right-menu" }, [
-                      _c("li", [
-                        _c(
-                          "a",
-                          {
-                            staticClass: "advance-search",
-                            attrs: { href: "javascript:;" },
-                            on: { click: _vm.AddAdvanceFilter }
-                          },
-                          [_vm._v("+ Add Another Filter Fields")]
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("li", [
-                        _c(
-                          "a",
-                          {
-                            staticClass: "advance-search",
-                            attrs: { href: "javascript:;" },
-                            on: { click: _vm.CloseAdvanceFilter }
-                          },
-                          [_vm._v("Close Advance Filter")]
                         )
                       ])
                     ])
@@ -44908,14 +45053,26 @@ var render = function() {
                     )
                   : _vm._e(),
                 _vm._v(" "),
-                _vm._m(3)
+                _c(
+                  "div",
+                  { staticClass: "advance-card advance-meter col-md-3" },
+                  [
+                    _c("div", { staticClass: "meter-value" }, [
+                      _vm._v(_vm._s(_vm.up_meter(_vm.avgUpmoodmeter)))
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "advance-card-label" }, [
+                      _vm._v("Average Upmood Meter")
+                    ])
+                  ]
+                )
               ])
             ]
           )
         ]),
         _vm._v(" "),
         _c("table", { staticClass: "table table-stripe users-table" }, [
-          _vm._m(4),
+          _vm._m(0),
           _vm._v(" "),
           _c(
             "tbody",
@@ -44946,7 +45103,7 @@ var render = function() {
                 _vm._v(" "),
                 _c("td", [_vm._v(_vm._s(user.profile_post))]),
                 _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(user.upmood_meter))]),
+                _c("td", [_vm._v(_vm._s(_vm.up_meter(user.upmood_meter)))]),
                 _vm._v(" "),
                 _c("td", [_vm._v(_vm._s(user.country))]),
                 _vm._v(" "),
@@ -45006,105 +45163,6 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      { staticClass: "select-ic ic-filter col-md-6 filter-width" },
-      [
-        _c(
-          "select",
-          {
-            staticClass: "form-control",
-            attrs: { id: "filter", name: "advancefilter[]" }
-          },
-          [
-            _c("option", { attrs: { value: "", selected: "", hidden: "" } }, [
-              _vm._v("Select Filter")
-            ]),
-            _vm._v(" "),
-            _c("option", { attrs: { value: "location" } }, [
-              _vm._v("Location")
-            ]),
-            _vm._v(" "),
-            _c("option", { attrs: { value: "gender" } }, [_vm._v("Gender")])
-          ]
-        )
-      ]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      { staticClass: "select-ic ic-filter col-md-6 filter-width" },
-      [
-        _c(
-          "select",
-          {
-            staticClass: "form-control",
-            attrs: { id: "filter", name: "advancefilter[]" }
-          },
-          [
-            _c("option", { attrs: { value: "", selected: "", hidden: "" } }, [
-              _vm._v("Select Filter")
-            ]),
-            _vm._v(" "),
-            _c("option", { attrs: { value: "location" } }, [
-              _vm._v("Location")
-            ]),
-            _vm._v(" "),
-            _c("option", { attrs: { value: "gender" } }, [_vm._v("Gender")])
-          ]
-        )
-      ]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      { staticClass: "select-ic ic-filter col-md-6 filter-width" },
-      [
-        _c(
-          "select",
-          {
-            staticClass: "form-control",
-            attrs: { id: "filter", name: "advancefilter[]" }
-          },
-          [
-            _c("option", { attrs: { value: "", selected: "", hidden: "" } }, [
-              _vm._v("Select Filter")
-            ]),
-            _vm._v(" "),
-            _c("option", { attrs: { value: "location" } }, [
-              _vm._v("Location")
-            ]),
-            _vm._v(" "),
-            _c("option", { attrs: { value: "gender" } }, [_vm._v("Gender")])
-          ]
-        )
-      ]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "advance-card advance-meter col-md-3" }, [
-      _c("div", { staticClass: "meter-value" }, [_vm._v("Calm")]),
-      _vm._v(" "),
-      _c("div", { staticClass: "advance-card-label" }, [
-        _vm._v("Average Upmood Meter")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
     return _c("thead", [
       _c("th", [_vm._v("Image")]),
       _vm._v(" "),
@@ -45141,6 +45199,433 @@ if (false) {
 
 /***/ }),
 /* 54 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(55)
+/* template */
+var __vue_template__ = __webpack_require__(56)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\Messages.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-ade8bc7a", Component.options)
+  } else {
+    hotAPI.reload("data-v-ade8bc7a", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 55 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            base_url: window.base_url
+        };
+    },
+    mounted: function mounted() {
+        this.resizeMessageContent();
+        $(".main-header > .title").html('<i class="header-ic ic-message-green"></i>Messages');
+    },
+
+    methods: {
+        resizeMessageContent: function resizeMessageContent() {
+            var wrapper_width = $(".messages-wrapper").css('width').replace('px', '');
+            var nav = $(".messages-nav").css('width').replace('px', '');
+            var list = $(".messages-list").css('width').replace('px', '');
+            var new_width = parseInt(wrapper_width) - (parseInt(nav) + parseInt(list));
+            $(".messages-content").css('width', new_width + "px");
+
+            var nav_height = $(".messages-nav").css('height');
+            $(".messages-content").css('height', nav_height);
+        }
+    }
+});
+
+/***/ }),
+/* 56 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "messages-wrapper" }, [
+    _vm._m(0),
+    _vm._v(" "),
+    _c("div", { staticClass: "messages-list" }, [
+      _c("form", { attrs: { action: "", method: "post" } }, [
+        _c("input", {
+          attrs: { type: "hidden" },
+          domProps: { value: _vm.csrf }
+        }),
+        _vm._v(" "),
+        _vm._m(1)
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "messages-row-wrapper" }, [
+        _c("ul", { staticClass: "message-row-menu" }, [
+          _c("li", { staticClass: "messages-row" }, [
+            _c("div", { staticClass: "message-header row" }, [
+              _c("div", { staticClass: "col-md-2" }, [
+                _c("div", { staticClass: "image-wrapper " }, [
+                  _c("img", {
+                    attrs: {
+                      src: _vm.base_url + "img/profile-avatar.png",
+                      alt: ""
+                    }
+                  })
+                ])
+              ]),
+              _vm._v(" "),
+              _vm._m(2),
+              _vm._v(" "),
+              _vm._m(3)
+            ]),
+            _vm._v(" "),
+            _vm._m(4)
+          ]),
+          _vm._v(" "),
+          _c("li", { staticClass: "messages-row active" }, [
+            _c("div", { staticClass: "message-header row" }, [
+              _c("div", { staticClass: "col-md-2" }, [
+                _c("div", { staticClass: "image-wrapper " }, [
+                  _c("img", {
+                    attrs: {
+                      src: _vm.base_url + "img/profile-avatar.png",
+                      alt: ""
+                    }
+                  })
+                ])
+              ]),
+              _vm._v(" "),
+              _vm._m(5),
+              _vm._v(" "),
+              _vm._m(6)
+            ]),
+            _vm._v(" "),
+            _vm._m(7)
+          ]),
+          _vm._v(" "),
+          _c("li", { staticClass: "messages-row" }, [
+            _c("div", { staticClass: "message-header row" }, [
+              _c("div", { staticClass: "col-md-2" }, [
+                _c("div", { staticClass: "image-wrapper " }, [
+                  _c("img", {
+                    attrs: {
+                      src: _vm.base_url + "img/profile-avatar.png",
+                      alt: ""
+                    }
+                  })
+                ])
+              ]),
+              _vm._v(" "),
+              _vm._m(8),
+              _vm._v(" "),
+              _vm._m(9)
+            ]),
+            _vm._v(" "),
+            _vm._m(10)
+          ])
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "messages-content" })
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "messages-nav" }, [
+      _c("button", { staticClass: "btn btn-success compose" }, [
+        _vm._v("Compose")
+      ]),
+      _vm._v(" "),
+      _c("ul", { staticClass: "menu-list" }, [
+        _c("li", [
+          _c("a", { attrs: { href: "javascript:;" } }, [_vm._v("Inbox")])
+        ]),
+        _vm._v(" "),
+        _c("li", [
+          _c("a", { attrs: { href: "javascript:;" } }, [_vm._v("Send")])
+        ]),
+        _vm._v(" "),
+        _c("li", { staticClass: "seperator" }),
+        _vm._v(" "),
+        _c("li", [
+          _c("a", { attrs: { href: "javascript:;" } }, [_vm._v("General")])
+        ]),
+        _vm._v(" "),
+        _c("li", [
+          _c("a", { attrs: { href: "javascript:;" } }, [_vm._v("Inquires")])
+        ]),
+        _vm._v(" "),
+        _c("li", [
+          _c("a", { attrs: { href: "javascript:;" } }, [_vm._v("Reports")])
+        ]),
+        _vm._v(" "),
+        _c("li", [
+          _c("a", { attrs: { href: "javascript:;" } }, [
+            _vm._v("Account Cancellation")
+          ])
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "input-ic ic-search messages-search-wrapper" },
+      [
+        _c("input", {
+          staticClass: "form-control messages-search",
+          attrs: {
+            type: "text",
+            name: "messages-search",
+            placeholder: "Search Messages"
+          }
+        })
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-6" }, [
+      _c("div", { staticClass: "name" }, [_vm._v("John Michael Cruz")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "subject" }, [_vm._v("Inquire")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-3" }, [
+      _c("div", { staticClass: "time pull-right" }, [_vm._v("10:52 AM")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "message-glance col-md-11" }, [
+        _vm._v(
+          "\n                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ..........\n                        "
+        )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-6" }, [
+      _c("div", { staticClass: "name" }, [_vm._v("John Michael Cruz")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "subject" }, [_vm._v("Inquire")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-3" }, [
+      _c("div", { staticClass: "time pull-right" }, [_vm._v("10:52 AM")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "message-glance col-md-11" }, [
+        _vm._v(
+          "\n                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ..........\n                        "
+        )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-6" }, [
+      _c("div", { staticClass: "name" }, [_vm._v("John Michael Cruz")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "subject" }, [_vm._v("Inquire")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-3" }, [
+      _c("div", { staticClass: "time pull-right" }, [_vm._v("10:52 AM")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "message-glance col-md-11" }, [
+        _vm._v(
+          "\n                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ..........\n                        "
+        )
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-ade8bc7a", module.exports)
+  }
+}
+
+/***/ }),
+/* 57 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

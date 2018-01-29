@@ -14,28 +14,21 @@
                             <div class="form-group col-md-4">
                                 <label for="filter">Filter By:</label>
                                 <div class="select-ic ic-filter half-input">
-                                    <select v-model="formdata.filter" id="filter" name="filter" class="form-control">
+                                    <select v-model="formdata.filter" id="filter" name="filter"  @change="selectAdvanceFilter(null,formdata.filter)" class="form-control">
                                         <option value="" selected hidden>Select Filter</option>
-                                        <option value="active">Active Level</option>
-                                        <!-- <option value="name">Name</option> -->
-                                        <option value="location">Location</option>
-                                        <option value="gender">Gender</option>
-                                        <option value="age">Age</option>
-                                        <option value="emotion">Current Emotion</option>
-                                        <!-- <option value="profile_post">Status</option> -->
-
+                                        <option v-for="(item,key) in filters"  v-if="checkFilterSelected(item.value,formdata.filter)"  :value="item.value">{{item.text}}</option>
                                     </select>
                                 </div>
                                 <select v-model="formdata.filterValue" id="filter-value" name="filter-value" class="form-control half-input" :disabled="disableFilterValue" >
-                                    <option v-for="n in filterOptions" :value="n.value">
-                                        {{n.text}}
+                                    <option v-for="item in filterOptions" v-if="":value="item.value">
+                                        {{item.text}}
                                     </option>
                                 </select>
                             </div>
                             <div class="form-group col-md-2">
                                 <label for="sort">Sort By:</label>
                                 <div class="select-ic ic-sort">
-                                    <select v-model="formdata.sortValue"  id="sort" name="sort" class="form-control" >
+                                    <select v-model="formdata.sortValue" id="sort" name="sort" class="form-control" >
                                         <option value="" selected hidden>Select Filter</option>
                                         <option value="name">Name</option>
                                         <option value="emotion_value">Current Emotion</option>
@@ -46,35 +39,44 @@
                             </div>
                         </div>
 
-                        <div class="advance-filter">
+                        <!-- <div class="advance-filter">
                             <div class="advance-filter-input row">
                                 <div class="advance-filter-row">
                                     <div class="col-md-5" id="advancefilter1">
                                         <div class="form-group">
                                             <label for="" class="col-md-4">Filter By No 2:</label>
                                             <div class="select-ic ic-filter col-md-6 filter-width">
-                                                <select id="filter" name="advancefilter[]" class="form-control">
+                                                <select v-model="formdata.filter2" id="filter" name="advancefilter[]" class="form-control">
                                                     <option value="" selected hidden>Select Filter</option>
-                                                    <option value="location">Location</option>
-                                                    <option value="gender">Gender</option>
+                                                    <option v-for="n in filters" :value="n.value">
+                                                        {{n.text}}
+                                                    </option>
                                                 </select>
                                             </div>
-                                            <select id="filter-value" name="filter-value" class="form-control col-md-2 filter-width" disabled></select>
-                                            <a href="javascript:;" class="filter-close"><img :src="base_url+'img/ic_close.png'" alt=""></a>
+                                            <select v-model="formdata.filterValue2" id="filter-value" name="filter-value" class="form-control col-md-2 filter-width" :disabled="disableFilterValue2">
+                                                <option v-for="n in filterOptions2" :value="n.value">
+                                                    {{n.text}}
+                                                </option>
+                                            </select>
+                                            <a href="javascript:;" class="filter-close" v-on:click="RemoveAdvanceFilter()"><img :src="base_url+'img/ic_close.png'" alt=""></a>
                                         </div>
                                     </div>
                                     <div class="col-md-5" id="advancefilter2">
                                         <div class="form-group">
                                             <label for="" class="col-md-4">Filter By No 3:</label>
                                             <div class="select-ic ic-filter col-md-6 filter-width">
-                                                <select id="filter" name="advancefilter[]" class="form-control">
-                                                    <option value="" selected hidden>Select Filter</option>
-                                                    <option value="location">Location</option>
-                                                    <option value="gender">Gender</option>
+                                                <select v-model="formdata.filter3" id="filter" name="advancefilter[]" class="form-control">
+                                                    <option v-for="n in filters" :value="n.value">
+                                                        {{n.text}}
+                                                    </option>
                                                 </select>
                                             </div>
-                                            <select id="filter-value" name="filter-value" class="form-control col-md-2 filter-width" disabled></select>
-                                            <a href="javascript:;" class="filter-close"><img :src="base_url+'img/ic_close.png'" alt=""></a>
+                                            <select v-model="formdata.filterValue3" id="filter-value" name="filter-value" class="form-control col-md-2 filter-width" :disabled="disableFilterValue3">
+                                                <option v-for="n in filterOptions3" :value="n.value">
+                                                    {{n.text}}
+                                                </option>
+                                            </select>
+                                            <a href="javascript:;" class="filter-close" v-on:click="RemoveAdvanceFilter()"><img :src="base_url+'img/ic_close.png'" alt=""></a>
                                         </div>
                                     </div>
                                 </div>
@@ -85,11 +87,25 @@
                                         <div class="form-group">
                                             <label for="" class="col-md-4">Filter By No 4:</label>
                                             <div class="select-ic ic-filter col-md-6 filter-width">
-                                                <select id="filter" name="advancefilter[]" class="form-control">
-                                                    <option value="" selected hidden>Select Filter</option>
-                                                    <option value="location">Location</option>
-                                                    <option value="gender">Gender</option>
-                                                </select>
+                                                <option v-for="n in filters" :value="n.value">
+                                                    {{n.text}}
+                                                </option>
+                                            </div>
+                                            <select v-model="formdata.filterValue4" id="filter-value" name="filter-value" class="form-control col-md-2 filter-width" :disabled="disableFilterValue4">
+                                                <option v-for="n in filterOptions4" :value="n.value">
+                                                    {{n.text}}
+                                                </option>
+                                            </select>
+                                            <a href="javascript:;" class="filter-close" v-on:click="RemoveAdvanceFilter()"><img :src="base_url+'img/ic_close.png'" alt=""></a>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5" id="advancefilter4">
+                                        <div class="form-group">
+                                            <label for="" class="col-md-4">Filter By No 5:</label>
+                                            <div class="select-ic ic-filter col-md-6 filter-width">
+                                                <option v-for="n in filters" :value="n.value">
+                                                    {{n.text}}
+                                                </option>
                                             </div>
                                             <select id="filter-value" name="filter-value" class="form-control col-md-2 filter-width" disabled></select>
                                             <a href="javascript:;" class="filter-close"><img :src="base_url+'img/ic_close.png'" alt=""></a>
@@ -98,7 +114,7 @@
                                 </div>
                             </div>
                         </div>
-                         <div class="row">
+                        <div class="row">
                             <div class="col-md-3 col-md-offset-9" id="advance-filter-menu">
                                 <ul class="filter-right-menu">
 
@@ -113,7 +129,39 @@
                                     <li><a href="javascript:;" class="advance-search" v-on:click="CloseAdvanceFilter">Close Advance Filter</a></li>
                                 </ul>
                             </div>
+                        </div> -->
+                        <div class="advance-filter" v-if="advanceFilter.length > 0" >
+                            <div class="advance-filter-input row">
+                                <div class="advance-filter-row">
+                                    <div class="col-md-5" v-for="advance in advanceFilter" >
+                                        <div class="form-group">
+                                            <label for="" class="col-md-4">Filter By No {{advance.id}}:</label>
+                                            <div class="select-ic ic-filter col-md-6 filter-width">
+                                                <select id="filter" class="form-control" @change="selectAdvanceFilter(advance)" v-model="advance.selectedFilter">
+                                                    <option value="" selected hidden>Select Filter</option>
+                                                    <option v-for="(item,key) in filters"  v-if="checkFilterSelected(item.value,advance.selectedFilter)"  :value="item.value">{{item.text}}</option>
+                                                </select>
+                                            </div>
+                                            <select id="filter-value" name="filter-value" class="form-control col-md-2 filter-width" >
+                                                <option v-for="item in advance.advanceFilterValues" :value="item.value">
+                                                    {{item.text}}
+                                                </option>
+                                            </select>
+                                            <a href="javascript:;" class="filter-close"><img :src="base_url+'img/ic_close.png'" alt=""></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-4 col-md-offset-8" id="advance-filter-menu-open">
+                                <ul class="filter-right-menu">
+                                    <li><a href="javascript:;" class="advance-search" @click="addFilter" >{{ advanceFilter.length <= 0 ? 'Advance Search' : '+ Add Another Filter Fields' }}</a></li>
+                                    <li><a href="javascript:;" class="advance-search" v-on:click="clearFields()">Clear Fields</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
                         <div class="scoreboard">
                             <div class="advance-card advance-user col-md-3">
                                 <div class="user-value">{{recordData.total}}</div>
@@ -141,7 +189,7 @@
                                 <div class="advance-card-label">No. of Location</div>
                             </div>
                             <div class="advance-card advance-meter col-md-3">
-                                <div class="meter-value">Calm</div>
+                                <div class="meter-value">{{ up_meter(avgUpmoodmeter) }}</div>
                                 <div class="advance-card-label">Average Upmood Meter</div>
                             </div>
                         </div>
@@ -171,7 +219,7 @@
                             <td>{{ user.stress_level }}</td>
                             <td>{{ user.heartbeat_count }}</td>
                             <td>{{ user.profile_post }}</td>
-                            <td>{{ user.upmood_meter }}</td>
+                            <td>{{ up_meter(user.upmood_meter) }}</td>
                             <td>{{ user.country }}</td>
 
                             <td v-if="user.active_level == 'online'"><span class="status-online">{{ user.active_level }}</span></td>
@@ -198,8 +246,10 @@
             return {
                 csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                 base_url: window.base_url,
+                searchUrl: window.base_url+'userslist?',
 
                 advance_filter: 1,
+                advance_filter_id: 1,
 
                 disableFilterValue: true,
 
@@ -214,10 +264,21 @@
                 maleRatio: 0,
                 femaleRatio: 0,
                 countryCount: 0,
+                avgUpmoodmeter: '',
 
                 recordData: this.results,
 
+                advanceFilter: [],
+                filterSelected: [],
                 filterOptions: [],
+
+                filters: [
+                    {value:'active',text:'Active Level'},
+                    {value:'location',text:'Location'},
+                    {value:'gender',text:'Gender'},
+                    {value:'age',text:'Age'},
+                    {value:'emotion',text:'Current Emotion'}
+                ],
 
                 active: [
                     {value:'1',text:'online'},
@@ -241,24 +302,24 @@
         watch: {
             'formdata.search': function (val) {
                 this.formdata.page = 1
+                window.history.pushState({},"",this.searchUrl+'search='+val+'&')
+                
                 this.getAxios()
             },
             'formdata.filter': function (val) {
                 this.filterOptions = this[val];
                 this.disableFilterValue = false;
             },
+
             'formdata.filterValue': function (val) {
-
                 this.formdata.page = 1
                 this.getAxios()
-
             },
-            'formdata.sortValue': function (val) {
 
+            'formdata.sortValue': function (val) {
                 this.formdata.page = 1
                 this.getAxios()
-
-            }
+            },
         },
         mounted() {
             $(".main-header > .title").html('<i class="header-ic ic-user-green"></i>Users');
@@ -285,9 +346,65 @@
 
                 return emotion
             }
-
         },
         methods: {
+            selectAdvanceFilter(data,filter = null){
+                if(data != null){
+                    data.advanceFilterValues = this[data.selectedFilter];
+
+                    var duplicateId = this.filterSelected.find(item => item.id === data.id);
+                    var removeSelected = this.filterSelected.indexOf(duplicateId);
+
+                    if(removeSelected != -1){
+                        this.filterSelected.splice(removeSelected,1);
+                    }
+
+                    this.filterSelected.push({
+                        id : data.id,
+                        value : data.selectedFilter
+                    })
+                }else{
+                    var duplicateId = this.filterSelected.find(item => item.id === 0);
+                    var removeSelected = this.filterSelected.indexOf(duplicateId);
+                    console.log(duplicateId)
+
+                    if(removeSelected != -1){
+                        this.filterSelected.splice(removeSelected,1);
+                    }
+
+                    this.filterSelected.push({
+                        id : 0,
+                        value : filter
+                    })
+
+                }
+            },
+
+            addFilter(){
+                this.advanceFilter.push({
+                    id: this.advance_filter_id,
+                    selectedFilter: '', 
+                    advanceFilterValues: '', 
+                });
+
+                this.advance_filter_id = this.advance_filter_id + 1;
+            },
+
+            checkFilterSelected(data,elem){
+                length = this.filterSelected.length;
+
+                for(var i = 0; i < length; i++) {
+
+                    if(elem != data){
+                        if(this.filterSelected[i].value == data){
+
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            },
+
             generatePaginationNumbers(){
                 var current = this.recordData.current_page;
                 var counter = this.recordData.current_page;
@@ -319,15 +436,20 @@
                 $(".pagination-number").html(numberstring);
             },
 
+            filtertUrl(){
+
+            },
+
             searchFilters(){
                 let vue = this;
 
-                axios.post(base_url+'usersfilter' , this.formdata).then(function (response) {
+                axios.get(base_url+'usersfilter?'+window.location.href.split('?')[1]).then(function (response) {
                     vue.recordData = response['data']['content'];
                     vue.recordData.current_page = vue.formdata.page;
                     vue.maleRatio = response['data']['counts'].maleRatio;
                     vue.femaleRatio = response['data']['counts'].femaleRatio;
                     vue.countryCount = response['data']['counts'].countryCount;
+                    vue.avgUpmoodmeter = response['data']['counts'].upmood_meter;
                     vue.generatePaginationNumbers();
 
                 }).catch(function (error) {
@@ -352,11 +474,35 @@
 
             clearFields(){
                 this.disableFilterValue = true;
-                this.formdata.search = '',
-                this.formdata.filter = '',
-                this.formdata.filterValue = '',
+                this.formdata.search = '';
+                this.formdata.filter = '';
+                this.formdata.filter2 = '';
+                this.formdata.filter3 = '';
+                this.formdata.filter4 = '';
+                this.formdata.filter5 = '';
+                this.formdata.filterValue = '';
+                this.formdata.filterValue2 = '';
+                this.formdata.filterValue3 = '';
+                this.formdata.filterValue4 = '',
+                this.formdata.filterValue5 = '';
                 this.formdata.page = 1
+            },
 
+            up_meter: function(val){
+                if(val == null){
+                    return "No Record Found";
+                }
+                if(val <= -61){
+                    return 'Sad';
+                }else if(val <= -21){
+                    return 'Unpleasant';
+                }else if(val <= 20){
+                    return 'Calm';
+                }else if(val <= 60){
+                    return 'Pleasant';
+                }else if(val <= 100){
+                    return 'Happy';
+                }
             },
 
             OpenAdvanceFilter(){
@@ -364,15 +510,17 @@
                 $("#advance-filter-menu-open").show();
                 $("#advance-filter-menu").hide();
             },
+
             CloseAdvanceFilter(){
                 $(".advance-filter").hide();
                 $("#advance-filter-menu-open").hide();
                 $("#advance-filter-menu").show();
             },
-            AddAdvanceFilter(){
-                this.advance_filter = this.advance_filter + 1;
-                $("#advancefilter" + this.advance_filter).show();
-            },
+
+            // RemoveAdvanceFilter(){
+            //     alert(this)
+            //     $(this).parent('col-md-5').hide()
+            // },
 
             getAxios: _.debounce(
                 function () {

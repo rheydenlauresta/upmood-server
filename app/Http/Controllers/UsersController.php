@@ -27,7 +27,7 @@ class UsersController extends Controller
     public function userFilter(Request $request)
     {
         $data = Input::all();
-        
+
         $res = [];
 
         $res['content'] = User::searchFilter($data);
