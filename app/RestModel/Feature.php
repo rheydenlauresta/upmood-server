@@ -16,12 +16,12 @@ class Feature extends Model
     {
 
     	$query = $this->where('features.user_id',request()->user()->id)
-            ->selectraw('users.id,users.name,users.email,users.image,r.emotion_value,r.heartbeat_count,r.stress_level')
+            ->selectraw('users.id,users.name,users.email,users.image,users.profile_post,CONCAT(r.emotion_set,"/emoji/",r.emotion_value,".png") as emotion_value,r.heartbeat_count,r.stress_level,r.resources_id,features.order')
     		->join('users','users.id','=','features.friend_id')
             ->leftJoin('records as r',function($qry){
                 $qry->on('r.user_id', '=', 'users.id')->where('r.id','=',DB::raw('(select max(records.id) from records where records.user_id = users.id)'));
             })
-    		->selectraw('users.id,users.name,users.email,users.image')
+    		->selectraw('users.id,users.name,users.email,users.image')->orderBy('order','ASC')
     		->get()->toArray();
 
         if($query != null) {
@@ -39,10 +39,9 @@ class Feature extends Model
                 'message' => 'No Record Found',
                 'module'   => 'featured-friends',
                 'errors'   => (Object) [],
-                'data'     => (Object) [],
+                'data'     => [],
             ];
         }
-
 
     	return $data;
 
@@ -98,25 +97,26 @@ class Feature extends Model
     			'data'	  => $featured->toArray()
             ];
         }
-
-
     }
 
     public function scopeRemove($query)
     {
-    	$featured = new $this;
 
-        $featured->where('user_id',request()->user()->id)
+        $featured = $this->where('user_id',request()->user()->id)
                   ->where('friend_id',request('friend_id'))
                   ->delete();
 
-        if(!$featured){
+        if($featured == 0){
 
             return [
                 'status'   => (int) env('BAD_REQUEST'),
                 'message' => 'something went wrong',
             ];
-
         }
+
+        return [
+            'status'   => (int) env('SUCCESS_RESPONSE_CODE'),
+            'message' => 'success',
+        ];
     }
 }
