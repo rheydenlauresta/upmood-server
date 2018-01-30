@@ -89,9 +89,10 @@ class User extends Authenticatable
             });
         }
         if(isset($data['filterValue']) && $data['filterValue'] != ''){
+
             if($data['filter'] == 'age'){
                 $query = $query->where(function($qry) use($data){
-                    $qry->whereBetween('age',$data['filterValue']);
+                    $qry->whereBetween('age',json_decode($data['ageValue']));
                 });
             }else{
                 $query = $query->where(function($qry) use($data){
@@ -103,67 +104,28 @@ class User extends Authenticatable
             }
         }
 
-        if(isset($data['filterValue2']) && $data['filterValue2'] != ''){
-            if($data['filter2'] == 'age'){
-                $query = $query->where(function($qry) use($data){
-                    $qry->whereBetween('age',$data['filterValue2']);
-                });
-            }else{
-                $query = $query->where(function($qry) use($data){
-                    $qry->where('gender','like',$data['filterValue2']);
-                    $qry->orWhere('is_online','like',$data['filterValue2']);
-                    $qry->orWhere('country','like',$data['filterValue2']);
-                    $qry->orWhere('r.emotion_value','like',$data['filterValue2']);
-                });
-            }
-        }
+        if(isset($data['advanceFilterValues']) && $data['advanceFilterValues'] != ''){
+            $json = json_decode($data['advanceFilterValues'] );
+            foreach ($json as $key => $value) {
 
-        if(isset($data['filterValue3']) && $data['filterValue3'] != ''){
-            if($data['filter3'] == 'age'){
-                $query = $query->where(function($qry) use($data){
-                    $qry->whereBetween('age',$data['filterValue3']);
-                });
-            }else{
-                $query = $query->where(function($qry) use($data){
-                    $qry->where('gender','like',$data['filterValue3']);
-                    $qry->orWhere('is_online','like',$data['filterValue3']);
-                    $qry->orWhere('country','like',$data['filterValue3']);
-                    $qry->orWhere('r.emotion_value','like',$data['filterValue3']);
-                });
-            }
-        }
+                if($value->selectedFilter == 'age'){
+                    $query = $query->where(function($qry) use($value){
+                        $qry->whereBetween('age',$value->filterValues);
+                    });
+                }else{
 
-        if(isset($data['filterValue4']) && $data['filterValue4'] != ''){
-            if($data['filter4'] == 'age'){
-                $query = $query->where(function($qry) use($data){
-                    $qry->whereBetween('age',$data['filterValue4']);
-                });
-            }else{
-                $query = $query->where(function($qry) use($data){
-                    $qry->where('gender','like',$data['filterValue4']);
-                    $qry->orWhere('is_online','like',$data['filterValue4']);
-                    $qry->orWhere('country','like',$data['filterValue4']);
-                    $qry->orWhere('r.emotion_value','like',$data['filterValue4']);
-                });
-            }
-        }
-
-        if(isset($data['filterValue5']) && $data['filterValue5'] != ''){
-            if($data['filter5'] == 'age'){
-                $query = $query->where(function($qry) use($data){
-                    $qry->whereBetween('age',$data['filterValue5']);
-                });
-            }else{
-                $query = $query->where(function($qry) use($data){
-                    $qry->where('gender','like',$data['filterValue5']);
-                    $qry->orWhere('is_online','like',$data['filterValue5']);
-                    $qry->orWhere('country','like',$data['filterValue5']);
-                    $qry->orWhere('r.emotion_value','like',$data['filterValue5']);
-                });
+                    $query = $query->where(function($qry) use($value){
+                        $qry->where('gender','like',$value->filterValues);
+                        $qry->orWhere('is_online','like',$value->filterValues);
+                        $qry->orWhere('country','like',$value->filterValues);
+                        $qry->orWhere('r.emotion_value','like',$value->filterValues);
+                    });
+                }
             }
         }
 
         if(isset($data['sortValue']) && $data['sortValue'] != '' && $data['sortValue'] != null){
+            
             $query = $query->orderBy($data['sortValue'],'ASC');
         }
 

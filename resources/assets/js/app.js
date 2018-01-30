@@ -6,7 +6,7 @@
  */
 
 require('./bootstrap');
-
+import router from './router';
 
 window.Vue = require('vue');
 
@@ -24,7 +24,8 @@ Vue.component('users-component', require('./components/Users.vue'));
 Vue.component('messages-component', require('./components/Messages.vue'));
 
 const app = new Vue({
-    el: '#app',
+   el: '#app',
+   router: router,
 });
 
 $(document).ready(function(){

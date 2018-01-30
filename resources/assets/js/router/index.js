@@ -1,19 +1,10 @@
-window.Vue = require('vue');
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import Routes from './routes';
 
-import Vuex from 'vuex';
-import * as types from './mutation-types'
+Vue.use(VueRouter);
 
-Vue.use(Vuex);
-
-export const store = new Vuex.Store({
-  state: {
-  },
-  mutations: {
-
-  },
-  actions: {
-
-  },
-  getters: {
-  }
+export default new VueRouter({
+    routes: Routes,
+    mode: 'history'
 });

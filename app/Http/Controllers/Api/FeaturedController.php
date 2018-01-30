@@ -19,13 +19,7 @@ class FeaturedController extends BaseController
         //
         $featuredList = Feature::ListAll();
 
-        return response()->json([
-            'status'   => (int) env('SUCCESS_RESPONSE_CODE'),
-            'message' => 'success',
-            'module'   => 'featured-friends',
-            'errors'   => (Object) [],
-            'data'     => $featuredList,
-        ]);
+        return json_encode($featuredList);
     }
 
     /**
