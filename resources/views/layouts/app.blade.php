@@ -11,6 +11,7 @@
     <title>{{ config('app.name', 'Upmood CMS') }}</title>
 
     <!-- Styles -->
+    <link rel="stylesheet" href="{{ asset('css/bootstrap-tagsinput.css') }}">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <script>
         var base_url = "{{url('/')}}/";
@@ -56,5 +57,6 @@
     <script src="{{ asset('js/app.js') }}"></script>
     <script src="{{ asset('js/jquery.min.js') }}"></script>
     <script src="{{ asset('js/jquery.scrollbar.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap-tagsinput.min.js') }}"></script>
 </body>
 </html>

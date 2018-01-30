@@ -2,6 +2,9 @@
     <div class="users-wrapper">
         <div class="users-table-wrapper">
             <div class="row">
+                <a href="javascript:;" class="btn btn-success pull-right downloadfile">Download File</a>
+            </div>
+            <div class="row">
                 <div class="filter-wrapper">
                     <form method="get" action="" class="formfilters">
                         <div class="basic-filter">
@@ -94,6 +97,10 @@
                             </div>
                             <div class="advance-card advance-gender col-md-3">
                                 <div class="gender-value">
+                                    <!-- <div class="col-md-6 male value-center"  v-if="formdata.filterValue != 'female'">
+                                        <span>Male</span>
+                                        <div class="male-value">{{ maleRatio }}</div>
+                                    </div> -->
                                     <div class="col-md-6 male"  v-if="formdata.filterValue != 'female'">
                                         <span>Male</span>
                                         <div class="male-value">{{ maleRatio }}</div>

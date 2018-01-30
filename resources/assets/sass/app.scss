@@ -222,7 +222,7 @@ body{
 }
 
 .main-container{
-  min-width: 1230px;
+  min-width: 1270px;
   position: relative;
   margin-left: 250px;
 
@@ -666,6 +666,10 @@ body{
         }
     }
 
+    .downloadfile{
+      margin-bottom: 15px;
+    }
+
     .filter-wrapper{
         form{
 
@@ -874,6 +878,12 @@ body{
                           font-size: 28px;
                           line-height: 32px;
                         }
+
+                        &.value-center{
+                          display:block;
+                          text-align:text-center;
+                          width: 100% !important;
+                        }
                       }
 
                       .female{
@@ -887,6 +897,12 @@ body{
                           font-weight: 600;
                           font-size: 28px;
                           line-height: 32px;
+                        }
+
+                        &.value-center{
+                          display:block;
+                          text-align:text-center;
+                          width: 100% !important;
                         }
                       }
                     }
@@ -947,14 +963,17 @@ body{
 
 .messages-wrapper{
   position:relative;
-  min-width: 1230px;
+  min-width: 1270px;
+  border-top: 1px solid #F9F9F9;
 
     .messages-nav{
         background-color: #1D232A;
-        position: fixed;
+        position: absolute;
+        top: 0px;
+        left: 0px;
         width: 282px;
-        height: 100%;
-        z-index: 9999;
+        height: calc(100vh - 81px);
+        z-index: 9998;
         padding: 15px;
 
         .compose{
@@ -1042,12 +1061,14 @@ body{
       }
 
       .messages-row-wrapper{
+          height: calc(100vh - 165px);
 
           ul.message-row-menu{
               list-style: none;
               padding: 0px;
 
               .messages-row{
+                  transition: 0.2s ease-out all;
                   color: #1E1E1E;
                   padding: 20px;
                   padding-left: 30px;
@@ -1101,17 +1122,202 @@ body{
                     background-color: #fff;
                     box-shadow: 0px 6px 9px rgba(0,0,0,0.16);
                   }
+
+                  &:hover{
+                    cursor: pointer;
+                  }
               }
           }
       }
     }
 
     .messages-content{
+      padding: 30px;
       min-width: 447px;
-      height: 100%;
+      height: calc(100vh - 81px);
       background-color: #fff;
       position: absolute;
       top: 0px;
       left: 782px;
+      color: #1E1E1E;
+      display: none;
+
+      .message-content-row{
+            position:relative;
+
+          .message-header{
+
+              .image-wrapper{
+                height: 80px;
+                width: 80px;
+                border-radius: 150px;
+                overflow-y: hidden;
+                object-fit: cover;
+                margin-right: 15px;
+
+                img{
+                  height: 100%;
+                  width: 100%;
+                }
+             }
+
+             .message-to{
+                font-size: 16px;
+                font-weight: 300;
+                display: block;
+                margin-bottom: 5px;
+             }
+
+             .message-subject{
+                font-size: 22px;
+                font-weight: 600;
+                display: block;
+                margin-bottom: 15px;
+             }
+
+             .message-timestamp{
+                position: absolute;
+                top: 5px;
+                right: 0px;
+                color: #949494;
+                text-align: right;
+             }
+          }
+
+          .content-body{
+
+              .content-row{
+                display: block;
+
+                p{
+                  margin-left: 95px;
+                  text-align: justify;
+                  border-bottom: 1px solid #707070;
+                  padding-bottom: 30px;
+                  font-size: 14px;
+                  font-weight: 400;
+                }
+              }
+          }
+
+          &.message-reply{
+            padding-left:95px;
+
+            .message-to{
+              margin-bottom: 15px;
+            }
+
+            .content-body{
+
+              .content-row{
+
+                p{
+                  margin-left: 0px;
+                }
+              }
+            }
+          }
+      }
+
+      .message-reply-input{
+          form{
+            textarea{
+              width: calc(100% - 95px);
+              height: 98px;
+              resize: none;
+              background-color:#F9F9F9;
+              color: #1E1E1E;
+              font-size: 12px;
+              font-weight: 400;
+              margin-left: 95px;
+              margin-top: 15px;
+              border:none;
+              padding: 10px;
+              margin-bottom: 5px;
+            }
+          }
+      }
+
+      &#compose{
+
+           .compose-wrapper{
+                @extend .content-center;
+                position:relative;
+                width: 600px;
+
+                h2{
+                  font-size: 24px;
+                  font-weight: 600;
+                }
+
+                button{
+                  position: absolute;
+                  top: 0px;
+                  right: 0px;
+                }
+
+              #ComposeForm{
+                  padding-top: 20px;
+                 
+                 .form-group{
+                    position:relative;
+
+                    label{
+                      position: absolute;
+                      top: 4px;
+                      left: 4px;
+                      color: #1E1E1E;
+                      font-size: 14px;
+                      font-weight: 400;
+                    }
+
+                    .form-control{
+                        padding-left:30px;
+                        background: transparent;
+                        border: none;
+                        box-shadow: none;
+                        border-radius: 0px;
+                        border-bottom: 1px solid #707070;
+                        min-width: 100%;
+
+                        &[name="email-subject"]{
+                          padding-left: 60px;
+                        }
+                    }
+
+                    textarea{
+                        resize: none !important;
+                        min-height: 50px;
+                        padding-left: 0px;
+                        font-weight: 400;
+                        font-size: 12px;
+                        max-height: 630px;
+                    }
+
+                    .bootstrap-tagsinput{
+                        padding-left:30px;
+                        background: transparent;
+                        border: none;
+                        box-shadow: none;
+                        border-radius: 0px;
+                        border-bottom: 1px solid #707070;
+                        min-width: 100%;
+
+                        .tag{
+                          background-color: #F0F0F0;
+                          color: #1E1E1E;
+                          font-size: 11px;
+                          font-weight: 400;
+                          border-radius: 150px;
+
+                          span[data-role="remove"]{
+                              color: #E74C3C; 
+                          }
+                        }
+                    }
+                 }
+              }
+           }
+      }
     }
 }

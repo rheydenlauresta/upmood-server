@@ -30,17 +30,41 @@ const app = new Vue({
 
 $(document).ready(function(){
 	$('.scrollbar-outer').scrollbar();
+
+  $(document).on('click','.messages-row',function(){
+      if (!$(this).hasClass('active')){
+        var messageID = $(this).data('message');      
+
+        $(".messages-row").removeClass('active');
+        $(this).addClass('active');
+
+        $(".messages-content").hide();
+        $(messageID).fadeIn();
+      }
+
+  });
 });
 
 $(window).on('resize', function(){
       if ($(".messages-wrapper").length){
-      	var wrapper_width = $(".messages-wrapper").css('width').replace('px','');
-        var nav = $(".messages-nav").css('width').replace('px','');
-        var list = $(".messages-list").css('width').replace('px','');
-        var new_width = parseInt(wrapper_width) - (parseInt(nav) + parseInt(list));
+      	var wrapper_width = parseInt($(".messages-wrapper").css('width').replace('px',''));
+        var nav = parseInt($(".messages-nav").css('width').replace('px',''));
+        var list = parseInt($(".messages-list").css('width').replace('px',''));
+        var new_width = wrapper_width - (nav + list);
         $(".messages-content").css('width',new_width + "px");
-
-        var nav_height = $(".messages-nav").css('height');
-        $(".messages-content").css('height',nav_height);
       }
+});
+
+$(document)
+.one('focus.autoExpand', 'textarea.autoExpand', function(){
+    var savedValue = this.value;
+    this.value = '';
+    this.baseScrollHeight = this.scrollHeight;
+    this.value = savedValue;
+})
+.on('input.autoExpand', 'textarea.autoExpand', function(){
+    var minRows = this.getAttribute('data-min-rows')|0, rows;
+    this.rows = minRows;
+    rows = Math.ceil((this.scrollHeight - this.baseScrollHeight) / 16);
+    this.rows = minRows + rows;
 });

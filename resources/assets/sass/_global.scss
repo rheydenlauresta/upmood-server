@@ -4,6 +4,7 @@
 
 .btn-success{
 	background-color: $success-color !important;
+	border-color: #95A757 !important;
 
 	&:hover{
 		background-color: darken($success-color,5%) !important;
