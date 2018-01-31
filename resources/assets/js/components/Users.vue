@@ -81,10 +81,6 @@
                             </div>
                             <div class="advance-card advance-gender col-md-3">
                                 <div class="gender-value">
-                                    <!-- <div class="col-md-6 male value-center"  v-if="formdata.filterValue != 'female'">
-                                        <span>Male</span>
-                                        <div class="male-value">{{ maleRatio }}</div>
-                                    </div> -->
                                     <div class="col-md-6 male"  v-if="formdata.filterValue != 'female'">
                                         <span>Male</span>
                                         <div class="male-value">{{ maleRatio }}</div>

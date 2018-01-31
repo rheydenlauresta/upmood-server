@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateContactMessageTable extends Migration
+class CreateRepliesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,12 @@ class CreateContactMessageTable extends Migration
      */
     public function up()
     {
-        Schema::create('contact_message', function (Blueprint $table) {
+        Schema::create('replies', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id');
-            $table->string('email');
-            $table->string('type')->comment('IN:account_cancellation,inquires,reports')->nullable();
-            $table->text('content')->nullable();
+            $table->integer('contact_message_id');
+            $table->text('message');
             $table->timestamps();
-        });
+        });//
     }
 
     /**
@@ -30,6 +28,7 @@ class CreateContactMessageTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('contact_message');
+        //
+        Schema::dropIfExists('replies');
     }
 }
