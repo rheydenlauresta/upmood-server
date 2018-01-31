@@ -99,7 +99,6 @@ class FeaturedController extends BaseController
      */
     public function remove()
     {
-        //
         $validator = $this->validator(request()->all(), [
             'friend_id'  => 'required',
 
@@ -107,14 +106,12 @@ class FeaturedController extends BaseController
 
         if($validator['status'] == 422) return json_encode($validator);
 
-        $group = Feature::remove();
+        $feature = Feature::remove();
 
-        return response()->json([
-            'status'   => (int) env('SUCCESS_RESPONSE_CODE'),
-            'message' => 'success',
-            'module'   => 'removed-featured',
-            'errors'   => (Object) [],
-        ]);
+        $feature['module'] = 'removed-featured';
+        $feature['errors'] =  (Object) [];
+
+        return $feature;
     }
 
     /**
@@ -124,13 +121,26 @@ class FeaturedController extends BaseController
     {
         $friends = request()->user()->featuredList();
 
-        return response()->json([
-            'status'   => (int) env('SUCCESS_RESPONSE_CODE'),
-            'message' => 'success',
-            'module'   => 'group-search',
-            'errors'   => (Object) [],
-            'data'     => $friends->toArray(),
-        ]);
+        if(count($friends) == 0){
+
+            return response()->json([
+                'status' => 204,
+                'message' => 'No Record Found',
+                'module'   => 'featured-search',
+                'errors'   => (Object) [],
+                'data'     => [],
+            ]);
+
+        }else{
+
+            return response()->json([
+                'status'   => (int) env('SUCCESS_RESPONSE_CODE'),
+                'message' => 'success',
+                'module'   => 'featured-search',
+                'errors'   => (Object) [],
+                'data'     => $friends->toArray(),
+            ]);
+        }
 
     }
 }

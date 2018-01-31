@@ -46844,22 +46844,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['results', 'countries', 'emotions'],
@@ -46869,9 +46853,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             base_url: window.base_url,
             searchUrl: window.base_url + 'userslist?',
 
-            advance_filter: 1,
-            advance_filter_id: 1,
-
             disableFilterValue: true,
 
             formdata: {
@@ -46879,8 +46860,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 filter: '',
                 filterValue: '',
                 sortValue: '',
-                advanceFilter: [],
-                page: 1
+                page: 1,
+                advanceFilterValues: '',
+                filterSelected: '',
+                advance_filter_id: 1
             },
 
             maleRatio: 0,
@@ -46890,6 +46873,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             recordData: this.results,
 
+            advanceFilter: [],
             filterSelected: [],
             filterOptions: [],
 
@@ -46899,7 +46883,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             gender: [{ value: 'male', text: 'male' }, { value: 'female', text: 'female' }],
 
-            age: [{ value: ['16', '20'], text: '16 - 20' }, { value: ['21', '25'], text: '21 - 25' }, { value: ['26', '30'], text: '26 - 30' }, { value: ['31', '35'], text: '31 - 35' }, { value: ['36', '40'], text: '36 - 40' }, { value: ['41', '45'], text: '41 - 45' }]
+            age: [{ value: ['16', '20'], text: '16 - 20' }, { value: ['21', '25'], text: '21 - 25' }, { value: ['26', '30'], text: '26 - 30' }, { value: ['31', '35'], text: '31 - 35' }, { value: ['36', '40'], text: '36 - 40' }, { value: ['41', '45'], text: '41 - 45' }],
+
+            pageNumber: []
         };
     },
 
@@ -46908,6 +46894,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         $(".main-header > .title").html('<i class="header-ic ic-user-green"></i>Users');
         this.generatePaginationNumbers();
         this.searchFilters();
+    },
+    created: function created() {
+        this.updateData();
     },
 
     computed: {
@@ -46970,13 +46959,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
         },
         addFilter: function addFilter() {
-            this.formdata.advanceFilter.push({
-                id: this.advance_filter_id,
+            this.advanceFilter.push({
+                id: this.formdata.advance_filter_id,
                 selectedFilter: '',
                 advanceFilterValues: ''
             });
 
-            this.advance_filter_id = this.advance_filter_id + 1;
+            this.formdata.advance_filter_id = this.formdata.advance_filter_id + 1;
         },
         checkFilterSelected: function checkFilterSelected(data, elem) {
             length = this.filterSelected.length;
@@ -46993,11 +46982,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             return true;
         },
         generatePaginationNumbers: function generatePaginationNumbers() {
+            this.pageNumber = [];
             var current = this.recordData.current_page;
-            var counter = this.recordData.current_page;
+            var counter = this.formdata.page;
             var lastpage = this.recordData.last_page;
             var path = this.recordData.path;
-
             var limit = 5;
             var numberstring = "";
             if (counter >= lastpage - limit + 1) {
@@ -47012,22 +47001,65 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 if (i < lastpage) {
 
                     if (current == counter) {
-                        numberstring += '<a class="active" href="' + path + '?page=' + counter + '" @click="preventPage($event)">' + counter + '</a>';
+                        this.pageNumber.push({
+                            isActive: true,
+                            counter: counter
+                        });
                     } else {
-                        numberstring += '<a href="' + path + '?page=' + counter + '" @click="preventPage($event)">' + counter + '</a>';
+                        this.pageNumber.push({
+                            isActive: false,
+                            counter: counter
+                        });
                     }
+
                     counter += 1;
                 }
             }
-            $(".pagination-number").html(numberstring);
         },
-        updateData: function updateData() {},
+        updateData: function updateData() {
+            var filters = window.location.href.split('?');
+
+            if (filters[1]) {
+                var data = filters[1].split('&');
+
+                this.formdata.search = data[0].split('=')[1];
+                this.formdata.filter = data[1].split('=')[1];
+                this.formdata.filterValue = data[2].split('=')[1];
+                this.formdata.sortValue = data[3].split('=')[1];
+                this.formdata.page = parseInt(data[4].split('=')[1]);
+
+                if (data[5].split('=')[1] != '') {
+                    this.formdata.advanceFilterValues = decodeURIComponent(data[5].split('=')[1]);
+                    this.advanceFilter = JSON.parse(decodeURIComponent(data[5].split('=')[1]));
+                }
+
+                if (data[6].split('=')[1] != '') {
+                    this.formdata.filterSelected = decodeURIComponent(data[6].split('=')[1]);
+                    this.filterSelected = JSON.parse(decodeURIComponent(data[6].split('=')[1]));
+                }
+
+                this.formdata.advance_filter_id = parseInt(data[7].split('=')[1]);
+
+                if (this.formdata.filter != '') {
+                    this.filterOptions = this[data[1].split('=')[1]];
+                    this.disableFilterValue = false;
+                }
+            }
+        },
         searchFilters: function searchFilters() {
             var vue = this;
 
             var filter = vue.formdata;
-            if (filter.advanceFilter.length != 0) {
-                filter.advanceFilterValues = JSON.stringify(filter.advanceFilter);
+            if (vue.advanceFilter.length != 0) {
+                filter.advanceFilterValues = JSON.stringify(vue.advanceFilter);
+            } else {
+                filter.advanceFilterValues = '';
+            }
+
+            if (vue.filterSelected.length != 0) {
+                filter.filterSelected = JSON.stringify(vue.filterSelected);
+            } else {
+                filter.filterSelected = '';
             }
 
             if (filter.filter == 'age') {
@@ -47038,7 +47070,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 query: filter
             };
 
-            vue.formdata.page = 1;
             vue.$router.push(data);
 
             axios.get(base_url + 'usersfilter?' + window.location.href.split('?')[1]).then(function (response) {
@@ -47066,13 +47097,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             event.preventDefault();
         },
         preventPage: function preventPage(event) {
-            alert();
-            event.preventDefault();
+            this.formdata.page = event;
+            this.searchFilters();
         },
         clearFields: function clearFields() {
             this.filterSelected = [];
             this.filterOptions = [];
-            this.formdata.advanceFilter = [];
+            this.advanceFilter = [];
             this.formdata.sortValue = '';
             this.formdata.search = '';
             this.formdata.filter = '';
@@ -47101,9 +47132,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
         },
 
-        RemoveAdvanceFilter: function RemoveAdvanceFilter() {
-            alert(this);
-        }
+        RemoveAdvanceFilter: function RemoveAdvanceFilter(event) {
+            var _this = this;
+
+            var duplicateId = this.filterSelected.find(function (item) {
+                return item.id === _this.advanceFilter[event].id;
+            });
+            var removeSelected = this.filterSelected.indexOf(duplicateId);
+
+            if (removeSelected != -1) {
+                this.filterSelected.splice(removeSelected, 1);
+            }
+
+            this.advanceFilter.splice(event, 1);
+            this.searchFilters();
+        },
+
+
+        getAxios: _.debounce(function () {
+            this.formdata.page = 1;
+            this.searchFilters();
+        }, 500)
     }
 });
 
@@ -47151,8 +47200,8 @@ var render = function() {
                       },
                       domProps: { value: _vm.formdata.search },
                       on: {
-                        keypress: function($event) {
-                          _vm.searchFilters()
+                        keyup: function($event) {
+                          _vm.getAxios()
                         },
                         input: function($event) {
                           if ($event.target.composing) {
@@ -47270,7 +47319,7 @@ var render = function() {
                             )
                           },
                           function($event) {
-                            _vm.searchFilters()
+                            _vm.getAxios()
                           }
                         ]
                       }
@@ -47324,7 +47373,7 @@ var render = function() {
                               )
                             },
                             function($event) {
-                              _vm.searchFilters()
+                              _vm.getAxios()
                             }
                           ]
                         }
@@ -47357,16 +47406,13 @@ var render = function() {
                 ])
               ]),
               _vm._v(" "),
-              _vm.formdata.advanceFilter.length > 0
+              _vm.advanceFilter.length > 0
                 ? _c("div", { staticClass: "advance-filter" }, [
                     _c("div", { staticClass: "advance-filter-input row" }, [
                       _c(
                         "div",
                         { staticClass: "advance-filter-row" },
-                        _vm._l(_vm.formdata.advanceFilter, function(
-                          advance,
-                          key
-                        ) {
+                        _vm._l(_vm.advanceFilter, function(advance, key) {
                           return _c("div", { staticClass: "col-md-5" }, [
                             _c("div", { staticClass: "form-group" }, [
                               _c(
@@ -47499,7 +47545,7 @@ var render = function() {
                                         )
                                       },
                                       function($event) {
-                                        _vm.searchFilters()
+                                        _vm.getAxios()
                                       }
                                     ]
                                   }
@@ -47528,7 +47574,7 @@ var render = function() {
                                   attrs: { href: "javascript:;" },
                                   on: {
                                     click: function($event) {
-                                      _vm.RemoveAdvanceFilter()
+                                      _vm.RemoveAdvanceFilter(key)
                                     }
                                   }
                                 },
@@ -47569,7 +47615,7 @@ var render = function() {
                           [
                             _vm._v(
                               _vm._s(
-                                _vm.formdata.advanceFilter.length <= 0
+                                _vm.advanceFilter.length <= 0
                                   ? "Advance Search"
                                   : "+ Add Another Filter Fields"
                               )
@@ -47747,37 +47793,58 @@ var render = function() {
           )
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "pagination" }, [
-          _c(
-            "a",
-            {
-              staticClass: "prev",
-              attrs: { href: _vm.recordData.prev_page_url },
-              on: {
-                click: function($event) {
-                  _vm.preventPrev($event)
+        _c(
+          "div",
+          { staticClass: "pagination" },
+          [
+            _c(
+              "a",
+              {
+                staticClass: "prev",
+                attrs: { href: _vm.recordData.prev_page_url },
+                on: {
+                  click: function($event) {
+                    _vm.preventPrev($event)
+                  }
                 }
-              }
-            },
-            [_vm._v("Prev")]
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "pagination-number" }),
-          _vm._v(" "),
-          _c(
-            "a",
-            {
-              staticClass: "next",
-              attrs: { href: _vm.recordData.next_page_url },
-              on: {
-                click: function($event) {
-                  _vm.preventNext($event)
+              },
+              [_vm._v("Prev")]
+            ),
+            _vm._v(" "),
+            _vm._l(_vm.pageNumber, function(page) {
+              return _c("div", { staticClass: "pagination-number" }, [
+                _c(
+                  "a",
+                  {
+                    class: { active: page.isActive },
+                    attrs: { href: "javascript:;" },
+                    on: {
+                      click: function($event) {
+                        _vm.preventPage(page.counter)
+                      }
+                    }
+                  },
+                  [_vm._v(_vm._s(page.counter))]
+                )
+              ])
+            }),
+            _vm._v(" "),
+            _c(
+              "a",
+              {
+                staticClass: "next",
+                attrs: { href: _vm.recordData.next_page_url },
+                on: {
+                  click: function($event) {
+                    _vm.preventNext($event)
+                  }
                 }
-              }
-            },
-            [_vm._v("Next")]
-          )
-        ])
+              },
+              [_vm._v("Next")]
+            )
+          ],
+          2
+        )
       ])
     ])
   ])

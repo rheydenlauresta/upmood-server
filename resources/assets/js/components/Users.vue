@@ -11,7 +11,7 @@
                             <div class="form-group col-md-6">
                                 <label for="search">Search:</label>
                                 <div class="input-ic ic-search">
-                                    <input v-model="formdata.search" placeholder="e.g. Name, Emotions or Status" type="text" class="form-control" name="search" id="search" @keypress="searchFilters()">
+                                    <input v-model="formdata.search" placeholder="e.g. Name, Emotions or Status" type="text" class="form-control" name="search" id="search" @keyup="getAxios()">
                                 </div>
                             </div>
                             <div class="form-group col-md-4">
@@ -22,7 +22,7 @@
                                         <option v-for="(item,key) in filters"  v-if="checkFilterSelected(item.value,formdata.filter)"  :value="item.value">{{item.text}}</option>
                                     </select>
                                 </div>
-                                <select v-model="formdata.filterValue" id="filter-value" name="filter-value" class="form-control half-input" :disabled="disableFilterValue" @change="searchFilters()">
+                                <select v-model="formdata.filterValue" id="filter-value" name="filter-value" class="form-control half-input" :disabled="disableFilterValue" @change="getAxios()">
                                     <option v-for="item in filterOptions" v-if="":value="item.value">
                                         {{item.text}}
                                     </option>
@@ -31,7 +31,7 @@
                             <div class="form-group col-md-2">
                                 <label for="sort">Sort By:</label>
                                 <div class="select-ic ic-sort">
-                                    <select v-model="formdata.sortValue" id="sort" name="sort" class="form-control" @change="searchFilters()">
+                                    <select v-model="formdata.sortValue" id="sort" name="sort" class="form-control" @change="getAxios()">
                                         <option value="" selected hidden>Select Filter</option>
                                         <option value="name">Name</option>
                                         <option value="emotion_value">Current Emotion</option>
@@ -42,26 +42,10 @@
                             </div>
                         </div>
 
-                        <!-- <div class="row">
-                            <div class="col-md-3 col-md-offset-9" id="advance-filter-menu">
-                                <ul class="filter-right-menu">
-
-                                    <li><a href="javascript:;" class="advance-search" v-on:click="OpenAdvanceFilter">Advance Search</a></li>
-                                    <li><a href="javascript:;" class="advance-search" v-on:click="clearFields()">Clear Fields</a></li>
-
-                                </ul>
-                            </div>
-                            <div class="col-md-4 col-md-offset-8" id="advance-filter-menu-open">
-                                <ul class="filter-right-menu">
-                                    <li><a href="javascript:;" class="advance-search" v-on:click="AddAdvanceFilter">+ Add Another Filter Fields</a></li>
-                                    <li><a href="javascript:;" class="advance-search" v-on:click="CloseAdvanceFilter">Close Advance Filter</a></li>
-                                </ul>
-                            </div>
-                        </div> -->
-                        <div class="advance-filter" v-if="formdata.advanceFilter.length > 0" >
+                        <div class="advance-filter" v-if="advanceFilter.length > 0" >
                             <div class="advance-filter-input row">
                                 <div class="advance-filter-row">
-                                    <div class="col-md-5" v-for="(advance,key) in formdata.advanceFilter" >
+                                    <div class="col-md-5" v-for="(advance,key) in advanceFilter" >
                                         <div class="form-group">
                                             <label for="" class="col-md-4">Filter By:</label>
                                             <div class="select-ic ic-filter col-md-6 filter-width">
@@ -70,12 +54,12 @@
                                                     <option v-for="(item,key) in filters"  v-if="checkFilterSelected(item.value,advance.selectedFilter)"  :value="item.value">{{item.text}}</option>
                                                 </select>
                                             </div>
-                                            <select v-model="advance.filterValues" id="filter-value" name="filter-value" class="form-control col-md-2 filter-width" @change="searchFilters()">
+                                            <select v-model="advance.filterValues" id="filter-value" name="filter-value" class="form-control col-md-2 filter-width" @change="getAxios()">
                                                 <option v-for="item in advance.advanceFilterValues" :value="item.value">
                                                     {{item.text}}
                                                 </option>
                                             </select>
-                                            <a href="javascript:;" class="filter-close" @click='RemoveAdvanceFilter()'><img :src="base_url+'img/ic_close.png'" alt=""></a>
+                                            <a href="javascript:;" class="filter-close" @click='RemoveAdvanceFilter(key)'><img :src="base_url+'img/ic_close.png'" alt=""></a>
                                         </div>
                                     </div>
                                 </div>
@@ -84,7 +68,7 @@
                         <div class="row">
                             <div class="col-md-4 col-md-offset-8" id="advance-filter-menu-open">
                                 <ul class="filter-right-menu">
-                                    <li><a href="javascript:;" class="advance-search" @click="addFilter" >{{ formdata.advanceFilter.length <= 0 ? 'Advance Search' : '+ Add Another Filter Fields' }}</a></li>
+                                    <li><a href="javascript:;" class="advance-search" @click="addFilter" >{{ advanceFilter.length <= 0 ? 'Advance Search' : '+ Add Another Filter Fields' }}</a></li>
                                     <li><a href="javascript:;" class="advance-search" v-on:click="clearFields()">Clear Fields</a></li>
                                 </ul>
                             </div>
@@ -161,8 +145,8 @@
                 </table>
                 <div class="pagination">
                     <a v-on:click="preventPrev($event)" class="prev" :href="recordData.prev_page_url">Prev</a>
-                    <div class="pagination-number">
-
+                    <div class="pagination-number" v-for="page in pageNumber">
+                        <a :class="{ active: page.isActive }"  href="javascript:;" @click="preventPage(page.counter)">{{page.counter}}</a>
                     </div>
                     <a v-on:click="preventNext($event)" class="next" :href="recordData.next_page_url">Next</a>
                 </div>
@@ -180,8 +164,6 @@
                 base_url: window.base_url,
                 searchUrl: window.base_url+'userslist?',
 
-                advance_filter: 1,
-                advance_filter_id: 1,
 
                 disableFilterValue: true,
 
@@ -190,8 +172,10 @@
                     filter: '',
                     filterValue: '',
                     sortValue: '',
-                    advanceFilter: [],
-                    page: 1
+                    page: 1,
+                    advanceFilterValues: '',
+                    filterSelected: '',
+                    advance_filter_id: 1
                 },
 
                 maleRatio: 0,
@@ -201,6 +185,7 @@
 
                 recordData: this.results,
 
+                advanceFilter: [],
                 filterSelected: [],
                 filterOptions: [],
 
@@ -230,7 +215,9 @@
                     {value:['31','35'],text:'31 - 35'},
                     {value:['36','40'],text:'36 - 40'},
                     {value:['41','45'],text:'41 - 45'},
-                ]
+                ],
+
+                pageNumber: []
             }
         },
         watch: {
@@ -240,6 +227,9 @@
             $(".main-header > .title").html('<i class="header-ic ic-user-green"></i>Users');
             this.generatePaginationNumbers();
             this.searchFilters();
+        },
+        created() {
+            this.updateData();
         },
         computed:{
             location(){
@@ -297,13 +287,13 @@
             },
 
             addFilter(){
-                this.formdata.advanceFilter.push({
-                    id: this.advance_filter_id,
+                this.advanceFilter.push({
+                    id: this.formdata.advance_filter_id,
                     selectedFilter: '', 
                     advanceFilterValues: '', 
                 });
 
-                this.advance_filter_id = this.advance_filter_id + 1;
+                this.formdata.advance_filter_id = this.formdata.advance_filter_id + 1;
             },
 
 
@@ -323,11 +313,11 @@
             },
 
             generatePaginationNumbers(){
+                this.pageNumber = [];
                 var current = this.recordData.current_page;
-                var counter = this.recordData.current_page;
+                var counter = this.formdata.page;
                 var lastpage = this.recordData.last_page;
                 var path = this.recordData.path;
-
                 var limit = 5;
                 var numberstring = "";
                 if (counter >= (lastpage - limit)+1){
@@ -342,27 +332,68 @@
                     if (i < lastpage ){
 
                         if (current == counter){
-                            numberstring += '<a class="active" href="' + path + '?page=' + counter +   '" @click="preventPage($event)">' + counter + '</a>';
+                            this.pageNumber.push({
+                                isActive: true,
+                                counter: counter,
+                            }) 
+                        }else{
+                            this.pageNumber.push({
+                                isActive: false,
+                                counter: counter,
+                            }) 
                         }
-                        else{
-                            numberstring += '<a href="' + path + '?page=' + counter +   '" @click="preventPage($event)">' + counter + '</a>';
-                        }
+
                         counter += 1;
                     }
                 }
-                $(".pagination-number").html(numberstring);
             },
 
             updateData(){
+                var filters = window.location.href.split('?')
 
+                if(filters[1]){
+                    var data = filters[1].split('&') 
+
+                    this.formdata.search = data[0].split('=')[1];
+                    this.formdata.filter = data[1].split('=')[1];
+                    this.formdata.filterValue = data[2].split('=')[1];
+                    this.formdata.sortValue = data[3].split('=')[1];
+                    this.formdata.page = parseInt(data[4].split('=')[1]);
+
+                    if(data[5].split('=')[1] != ''){
+                        this.formdata.advanceFilterValues = decodeURIComponent(data[5].split('=')[1]);
+                        this.advanceFilter = JSON.parse(decodeURIComponent(data[5].split('=')[1]));
+                    }
+
+                    if(data[6].split('=')[1] != ''){
+                        this.formdata.filterSelected = decodeURIComponent(data[6].split('=')[1]);
+                        this.filterSelected = JSON.parse(decodeURIComponent(data[6].split('=')[1]));
+                    }
+
+                    this.formdata.advance_filter_id = parseInt(data[7].split('=')[1]);
+
+
+                    if(this.formdata.filter != ''){
+                        this.filterOptions = this[data[1].split('=')[1]];
+                        this.disableFilterValue = false;
+                    }
+                }
             },
 
             searchFilters(){
                 let vue = this;
 
                 let filter = vue.formdata;
-                if(filter.advanceFilter.length != 0 ){
-                    filter.advanceFilterValues = JSON.stringify(filter.advanceFilter);
+                if(vue.advanceFilter.length != 0 ){
+                    filter.advanceFilterValues = JSON.stringify(vue.advanceFilter);
+                }else{
+                    filter.advanceFilterValues = ''
+                }
+
+                if(vue.filterSelected.length != 0 ){
+                    filter.filterSelected = JSON.stringify(vue.filterSelected);
+                }else{
+                    filter.filterSelected = ''
                 }
 
                 if(filter.filter  == 'age'){
@@ -370,10 +401,9 @@
                 }
 
                 let data = {
-                        query:filter
-                    }
+                    query:filter
+                }
 
-                vue.formdata.page = 1
                 vue.$router.push(data);
 
                 axios.get(base_url+'usersfilter?'+window.location.href.split('?')[1]).then(function (response) {
@@ -406,14 +436,14 @@
             },
 
             preventPage(event){
-alert();
-                event.preventDefault()
+                this.formdata.page = event
+                this.searchFilters();
             },
 
             clearFields(){
                 this.filterSelected = [];
                 this.filterOptions = [];
-                this.formdata.advanceFilter = [];
+                this.advanceFilter = [];
                 this.formdata.sortValue = '';
                 this.formdata.search = '';
                 this.formdata.filter = '';
@@ -441,9 +471,25 @@ alert();
                 }
             },
 
-            RemoveAdvanceFilter(){
-                alert(this)
+            RemoveAdvanceFilter(event){
+
+                var duplicateId = this.filterSelected.find(item => item.id === this.advanceFilter[event].id);
+                var removeSelected = this.filterSelected.indexOf(duplicateId);
+
+                if(removeSelected != -1){
+                    this.filterSelected.splice(removeSelected,1);
+                }
+
+                this.advanceFilter.splice(event,1);
+                this.searchFilters()
             },
+
+            getAxios: _.debounce(
+                function () {
+                    this.formdata.page = 1
+                    this.searchFilters()
+                },500
+            )
         }
     }
 </script>

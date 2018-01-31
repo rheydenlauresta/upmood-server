@@ -418,7 +418,7 @@ class User extends Authenticatable
     public function featuredList($id = null)
     {
         $query = DB::table('connections')
-                ->selectraw('connections.*, users.id as user_friend_id, users.name as user_name, users.image as user_image, users.email as user_email')
+                ->selectraw('connections.*, users.id as user_friend_id, users.name as user_name, users.image as user_image, users.email as user_email, features.user_id as featured')
 
                 ->where(function($qry){
                     $qry->where('connections.user_id',request()->user()->id);
@@ -428,7 +428,7 @@ class User extends Authenticatable
                     $join->on('features.friend_id','=',DB::raw('CASE '.request()->user()->id.' WHEN connections.user_id THEN connections.friend_id ELSE connections.user_id END'));
                     $join->where('features.user_id','=',request()->user()->id);
                 })
-                ->where('features.user_id','=',null)
+                // ->where('features.user_id','=',null)
                 ->where('connections.status','=',1)
                 ->leftJoin('users', 'users.id', '=', DB::raw('CASE '.request()->user()->id.' WHEN connections.user_id THEN connections.friend_id ELSE connections.user_id END'));           
 
@@ -442,6 +442,12 @@ class User extends Authenticatable
                     'email' => $value[0]->user_email,
 
             ];
+
+            if($value[0]->featured != null){
+                $data['featured'] = 1;
+            }else{ 
+                $data['featured'] = 0;
+            }
 
             return $data;
 
