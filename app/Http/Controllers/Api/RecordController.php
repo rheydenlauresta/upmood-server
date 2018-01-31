@@ -23,9 +23,7 @@ class RecordController extends BaseController
             $record = Record::sort($type);
 
         }else{
-
             $record = request()->user()->records();
-
         }
 
         return response()->json([

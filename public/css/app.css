@@ -121,13 +121,14 @@
 
 .btn-success {
   background-color: #BCCB87 !important;
+  border-color: #95A757 !important;
 }
 
 .btn-success:hover {
   background-color: #b2c375 !important;
 }
 
-.content-center, .users-wrapper .users-table-wrapper .pagination, .messages-wrapper .messages-nav .compose, .messages-wrapper .messages-nav .menu-list, .messages-wrapper .messages-nav .menu-list li.seperator, .messages-wrapper .messages-list .messages-search-wrapper .messages-search {
+.content-center, .users-wrapper .users-table-wrapper .pagination, .messages-wrapper .messages-nav .compose, .messages-wrapper .messages-nav .menu-list, .messages-wrapper .messages-nav .menu-list li.seperator, .messages-wrapper .messages-list .messages-search-wrapper .messages-search, .messages-wrapper .messages-content#compose .compose-wrapper {
   display: block;
   margin: 0 auto;
 }
@@ -8310,7 +8311,7 @@ body {
 }
 
 .main-container {
-  min-width: 1230px;
+  min-width: 1270px;
   position: relative;
   margin-left: 250px;
 }
@@ -8725,6 +8726,10 @@ body {
   background-color: #BCCB87;
 }
 
+.users-wrapper .users-table-wrapper .downloadfile {
+  margin-bottom: 15px;
+}
+
 .users-wrapper .users-table-wrapper .filter-wrapper form label {
   color: #696969;
   font-size: 14px;
@@ -8943,6 +8948,12 @@ body {
   line-height: 32px;
 }
 
+.users-wrapper .users-table-wrapper .filter-wrapper form .scoreboard .advance-card .gender-value .male.value-center {
+  display: block;
+  text-align: text-center;
+  width: 100% !important;
+}
+
 .users-wrapper .users-table-wrapper .filter-wrapper form .scoreboard .advance-card .gender-value .female span {
   font-weight: 300;
   font-size: 14px;
@@ -8952,6 +8963,12 @@ body {
   font-weight: 600;
   font-size: 28px;
   line-height: 32px;
+}
+
+.users-wrapper .users-table-wrapper .filter-wrapper form .scoreboard .advance-card .gender-value .female.value-center {
+  display: block;
+  text-align: text-center;
+  width: 100% !important;
 }
 
 .users-wrapper .users-table-wrapper .filter-wrapper form .scoreboard .advance-card:before {
@@ -8986,15 +9003,18 @@ body {
 
 .messages-wrapper {
   position: relative;
-  min-width: 1230px;
+  min-width: 1270px;
+  border-top: 1px solid #F9F9F9;
 }
 
 .messages-wrapper .messages-nav {
   background-color: #1D232A;
-  position: fixed;
+  position: absolute;
+  top: 0px;
+  left: 0px;
   width: 282px;
-  height: 100%;
-  z-index: 9999;
+  height: calc(100vh - 81px);
+  z-index: 9998;
   padding: 15px;
 }
 
@@ -9076,12 +9096,18 @@ body {
           box-shadow: none;
 }
 
+.messages-wrapper .messages-list .messages-row-wrapper {
+  height: calc(100vh - 165px);
+}
+
 .messages-wrapper .messages-list .messages-row-wrapper ul.message-row-menu {
   list-style: none;
   padding: 0px;
 }
 
 .messages-wrapper .messages-list .messages-row-wrapper ul.message-row-menu .messages-row {
+  -webkit-transition: 0.2s ease-out all;
+  transition: 0.2s ease-out all;
   color: #1E1E1E;
   padding: 20px;
   padding-left: 30px;
@@ -9135,11 +9161,179 @@ body {
           box-shadow: 0px 6px 9px rgba(0, 0, 0, 0.16);
 }
 
+.messages-wrapper .messages-list .messages-row-wrapper ul.message-row-menu .messages-row:hover {
+  cursor: pointer;
+}
+
 .messages-wrapper .messages-content {
+  padding: 30px;
   min-width: 447px;
-  height: 100%;
+  height: calc(100vh - 81px);
   background-color: #fff;
   position: absolute;
   top: 0px;
   left: 782px;
+  color: #1E1E1E;
+  display: none;
+}
+
+.messages-wrapper .messages-content .message-content-row {
+  position: relative;
+}
+
+.messages-wrapper .messages-content .message-content-row .message-header .image-wrapper {
+  height: 80px;
+  width: 80px;
+  border-radius: 150px;
+  overflow-y: hidden;
+  -o-object-fit: cover;
+     object-fit: cover;
+  margin-right: 15px;
+}
+
+.messages-wrapper .messages-content .message-content-row .message-header .image-wrapper img {
+  height: 100%;
+  width: 100%;
+}
+
+.messages-wrapper .messages-content .message-content-row .message-header .message-to {
+  font-size: 16px;
+  font-weight: 300;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.messages-wrapper .messages-content .message-content-row .message-header .message-subject {
+  font-size: 22px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 15px;
+}
+
+.messages-wrapper .messages-content .message-content-row .message-header .message-timestamp {
+  position: absolute;
+  top: 5px;
+  right: 0px;
+  color: #949494;
+  text-align: right;
+}
+
+.messages-wrapper .messages-content .message-content-row .content-body .content-row {
+  display: block;
+}
+
+.messages-wrapper .messages-content .message-content-row .content-body .content-row p {
+  margin-left: 95px;
+  text-align: justify;
+  border-bottom: 1px solid #707070;
+  padding-bottom: 30px;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.messages-wrapper .messages-content .message-content-row.message-reply {
+  padding-left: 95px;
+}
+
+.messages-wrapper .messages-content .message-content-row.message-reply .message-to {
+  margin-bottom: 15px;
+}
+
+.messages-wrapper .messages-content .message-content-row.message-reply .content-body .content-row p {
+  margin-left: 0px;
+}
+
+.messages-wrapper .messages-content .message-reply-input form textarea {
+  width: calc(100% - 95px);
+  height: 98px;
+  resize: none;
+  background-color: #F9F9F9;
+  color: #1E1E1E;
+  font-size: 12px;
+  font-weight: 400;
+  margin-left: 95px;
+  margin-top: 15px;
+  border: none;
+  padding: 10px;
+  margin-bottom: 5px;
+}
+
+.messages-wrapper .messages-content#compose .compose-wrapper {
+  position: relative;
+  width: 600px;
+}
+
+.messages-wrapper .messages-content#compose .compose-wrapper h2 {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.messages-wrapper .messages-content#compose .compose-wrapper button {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
+
+.messages-wrapper .messages-content#compose .compose-wrapper #ComposeForm {
+  padding-top: 20px;
+}
+
+.messages-wrapper .messages-content#compose .compose-wrapper #ComposeForm .form-group {
+  position: relative;
+}
+
+.messages-wrapper .messages-content#compose .compose-wrapper #ComposeForm .form-group label {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  color: #1E1E1E;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.messages-wrapper .messages-content#compose .compose-wrapper #ComposeForm .form-group .form-control {
+  padding-left: 30px;
+  background: transparent;
+  border: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  border-radius: 0px;
+  border-bottom: 1px solid #707070;
+  min-width: 100%;
+}
+
+.messages-wrapper .messages-content#compose .compose-wrapper #ComposeForm .form-group .form-control[name="email-subject"] {
+  padding-left: 60px;
+}
+
+.messages-wrapper .messages-content#compose .compose-wrapper #ComposeForm .form-group textarea {
+  resize: none !important;
+  min-height: 50px;
+  padding-left: 0px;
+  font-weight: 400;
+  font-size: 12px;
+  max-height: 630px;
+}
+
+.messages-wrapper .messages-content#compose .compose-wrapper #ComposeForm .form-group .bootstrap-tagsinput {
+  padding-left: 30px;
+  background: transparent;
+  border: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  border-radius: 0px;
+  border-bottom: 1px solid #707070;
+  min-width: 100%;
+}
+
+.messages-wrapper .messages-content#compose .compose-wrapper #ComposeForm .form-group .bootstrap-tagsinput .tag {
+  background-color: #F0F0F0;
+  color: #1E1E1E;
+  font-size: 11px;
+  font-weight: 400;
+  border-radius: 150px;
+}
+
+.messages-wrapper .messages-content#compose .compose-wrapper #ComposeForm .form-group .bootstrap-tagsinput .tag span[data-role="remove"] {
+  color: #E74C3C;
 }

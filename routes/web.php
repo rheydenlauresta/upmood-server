@@ -30,10 +30,10 @@ Route::get('/userslist', 'UsersController@usersList');
 Route::get('/usersfilter', 'UsersController@userFilter');
 
 // messages
-
-Route::get('/messages', function () {
-    return view('messages');
-});
-
+Route::resources([
+    'messages' => 'MessagesController'
+]);
+Route::get('/content', 'MessagesController@messages');
+Route::get('/reply', 'MessagesController@replies');
 
 Route::get('/', 'DashboardController@index');

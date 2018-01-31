@@ -5,7 +5,7 @@ namespace App\RestModel;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use DateTime;
-
+use DB;
 class Record extends Model
 {
     protected $table = 'records';
@@ -37,12 +37,39 @@ class Record extends Model
 	        $to = substr(request('date'), 11, 10);
     	}
 
-    	return $query->select('records.id','records.type','records.heartbeat_count','records.stress_level','records.ppi',
+        $average = Record::selectraw('SUM(CASE WHEN emotion_value = "sad" OR emotion_value = "anxious"THEN -3
+                            WHEN emotion_value = "happy" OR emotion_value = "zen" OR emotion_value = "excitement" THEN 3
+                            WHEN emotion_value = "pleasant" OR emotion_value = "calm" THEN 1
+                            WHEN emotion_value = "unpleasant" OR emotion_value = "confused" OR emotion_value = "challenged" OR emotion_value = "hyped" THEN -1
+                            WHEN emotion_value = "loading" THEN 0
+                            ELSE 0 END) as upmood_meter')
+                    ->where('records.user_id', $userID)->where('records.type', 'automated')
+                    ->whereRaw('DATE(records.created_at) BETWEEN "'.$from.'" AND "'.$to.'"')
+                    ->first();
+
+    	$query = $query->select('records.id','records.type','records.heartbeat_count','records.stress_level','records.ppi',
                                'records.emotion_value','records.emotion_level','records.longitude','records.latitude',
-                               'records.created_at','records.updated_at')
+                               DB::raw('DATE_FORMAT(records.created_at, "%Y-%m-%d") as date_created'),DB::raw('DATE_FORMAT(records.created_at, "%H:%i:%s") as time_created'),'records.updated_at')
                     ->where('records.user_id', $userID)->where('records.type', 'automated')
                     ->whereRaw('DATE(records.created_at) BETWEEN "'.$from.'" AND "'.$to.'"')
                     ->orderBy('records.id', 'desc')->get();
+
+        if($average->upmood_meter == null){
+            $query['upmood_meter'] = 'No Record Found';
+        }
+        if($average->upmood_meter <= -61){
+            $query['upmood_meter'] = 'Sad';
+        }else if($average->upmood_meter <= -21){
+            $query['upmood_meter'] = 'Unpleasant';
+        }else if($average->upmood_meter <= 20){
+            $query['upmood_meter'] = 'Calm';
+        }else if($average->upmood_meter <= 60){
+            $query['upmood_meter'] = 'Pleasant';
+        }else if($average->upmood_meter <= 100){
+            $query['upmood_meter'] = 'Happy';
+        }
+        
+        return $query;
 
     }
 

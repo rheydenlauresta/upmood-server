@@ -11,4 +11,56 @@ use Validator;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    public function get_store($data,$model)
+    {
+        $model = new $model($data);
+
+        $res = $model->save();
+        
+        if($res){
+            $response = json_encode(['status'=>true,'response'=>'Saving was successful!']);
+
+        }else{
+            $response = json_encode(['status'=>false,'response'=>'Saving Failed!']);
+
+        }
+
+        return $response;
+    }
+
+    public function get_update($data,$model)
+    {
+        $data['id'] = Crypt::decrypt($data['id']);
+
+        $model  = new $model($data);
+
+        $res = $model->find($data['id'])->update($data);
+
+        if($res){
+            // 
+            $response = json_encode(['status'=>true,'response'=>'Saving was successful!']);
+
+        }else{
+            $response = json_encode(['status'=>false,'response'=>'Saving Failed!']);
+
+        }
+
+        return $response;
+    }
+
+    public function get_destroy($form_data)
+    {
+        $data = array();
+        foreach ($form_data['data'] as $key => $value) {
+            array_push($data, Crypt::decrypt($value));
+        }
+
+        $res = DB::table($this->table)
+                        ->whereIn('id',$data)
+                        ->update(['deleted_at'=>date('Y-m-d H:i:s')]);
+
+        if($res){ echo 'deleted'; }
+
+    }
 }
