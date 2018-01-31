@@ -45,6 +45,10 @@
 	}
 }
 
+.suggestion-ic{
+	position: absolute;
+}
+
 .ic-notification{
 	background: url('../img/ic_notification.png') no-repeat;
 	top: 17px;
@@ -85,6 +89,24 @@
 	background: url('../img/ic_message_title.png') no-repeat;
 	top: 7px;
 	width: 41px;
+}
+
+.ic-check-contact{
+	background: url('../img/ic_check_contacts.png') no-repeat;
+	top: 9px;
+	right: 10px;
+	height: 16px;
+	width: 16px;
+}
+
+.ic-add-contact-messages{
+	position: absolute;
+	background: url('../img/ic_add_contact_messages.png') no-repeat;
+	bottom: 5px;
+	right: 0px;
+	height: 16px;
+	width: 16px;
+	cursor: pointer;
 }
 
 

@@ -42,7 +42,6 @@ $(document).ready(function(){
   //       $(messageID).fadeIn();
   //     }
 
-  // });
 });
 
 $(window).on('resize', function(){
@@ -67,4 +66,60 @@ $(document)
     this.rows = minRows;
     rows = Math.ceil((this.scrollHeight - this.baseScrollHeight) / 16);
     this.rows = minRows + rows;
+});
+
+$(document).on('click keyup change',".bootstrap-tagsinput > input",function(){
+    if($(this).val().length){
+        var input = $(this).val();
+
+        $(".suggestion-row").each(function(index){
+            var name = $(this).children('.suggestion-content').children('.suggestion-name').html();
+            var email = $(this).children('.suggestion-content').children('.suggestion-email').html(); 
+
+            if (name.indexOf(input) >= 0){
+              $(this).show();
+            }
+            else if (email.indexOf(input) >= 0){
+              $(this).show();
+            }
+            else{
+              $(this).hide();
+            }
+        });
+
+        $(".compose-suggestion").show();
+    }
+    else{
+        $(".compose-suggestion").hide();
+    }
+});
+
+$(document).on('keyup change',".contact-search-input",function(){
+    if(true){
+        var input = $(this).val();
+
+        $(".contact-row").each(function(index){
+            var name = $(this).children('.contact-content').children('.contact-name').html();
+            var email = $(this).children('.contact-content').children('.contact-email').html(); 
+
+            if (name.indexOf(input) >= 0){
+              $(this).show();
+            }
+            else if (email.indexOf(input) >= 0){
+              $(this).show();
+            }
+            else{
+              $(this).hide();
+            }
+        });
+
+        $(".contact-wrapper").show();
+    }
+    else{
+        $(".contact-wrapper").hide();
+    }
+});
+
+$(document).on('blur',".bootstrap-tagsinput > input",function(){
+    $(".compose-suggestion").hide();
 });
