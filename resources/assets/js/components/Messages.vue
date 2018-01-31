@@ -96,14 +96,82 @@
                 <form action="" method="post" id="ComposeForm">
                     <div class="form-group">
                         <label for="email-to">To:</label>
-                        <input type="text" id="email-to" name="email-to" value="waylon.dalton@gmail.com,emilia.maria@yahoo.com" data-role="tagsinput">
+                        <input type="text" id="email-to" name="email-to" value="waylon.dalton@gmail.com,emilia.maria@yahoo.com" data-role="tagsinput" v-on:click="HideContacts">
+                        <div class="compose-suggestion">
+                            <div class="suggestion-row">
+                                <div class="image-wrapper">
+                                    <img :src="base_url + 'img/profile-avatar.png'" alt="">
+                                </div>
+                                <div class="suggestion-content">
+                                    <div class="suggestion-name">Waylon Dalton</div>
+                                    <div class="suggestion-email">waylon.dalton@gmail.com</div>
+                                    <i class="suggestion-ic ic-check-contact"></i>
+                                </div>
+                            </div>
+                            <div class="suggestion-row">
+                                <div class="image-wrapper">
+                                    <img :src="base_url + 'img/profile-avatar.png'" alt="">
+                                </div>
+                                <div class="suggestion-content">
+                                    <div class="suggestion-name">Drei</div>
+                                    <div class="suggestion-email">drei@gmail.com</div>
+                                </div>
+                            </div>
+                            <div class="suggestion-row">
+                                <div class="image-wrapper">
+                                    <img :src="base_url + 'img/profile-avatar.png'" alt="">
+                                </div>
+                                <div class="suggestion-content">
+                                    <div class="suggestion-name">Waylon Dalton</div>
+                                    <div class="suggestion-email">waylon.dalton@gmail.com</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="add-contact ic-add-contact-messages" v-on:click="showContacts"></span>
+                        <div class="contact-wrapper">
+                            <div class="contact-search">
+                                <form action="" method="post">
+                                    <div class="form-group input-ic ic-search">
+                                        <input type="text" class="form-control contact-search-input" placeholder="Search Email Address">
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="contact-row">
+                                <div class="image-wrapper">
+                                    <img :src="base_url + 'img/profile-avatar.png'" alt="">
+                                </div>
+                                <div class="contact-content">
+                                    <div class="contact-name">Waylon Dalton</div>
+                                    <div class="contact-email">waylon.dalton@gmail.com</div>
+                                    <i class="contact-ic ic-check-contact"></i>
+                                </div>
+                            </div>
+                            <div class="contact-row">
+                                <div class="image-wrapper">
+                                    <img :src="base_url + 'img/profile-avatar.png'" alt="">
+                                </div>
+                                <div class="contact-content">
+                                    <div class="contact-name">Drei</div>
+                                    <div class="contact-email">drei@gmail.com</div>
+                                </div>
+                            </div>
+                            <div class="contact-row">
+                                <div class="image-wrapper">
+                                    <img :src="base_url + 'img/profile-avatar.png'" alt="">
+                                </div>
+                                <div class="contact-content">
+                                    <div class="contact-name">Waylon Dalton</div>
+                                    <div class="contact-email">waylon.dalton@gmail.com</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="email-subject">Subject:</label>
-                        <input type="text" id="email-subject" name="email-subject" class="form-control">
+                        <input type="text" id="email-subject" name="email-subject" class="form-control" v-on:click="HideContacts">
                     </div>
                     <div class="form-group">
-                        <textarea class="form-control autoExpand" name="" id=""></textarea>
+                        <textarea class="form-control autoExpand" name="" id="" v-on:click="HideContacts"></textarea>
                     </div>
                 </form>
             </div>
@@ -239,6 +307,12 @@
                 $(".messages-row").removeClass('active');
                 $(".messages-content").hide();
                 $("#compose").fadeIn();
+            },
+            showContacts(){
+                $(".contact-wrapper").show();  
+            },
+            HideContacts(){
+                $(".contact-wrapper").hide();
             }
         }
     }

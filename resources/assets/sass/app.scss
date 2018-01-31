@@ -1316,6 +1316,133 @@ body{
                         }
                     }
                  }
+
+                 .compose-suggestion{
+                    position: absolute;
+                    left: -10px;
+                    background: #fff;
+                    padding-top: 10px;
+                    padding-bottom: 10px;
+                    z-index: 1;
+                    display: none;
+                    box-shadow: 0px 3px 6px rgba(0,0,0,0.16);
+
+                    .suggestion-row{
+                        min-height: 40px;
+                        cursor: pointer;
+                        padding-right: 50px;
+                        padding-left: 10px;
+                        position: relative;
+
+                        &:hover{
+                          background-color: #f7f9f1;
+                        }
+
+                        .image-wrapper{
+                            float: left;
+                            height: 30px;
+                            width: 30px;
+                            object-fit: cover;
+                            overflow:hidden;
+                            border-radius: 150px;
+                            margin-right: 8px;
+                            position: relative;
+                            top: 2px;
+
+                            img{
+                              height: 100%;
+                              width: 100%;
+                            }
+                        }
+
+                        .suggestion-content{
+                          float: left;
+
+                          .suggestion-name{
+                            font-size: 12px;
+                            font-weight: 400;
+                          }
+
+                          .suggestion-email{
+                            font-size: 11px;
+                            font-weight: 400;
+                            line-height: 10px;
+                          }
+                        }
+                    }
+                 }
+
+                 .contact-wrapper{
+                    min-width: 233px;
+                    display: none;
+                    position: absolute;
+                    right: 0px;
+                    background: #fff;
+                    padding-top: 10px;
+                    padding-bottom: 10px;
+                    z-index: 1;
+                    box-shadow: 0px 3px 6px rgba(0,0,0,0.16);
+
+                    .contact-search{
+                        padding:10px;
+
+                        .ic-search{
+
+                            &:before{
+                                left: 8px;
+                            }
+                        }
+
+                        .contact-search-input{
+                            border: 1px solid #BCBDBD;
+                            border-radius: 2px;
+                        }
+                    }
+
+                    .contact-row{
+                        min-height: 40px;
+                        cursor: pointer;
+                        padding-right: 50px;
+                        padding-left: 10px;
+                        position: relative;
+
+                        &:hover{
+                          background-color: #f7f9f1;
+                        }
+
+                        .image-wrapper{
+                            float: left;
+                            height: 30px;
+                            width: 30px;
+                            object-fit: cover;
+                            overflow:hidden;
+                            border-radius: 150px;
+                            margin-right: 8px;
+                            position: relative;
+                            top: 2px;
+
+                            img{
+                              height: 100%;
+                              width: 100%;
+                            }
+                        }
+
+                        .contact-content{
+                          float: left;
+
+                          .contact-name{
+                            font-size: 12px;
+                            font-weight: 400;
+                          }
+
+                          .contact-email{
+                            font-size: 11px;
+                            font-weight: 400;
+                            line-height: 10px;
+                          }
+                        }
+                    }
+                 }
               }
            }
       }
