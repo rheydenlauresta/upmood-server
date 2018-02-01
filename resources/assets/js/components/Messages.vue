@@ -21,7 +21,7 @@
             </form>
             <div class="messages-row-wrapper scrollbar-outer">
                 <ul class="message-row-menu" v-for="message in messages">
-                    <li class="messages-row" @click="viewMessage(message)">
+                    <li class="messages-row" @click="viewMessage(message)" :id="'messages-row' + message.id">
                         <div class="message-header row">
                             <div class="col-md-2">
                                 <div class="image-wrapper ">
@@ -271,7 +271,10 @@
                 }).catch(function (error) {
                 });
 
-                $("#messagedisplay").show();
+                $(".messages-row").removeClass('active');
+                $("#messages-row" + message.id).addClass('active');
+                $("#compose").hide();
+                $("#messagedisplay").fadeIn();
             },
 
             sendMessage(){

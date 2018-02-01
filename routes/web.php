@@ -28,6 +28,9 @@ Route::get('/dashboard', 'DashboardController@index');
 // user
 Route::get('/userslist', 'UsersController@usersList');
 Route::get('/usersfilter', 'UsersController@userFilter');
+Route::get('/userprofile', function () {
+    return view('userprofile');
+});
 
 // messages
 Route::resources([

@@ -430,7 +430,7 @@ body{
       }
     }
 
-    .table{
+    .table-population{
 
       thead{
 
@@ -441,6 +441,8 @@ body{
           font-size: 11px;
           font-weight: 400;
           padding: 15px 10px 15px 10px;
+          background: #fff;
+          color: #000 !important;
 
           &:first-child{
             text-align: left;
@@ -1446,5 +1448,265 @@ body{
               }
            }
       }
+    }
+}
+
+.user-profile-wrapper{
+    @extend .main-content-container;
+    margin-bottom: 15px;
+
+    .row{
+      .col-md-4{
+        padding-right: 0px;
+      }
+    }
+
+    .profile-info-container{
+        padding: 60px !important;
+        margin-top: 50px;
+        background: #fff;
+        border-radius: 5px;
+        box-shadow: 0px 3px 6px rgba(0,0,0,0.16);
+
+        .row{
+          margin-bottom: 15px;
+        }
+
+        .image-wrapper{
+            height: 180px;
+            width: 180px;
+            border: 1px solid #9E9E9E;
+            border-radius: 150px;
+            overflow: hidden;
+
+            img{
+                height: 100%;
+                width: 100%;
+                object-fit: cover;
+            }
+        }
+
+        .profile-info{
+            padding-left: 45px;
+            font-size: 16px;
+
+            .name{
+                font-size: 30px;
+                font-weight: 600;
+
+                .badge{
+                  display: inline-block !important;
+                  height: 21px;
+                  width: 20px;
+                }
+
+                .badge-online{
+                  @extend .badge;
+                  background-color: #F4D546;
+                }
+
+                .badge-offline{
+                  @extend .badge;
+                  background-color: #FEA0A0;
+                }
+            }
+
+            .age{
+                font-size: 16px;
+                padding-left: 25px;
+            }
+
+            .gender{
+              font-size: 16px;
+              padding-left: 25px;
+            }
+
+            .location{
+              font-size: 16px;
+            }
+
+            .description{
+              font-size: 14px;
+              font-weight: 300;
+              font-style: italic;
+              height: 80px;
+              overflow:hidden;
+              text-overflow: ellipsis;
+            }
+        }
+    }
+
+    .user-profile-modules{
+        height: 479px;
+        padding: 20px;
+        background: #fff;
+        border-radius: 5px;
+        box-shadow: 0px 3px 6px rgba(0,0,0,0.16);
+
+        .title{
+            font-weight: 600;
+            font-size: 20px;
+            font-style: italic;
+        }
+    }
+
+    .current-emotion{
+      @extend .user-profile-modules;
+      margin-top: 15px;
+
+      .image-wrapper{
+          @extend .content-center;
+          margin-top: 15px;
+          margin-bottom: 25px;
+          height: 180px;
+          width: 180px;
+          overflow: hidden;
+
+          img{
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+          }
+      }
+
+      .col-md-4{
+        padding-right: 0px;
+        font-weight: 600 !important;
+      }
+
+      .col-md-12{
+        font-weight: 600 !important;
+      }
+
+      .BPM{
+        padding-left: 0px;
+      }
+
+      .stress-level{
+        padding-left: 0px;
+      }
+
+      .emotion-info{
+        padding: 15px;
+
+        .row{
+          margin-bottom: 5px;
+        }
+
+        .upmood-meter{
+            margin-top: 5px;
+
+            .meter{
+              background: linear-gradient(45deg, rgba(37,176,160,1) 0%, rgba(237,199,38,1) 100%);
+              position: relative;
+              height: 39px;
+              border-radius: 150px;
+
+              .meter-control{
+                  position: absolute;
+                  top: 0px;
+                  left: 0px;
+                  height:  39px;
+                  width:  39px;
+                  overflow: hidden;
+                  border-radius: 150px;
+
+                  img{
+                      height: 100%;
+                      width: 100%;
+                      object-fit: cover;
+                  }
+              }
+            }
+
+            .meter-description{
+                position: relative;
+                left: 18px;
+
+                .description-tag{
+
+                    display: inline-block;
+                    float: left;
+                    margin-right: 33px;
+                    font-size:11px;
+                    font-weight: 300;
+                    font-style: italic;
+                }
+            }
+        }
+      }
+    }
+
+    .mood-steam{
+      @extend .user-profile-modules;
+      margin-top: 15px;
+
+      .mood-steam-table{
+          height: 410px;
+          
+          table{
+            margin-top: 15px;
+
+              tbody{
+
+                  tr{
+                      td{
+                          .image-wrapper{
+                              @extend .content-center;
+                              height: 50px;
+                              width: 50px;
+                              overflow: hidden;
+
+                              img{
+                                height: 100%;
+                                width: 100%;
+                                object-fit: cover;
+                              }
+                          }
+                      }
+                  }
+              }
+          }
+      }
+    }
+
+    .featured-friends{
+      @extend .user-profile-modules;
+      margin-top: 15px;
+
+      .featured-friends-table{
+          height: 410px;
+          
+          table{
+            margin-top: 15px;
+
+              tbody{
+
+                  tr{
+                      td{
+                          .image-wrapper{
+                              @extend .content-center;
+                              height: 50px;
+                              width: 50px;
+                              overflow: hidden;
+
+                              img{
+                                height: 100%;
+                                width: 100%;
+                                object-fit: cover;
+                              }
+                          }
+                      }
+                  }
+              }
+          }
+      }
+    }
+
+    .emotion-calendar{
+      @extend .user-profile-modules;
+      margin-top: 15px;
+
+
     }
 }

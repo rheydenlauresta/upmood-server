@@ -25,7 +25,7 @@
                     <div class="dashboard-panel">
                         <div class="panel-title">Upmood Population</div>
                         <div class="scrollbar-outer dashboard-population-table">
-                            <table class="table table-stripe">
+                            <table class="table table-population table-stripe">
                                 <thead>
                                     <th>Country:</th>
                                     <th>Online:</th>
