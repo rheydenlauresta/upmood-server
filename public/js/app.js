@@ -11889,7 +11889,7 @@ module.exports = Vue$3;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(12);
-module.exports = __webpack_require__(60);
+module.exports = __webpack_require__(63);
 
 
 /***/ }),
@@ -11922,51 +11922,90 @@ Vue.component('login', __webpack_require__(45));
 Vue.component('passwordreset', __webpack_require__(48));
 Vue.component('dashboard', __webpack_require__(51));
 Vue.component('users-component', __webpack_require__(54));
-Vue.component('messages-component', __webpack_require__(57));
+Vue.component('usersprofile-component', __webpack_require__(57));
+Vue.component('messages-component', __webpack_require__(60));
 
 var app = new Vue({
-  el: '#app',
-  router: __WEBPACK_IMPORTED_MODULE_0__router__["a" /* default */]
+    el: '#app',
+    router: __WEBPACK_IMPORTED_MODULE_0__router__["a" /* default */]
 });
 
 $(document).ready(function () {
-  $('.scrollbar-outer').scrollbar();
-
-  // $(document).on('click','.messages-row',function(){
-  //     if (!$(this).hasClass('active')){
-  //       var messageID = $(this).data('message');      
-
-  //       $(".messages-row").removeClass('active');
-  //       $(this).addClass('active');
-
-  //       $(".messages-content").hide();
-  //       $(messageID).fadeIn();
-  //     }
-
-  // });
+    $('.scrollbar-outer').scrollbar();
 });
 
 $(window).on('resize', function () {
-  if ($(".messages-wrapper").length) {
-    var wrapper_width = parseInt($(".messages-wrapper").css('width').replace('px', ''));
-    var nav = parseInt($(".messages-nav").css('width').replace('px', ''));
-    var list = parseInt($(".messages-list").css('width').replace('px', ''));
-    var new_width = wrapper_width - (nav + list);
-    $(".messages-content").css('width', new_width + "px");
-  }
+    if ($(".messages-wrapper").length) {
+        var wrapper_width = parseInt($(".messages-wrapper").css('width').replace('px', ''));
+        var nav = parseInt($(".messages-nav").css('width').replace('px', ''));
+        var list = parseInt($(".messages-list").css('width').replace('px', ''));
+        var new_width = wrapper_width - (nav + list);
+        $(".messages-content").css('width', new_width + "px");
+    }
 });
 
 $(document).one('focus.autoExpand', 'textarea.autoExpand', function () {
-  var savedValue = this.value;
-  this.value = '';
-  this.baseScrollHeight = this.scrollHeight;
-  this.value = savedValue;
+    var savedValue = this.value;
+    this.value = '';
+    this.baseScrollHeight = this.scrollHeight;
+    this.value = savedValue;
 }).on('input.autoExpand', 'textarea.autoExpand', function () {
-  var minRows = this.getAttribute('data-min-rows') | 0,
-      rows;
-  this.rows = minRows;
-  rows = Math.ceil((this.scrollHeight - this.baseScrollHeight) / 16);
-  this.rows = minRows + rows;
+    var minRows = this.getAttribute('data-min-rows') | 0,
+        rows;
+    this.rows = minRows;
+    rows = Math.ceil((this.scrollHeight - this.baseScrollHeight) / 16);
+    this.rows = minRows + rows;
+});
+
+$(document).on('click keyup change', ".bootstrap-tagsinput > input", function () {
+
+    if ($(this).val().length) {
+        var input = $(this).val();
+
+        $(".suggestion-row").each(function (index) {
+            var name = $(this).children('.suggestion-content').children('.suggestion-name').html();
+            var email = $(this).children('.suggestion-content').children('.suggestion-email').html();
+
+            if (name.indexOf(input) >= 0) {
+                $(this).show();
+            } else if (email.indexOf(input) >= 0) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+
+        $(".compose-suggestion").show();
+    } else {
+        $(".compose-suggestion").hide();
+    }
+});
+
+$(document).on('keyup change', ".contact-search-input", function () {
+    if (true) {
+        var input = $(this).val();
+
+        $(".contact-row").each(function (index) {
+            var name = $(this).children('.contact-content').children('.contact-name').html();
+            var email = $(this).children('.contact-content').children('.contact-email').html();
+
+            if (name.indexOf(input) >= 0) {
+                $(this).show();
+            } else if (email.indexOf(input) >= 0) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+
+        $(".contact-wrapper").show();
+    } else {
+        $(".contact-wrapper").hide();
+    }
+});
+
+$(document).on('blur', ".bootstrap-tagsinput > input", function () {
+    $(".compose-suggestion").hide();
 });
 
 /***/ }),
@@ -46497,24 +46536,28 @@ var render = function() {
             "div",
             { staticClass: "scrollbar-outer dashboard-population-table" },
             [
-              _c("table", { staticClass: "table table-stripe" }, [
-                _vm._m(0),
-                _vm._v(" "),
-                _c(
-                  "tbody",
-                  _vm._l(_vm.countries, function(country) {
-                    return _c("tr", [
-                      _c("td", [_vm._v(_vm._s(country.country))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(country.online))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(country.offline))]),
-                      _vm._v(" "),
-                      _c("td")
-                    ])
-                  })
-                )
-              ])
+              _c(
+                "table",
+                { staticClass: "table table-population table-stripe" },
+                [
+                  _vm._m(0),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    _vm._l(_vm.countries, function(country) {
+                      return _c("tr", [
+                        _c("td", [_vm._v(_vm._s(country.country))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(country.online))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(country.offline))]),
+                        _vm._v(" "),
+                        _c("td")
+                      ])
+                    })
+                  )
+                ]
+              )
             ]
           )
         ])
@@ -47787,7 +47830,11 @@ var render = function() {
                   ])
                 ]),
                 _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(user.name))]),
+                _c("td", [
+                  _c("a", { attrs: { href: _vm.base_url + "userprofile" } }, [
+                    _vm._v(_vm._s(user.name))
+                  ])
+                ]),
                 _vm._v(" "),
                 _c("td", [_vm._v(_vm._s(user.gender))]),
                 _vm._v(" "),
@@ -47957,7 +48004,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources\\assets\\js\\components\\Messages.vue"
+Component.options.__file = "resources\\assets\\js\\components\\UsersProfile.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -47966,9 +48013,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-ade8bc7a", Component.options)
+    hotAPI.createRecord("data-v-083f9e10", Component.options)
   } else {
-    hotAPI.reload("data-v-ade8bc7a", Component.options)
+    hotAPI.reload("data-v-083f9e10", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -48097,6 +48144,1182 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: [],
+    data: function data() {
+        return {
+            csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            base_url: window.base_url
+        };
+    },
+    mounted: function mounted() {
+        $(".main-header > .title").html('<i class="header-ic ic-user-green"></i>Users');
+        this.UpdateMoodMeter('sad');
+    },
+
+    methods: {
+        UpdateMoodMeter: function UpdateMoodMeter(mood) {
+            if (mood == 'Sad' || mood == 'sad') {
+                $(".meter-control").css('left', '0px');
+            } else if (mood == 'Unpleasant' || mood == 'unpleasant') {
+                $(".meter-control").css('left', '62px');
+            } else if (mood == 'Calm' || mood == 'calm') {
+                $(".meter-control").css('left', '134px');
+            } else if (mood == 'Pleasant' || mood == 'pleasant') {
+                $(".meter-control").css('left', '200px');
+            } else if (mood == 'Happy' || mood == 'happy') {
+                $(".meter-control").css('left', '263px');
+            }
+        }
+    }
+});
+
+/***/ }),
+/* 59 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "user-profile-wrapper" }, [
+    _c("div", { staticClass: "profile-info-container" }, [
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-md-2" }, [
+          _c("div", { staticClass: "image-wrapper" }, [
+            _c("img", {
+              attrs: { src: _vm.base_url + "img/profile-avatar.png", alt: "" }
+            })
+          ])
+        ]),
+        _vm._v(" "),
+        _vm._m(0)
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-md-4" }, [
+        _c("div", { staticClass: "current-emotion" }, [
+          _c("div", { staticClass: "title" }, [_vm._v("Current Emotion")]),
+          _vm._v(" "),
+          _c("div", { staticClass: "image-wrapper" }, [
+            _c("img", {
+              attrs: {
+                src:
+                  _vm.base_url + "img/resources/gummybear/emoji/confused.png",
+                alt: ""
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "emotion-info" }, [
+            _vm._m(1),
+            _vm._v(" "),
+            _vm._m(2),
+            _vm._v(" "),
+            _vm._m(3),
+            _vm._v(" "),
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-md-12" }, [
+                _c("div", { staticClass: "upmood-meter" }, [
+                  _c("div", { staticClass: "meter" }, [
+                    _c("div", { staticClass: "meter-control" }, [
+                      _c("img", {
+                        attrs: {
+                          src: _vm.base_url + "img/profile-avatar.png",
+                          alt: ""
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _vm._m(4)
+                ])
+              ])
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-8" }, [
+        _c("div", { staticClass: "mood-steam" }, [
+          _c("div", { staticClass: "title" }, [_vm._v("Mood Steam")]),
+          _vm._v(" "),
+          _c("div", { staticClass: "scrollbar-outer mood-steam-table" }, [
+            _c("table", { staticClass: "table" }, [
+              _vm._m(5),
+              _vm._v(" "),
+              _c("tbody", [
+                _c("tr", [
+                  _c("td", [_vm._v("01-20-18 12:21:43 AM")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v("43.705")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v("202")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v("180160")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v("Moderate")]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c("div", { staticClass: "image-wrapper" }, [
+                      _c("img", {
+                        attrs: {
+                          src:
+                            _vm.base_url +
+                            "img/resources/regular/emoji/confused.png",
+                          alt: ""
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c("div", { staticClass: "image-wrapper" }, [
+                      _c("img", {
+                        attrs: {
+                          src:
+                            _vm.base_url +
+                            "img/resources/chick/emoji/happy.png",
+                          alt: ""
+                        }
+                      })
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("tr", [
+                  _c("td", [_vm._v("01-20-18 12:21:43 AM")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v("43.705")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v("202")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v("180160")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v("Moderate")]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c("div", { staticClass: "image-wrapper" }, [
+                      _c("img", {
+                        attrs: {
+                          src:
+                            _vm.base_url +
+                            "img/resources/regular/emoji/confused.png",
+                          alt: ""
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c("div", { staticClass: "image-wrapper" }, [
+                      _c("img", {
+                        attrs: {
+                          src:
+                            _vm.base_url +
+                            "img/resources/chick/emoji/happy.png",
+                          alt: ""
+                        }
+                      })
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("tr", [
+                  _c("td", [_vm._v("01-20-18 12:21:43 AM")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v("43.705")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v("202")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v("180160")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v("Moderate")]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c("div", { staticClass: "image-wrapper" }, [
+                      _c("img", {
+                        attrs: {
+                          src:
+                            _vm.base_url +
+                            "img/resources/regular/emoji/confused.png",
+                          alt: ""
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c("div", { staticClass: "image-wrapper" }, [
+                      _c("img", {
+                        attrs: {
+                          src:
+                            _vm.base_url +
+                            "img/resources/chick/emoji/happy.png",
+                          alt: ""
+                        }
+                      })
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("tr", [
+                  _c("td", [_vm._v("01-20-18 12:21:43 AM")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v("43.705")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v("202")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v("180160")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v("Moderate")]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c("div", { staticClass: "image-wrapper" }, [
+                      _c("img", {
+                        attrs: {
+                          src:
+                            _vm.base_url +
+                            "img/resources/regular/emoji/confused.png",
+                          alt: ""
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c("div", { staticClass: "image-wrapper" }, [
+                      _c("img", {
+                        attrs: {
+                          src:
+                            _vm.base_url +
+                            "img/resources/chick/emoji/happy.png",
+                          alt: ""
+                        }
+                      })
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("tr", [
+                  _c("td", [_vm._v("01-20-18 12:21:43 AM")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v("43.705")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v("202")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v("180160")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v("Moderate")]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c("div", { staticClass: "image-wrapper" }, [
+                      _c("img", {
+                        attrs: {
+                          src:
+                            _vm.base_url +
+                            "img/resources/regular/emoji/confused.png",
+                          alt: ""
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c("div", { staticClass: "image-wrapper" }, [
+                      _c("img", {
+                        attrs: {
+                          src:
+                            _vm.base_url +
+                            "img/resources/chick/emoji/happy.png",
+                          alt: ""
+                        }
+                      })
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("tr", [
+                  _c("td", [_vm._v("01-20-18 12:21:43 AM")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v("43.705")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v("202")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v("180160")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v("Moderate")]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c("div", { staticClass: "image-wrapper" }, [
+                      _c("img", {
+                        attrs: {
+                          src:
+                            _vm.base_url +
+                            "img/resources/regular/emoji/confused.png",
+                          alt: ""
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c("div", { staticClass: "image-wrapper" }, [
+                      _c("img", {
+                        attrs: {
+                          src:
+                            _vm.base_url +
+                            "img/resources/chick/emoji/happy.png",
+                          alt: ""
+                        }
+                      })
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("tr", [
+                  _c("td", [_vm._v("01-20-18 12:21:43 AM")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v("43.705")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v("202")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v("180160")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v("Moderate")]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c("div", { staticClass: "image-wrapper" }, [
+                      _c("img", {
+                        attrs: {
+                          src:
+                            _vm.base_url +
+                            "img/resources/regular/emoji/confused.png",
+                          alt: ""
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c("div", { staticClass: "image-wrapper" }, [
+                      _c("img", {
+                        attrs: {
+                          src:
+                            _vm.base_url +
+                            "img/resources/chick/emoji/happy.png",
+                          alt: ""
+                        }
+                      })
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("tr", [
+                  _c("td", [_vm._v("01-20-18 12:21:43 AM")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v("43.705")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v("202")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v("180160")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v("Moderate")]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c("div", { staticClass: "image-wrapper" }, [
+                      _c("img", {
+                        attrs: {
+                          src:
+                            _vm.base_url +
+                            "img/resources/regular/emoji/confused.png",
+                          alt: ""
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c("div", { staticClass: "image-wrapper" }, [
+                      _c("img", {
+                        attrs: {
+                          src:
+                            _vm.base_url +
+                            "img/resources/chick/emoji/happy.png",
+                          alt: ""
+                        }
+                      })
+                    ])
+                  ])
+                ])
+              ])
+            ])
+          ])
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-md-4" }, [
+        _c("div", { staticClass: "featured-friends" }, [
+          _c("div", { staticClass: "title" }, [_vm._v("Featured Friends")]),
+          _vm._v(" "),
+          _c("div", { staticClass: "scrollbar-outer featured-friends-table" }, [
+            _c("table", { staticClass: "table" }, [
+              _vm._m(6),
+              _vm._v(" "),
+              _c("tbody", [
+                _c("tr", [
+                  _c("td", [_vm._v("Fname Lname")]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c("div", { staticClass: "image-wrapper" }, [
+                      _c("img", {
+                        attrs: {
+                          src:
+                            _vm.base_url +
+                            "img/resources/regular/emoji/confused.png",
+                          alt: ""
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c("div", { staticClass: "image-wrapper" }, [
+                      _c("img", {
+                        attrs: {
+                          src:
+                            _vm.base_url +
+                            "img/resources/chick/emoji/happy.png",
+                          alt: ""
+                        }
+                      })
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("tr", [
+                  _c("td", [_vm._v("Fname Lname")]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c("div", { staticClass: "image-wrapper" }, [
+                      _c("img", {
+                        attrs: {
+                          src:
+                            _vm.base_url +
+                            "img/resources/regular/emoji/confused.png",
+                          alt: ""
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c("div", { staticClass: "image-wrapper" }, [
+                      _c("img", {
+                        attrs: {
+                          src:
+                            _vm.base_url +
+                            "img/resources/chick/emoji/happy.png",
+                          alt: ""
+                        }
+                      })
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("tr", [
+                  _c("td", [_vm._v("Fname Lname")]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c("div", { staticClass: "image-wrapper" }, [
+                      _c("img", {
+                        attrs: {
+                          src:
+                            _vm.base_url +
+                            "img/resources/regular/emoji/confused.png",
+                          alt: ""
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c("div", { staticClass: "image-wrapper" }, [
+                      _c("img", {
+                        attrs: {
+                          src:
+                            _vm.base_url +
+                            "img/resources/chick/emoji/happy.png",
+                          alt: ""
+                        }
+                      })
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("tr", [
+                  _c("td", [_vm._v("Fname Lname")]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c("div", { staticClass: "image-wrapper" }, [
+                      _c("img", {
+                        attrs: {
+                          src:
+                            _vm.base_url +
+                            "img/resources/regular/emoji/confused.png",
+                          alt: ""
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c("div", { staticClass: "image-wrapper" }, [
+                      _c("img", {
+                        attrs: {
+                          src:
+                            _vm.base_url +
+                            "img/resources/chick/emoji/happy.png",
+                          alt: ""
+                        }
+                      })
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("tr", [
+                  _c("td", [_vm._v("Fname Lname")]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c("div", { staticClass: "image-wrapper" }, [
+                      _c("img", {
+                        attrs: {
+                          src:
+                            _vm.base_url +
+                            "img/resources/regular/emoji/confused.png",
+                          alt: ""
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c("div", { staticClass: "image-wrapper" }, [
+                      _c("img", {
+                        attrs: {
+                          src:
+                            _vm.base_url +
+                            "img/resources/chick/emoji/happy.png",
+                          alt: ""
+                        }
+                      })
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("tr", [
+                  _c("td", [_vm._v("Fname Lname")]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c("div", { staticClass: "image-wrapper" }, [
+                      _c("img", {
+                        attrs: {
+                          src:
+                            _vm.base_url +
+                            "img/resources/regular/emoji/confused.png",
+                          alt: ""
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c("div", { staticClass: "image-wrapper" }, [
+                      _c("img", {
+                        attrs: {
+                          src:
+                            _vm.base_url +
+                            "img/resources/chick/emoji/happy.png",
+                          alt: ""
+                        }
+                      })
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("tr", [
+                  _c("td", [_vm._v("Fname Lname")]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c("div", { staticClass: "image-wrapper" }, [
+                      _c("img", {
+                        attrs: {
+                          src:
+                            _vm.base_url +
+                            "img/resources/regular/emoji/confused.png",
+                          alt: ""
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c("div", { staticClass: "image-wrapper" }, [
+                      _c("img", {
+                        attrs: {
+                          src:
+                            _vm.base_url +
+                            "img/resources/chick/emoji/happy.png",
+                          alt: ""
+                        }
+                      })
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("tr", [
+                  _c("td", [_vm._v("Fname Lname")]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c("div", { staticClass: "image-wrapper" }, [
+                      _c("img", {
+                        attrs: {
+                          src:
+                            _vm.base_url +
+                            "img/resources/regular/emoji/confused.png",
+                          alt: ""
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c("div", { staticClass: "image-wrapper" }, [
+                      _c("img", {
+                        attrs: {
+                          src:
+                            _vm.base_url +
+                            "img/resources/chick/emoji/happy.png",
+                          alt: ""
+                        }
+                      })
+                    ])
+                  ])
+                ])
+              ])
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _vm._m(7)
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-10" }, [
+      _c("div", { staticClass: "profile-info" }, [
+        _c("div", { staticClass: "name" }, [
+          _vm._v("Samuel Newman "),
+          _c("span", { staticClass: "badge-online" })
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "row" }, [
+          _c("div", { staticClass: "col-md-1 text-semibold" }, [
+            _vm._v("Age:")
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "age col-md-5" }, [_vm._v("26 Years Old")]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-md-1" }, [
+            _c("i", { staticClass: "ic-location" })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-md-5 location" }, [
+            _vm._v("Metro Manila, Philippines")
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "row" }, [
+          _c("div", { staticClass: "col-md-1 text-semibold" }, [
+            _vm._v("Gender:")
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-md-11 gender" }, [_vm._v("Male")])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "row" }, [
+          _c("div", { staticClass: "col-md-12" }, [
+            _c("div", { staticClass: "description" }, [
+              _vm._v(
+                '"Infuse your life with action. Don\'t wait for it to happen. Make it happen. Make your own future. Make your own hope. Make your own love. And whatever your beliefs, honor your creator, not by passively waiting for grace to come down from upon high, but by doing what you can to make grace happen... yourself, right now, right down here on Earth."'
+              )
+            ])
+          ])
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-md-4" }, [_vm._v("BPM:")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-8 BPM" }, [_vm._v("43.7405")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-md-4" }, [_vm._v("Stress Level:")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-8 stress-level" }, [_vm._v("Moderate")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-md-12" }, [_vm._v("Mood Meter:")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row meter-description" }, [
+      _c("div", { staticClass: "description-tag" }, [_vm._v("Sad")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "description-tag" }, [_vm._v("Unpleasant")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "description-tag" }, [_vm._v("Calm")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "description-tag" }, [_vm._v("Pleasant")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "description-tag" }, [_vm._v("Happy")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("th", [_vm._v("Time")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("BPM")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("No of PPI")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Total Sum")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Stress Level")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Emotion")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Reaction")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("th", [_vm._v("Name")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Emotion")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Reaction")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-4" }, [
+      _c("div", { staticClass: "emotion-calendar" }, [
+        _c("div", { staticClass: "title" }, [_vm._v("Upmood Emotion Calendar")])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-083f9e10", module.exports)
+  }
+}
+
+/***/ }),
+/* 60 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(61)
+/* template */
+var __vue_template__ = __webpack_require__(62)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\Messages.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-ade8bc7a", Component.options)
+  } else {
+    hotAPI.reload("data-v-ade8bc7a", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 61 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+$(document).on('change', "#email-to", function () {
+    alert();
+});
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -48106,12 +49329,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             messages: [],
 
-            types: [{
-                'general': 'General',
-                'reports': 'Report',
-                'inquiries': 'Inquire',
-                'account_cancellation': 'Account Cancellation'
-            }],
+            search: "",
+            type: "",
+            emailString: "",
+
+            sendButton: {
+                disable: false,
+                text: 'Send'
+            },
+
+            types: {
+                general: 'General',
+                reports: 'Report',
+                inquiries: 'Inquire',
+                account_cancellation: 'Account Cancellation'
+            },
 
             messageContent: {
                 name: '',
@@ -48120,6 +49352,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 time: '',
                 content: '',
                 id: 0
+            },
+
+            composeMessage: {
+                emailArray: [],
+                subject: '',
+                message: ''
             },
 
             replyContent: {
@@ -48150,16 +49388,38 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     methods: {
+        messageType: function messageType(type) {
+            return this.types[type];
+        },
         getContent: function getContent(type) {
             var vue = this;
 
-            axios.get(base_url + 'content?type=' + type).then(function (response) {
+            if (typeof type != 'undefined') {
+                vue.type = type;
+            }
+
+            vue.formData._method = 'GET';
+            axios.get(base_url + 'messages/getMessages?type=' + vue.type + '&search=' + vue.search).then(function (response) {
                 vue.messages = response['data'];
                 vue.viewMessage(vue.messages[0]);
             }).catch(function (error) {});
         },
-        messageType: function messageType(type) {
-            return this.types[0][type];
+        getReply: function getReply(id) {
+            var vue = this;
+
+            vue.formData._method = 'GET';
+            axios.get(base_url + 'messages/getReplies?id=' + id).then(function (response) {
+
+                if (response['data'].length > 0) {
+                    vue.replyContent.message = response['data'][0].message;
+                    vue.replyContent.date = response['data'][0].date_created;
+                    vue.replyContent.time = response['data'][0].time_created;
+                } else {
+                    vue.replyContent.message = '';
+                    vue.replyContent.date = '';
+                    vue.replyContent.time = '';
+                }
+            }).catch(function (error) {});
         },
         viewMessage: function viewMessage(message) {
 
@@ -48172,29 +49432,47 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.messageContent.content = message.content;
             this.messageContent.id = message.id;
 
-            axios.get(base_url + 'reply?id=' + message.id).then(function (response) {
+            this.getReply(message.id);
 
-                if (response['data'].length > 0) {
-                    vue.replyContent.message = response['data'][0].message;
-                    vue.replyContent.date = response['data'][0].date_created;
-                    vue.replyContent.time = response['data'][0].time_created;
-                } else {
-                    vue.replyContent.message = '';
-                    vue.replyContent.date = '';
-                    vue.replyContent.time = '';
-                }
-            }).catch(function (error) {});
-
-            $("#messagedisplay").show();
+            $(".messages-row").removeClass('active');
+            $("#messages-row" + message.id).addClass('active');
+            $("#compose").hide();
+            $("#messagedisplay").hide();
+            $("#messagedisplay").fadeIn(500);
+        },
+        sendReply: function sendReply() {
+            this.formData.contact_message_id = this.messageContent.id;
+            this.formData._method = 'PUT';
+            this.submit('messages/sendReply', this.formData, 'clearFormData');
         },
         sendMessage: function sendMessage() {
+            this.emailString = $('#email-to').val();
+            this.composeMessage.emailArray = this.emailString.split(",");
+            this.composeMessage._method = 'PUT';
+
+            this.submit('messages/sendMessage', this.composeMessage, 'clearComposeMessage');
+        },
+        submit: function submit(url, data, successAction) {
             var vue = this;
 
-            vue.formData.contact_message_id = vue.messageContent.id;
+            vue.sendButton.disable = true;
+            vue.sendButton.text = 'Sending';
 
-            axios.post(base_url + 'messages', this.formData).then(function (response) {
-                // vue.messages = response['data'];
-                // vue.viewMessage(vue.messages[0]);
+            axios.post(base_url + url, data).then(function (response) {
+                vue.sendButton.disable = false;
+                vue.sendButton.text = 'Send';
+
+                if (successAction == 'clearFormData') {
+                    vue.formData.contact_message_id = 0;
+                    vue.formData.message = '';
+                    vue.getReply(vue.messageContent.id);
+                } else if (successAction == 'clearComposeMessage') {
+                    vue.composeMessage.emailArray = [];
+                    vue.composeMessage.subject = '';
+                    vue.composeMessage.message = '';
+                    $('#email-to').val('');
+                    $('#email-to').tagsinput('removeAll');
+                }
             }).catch(function (error) {});
         },
         resizeMessageContent: function resizeMessageContent() {
@@ -48217,12 +49495,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             $(".messages-row").removeClass('active');
             $(".messages-content").hide();
             $("#compose").fadeIn();
-        }
+        },
+        showContacts: function showContacts() {
+            $(".contact-wrapper").show();
+        },
+        HideContacts: function HideContacts() {
+            $(".contact-wrapper").hide();
+        },
+
+
+        getAxios: _.debounce(function () {
+            this.getContent();
+        }, 500)
     }
 });
 
 /***/ }),
-/* 59 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -48329,7 +49618,40 @@ var render = function() {
           domProps: { value: _vm.csrf }
         }),
         _vm._v(" "),
-        _vm._m(1)
+        _c(
+          "div",
+          { staticClass: "input-ic ic-search messages-search-wrapper" },
+          [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.search,
+                  expression: "search"
+                }
+              ],
+              staticClass: "form-control messages-search",
+              attrs: {
+                type: "text",
+                name: "messages-search",
+                placeholder: "Search Messages"
+              },
+              domProps: { value: _vm.search },
+              on: {
+                keyup: function($event) {
+                  _vm.getAxios()
+                },
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.search = $event.target.value
+                }
+              }
+            })
+          ]
+        )
       ]),
       _vm._v(" "),
       _c(
@@ -48485,14 +49807,14 @@ var render = function() {
                   "button",
                   {
                     staticClass: "btn btn-success pull-right",
-                    attrs: { type: "button" },
+                    attrs: { type: "button", disabled: _vm.sendButton.disable },
                     on: {
                       click: function($event) {
-                        _vm.sendMessage()
+                        _vm.sendReply()
                       }
                     }
                   },
-                  [_vm._v("Send")]
+                  [_vm._v(_vm._s(_vm.sendButton.text))]
                 )
               ])
             ])
@@ -48500,7 +49822,196 @@ var render = function() {
       ]
     ),
     _vm._v(" "),
-    _vm._m(2)
+    _c("div", { staticClass: "messages-content", attrs: { id: "compose" } }, [
+      _c("div", { staticClass: "compose-wrapper" }, [
+        _c("h2", [_vm._v("Compose Message")]),
+        _vm._v(" "),
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-success",
+            attrs: { disabled: _vm.sendButton.disable },
+            on: {
+              click: function($event) {
+                _vm.sendMessage()
+              }
+            }
+          },
+          [_vm._v(_vm._s(_vm.sendButton.text))]
+        ),
+        _vm._v(" "),
+        _c(
+          "form",
+          { attrs: { action: "", method: "post", id: "ComposeForm" } },
+          [
+            _c("div", { staticClass: "form-group" }, [
+              _c("label", { attrs: { for: "email-to" } }, [_vm._v("To:")]),
+              _vm._v(" "),
+              _c("input", {
+                attrs: {
+                  type: "text",
+                  id: "email-to",
+                  name: "email-to",
+                  "data-role": "tagsinput"
+                },
+                on: {
+                  change: function($event) {
+                    _vm.HideContacts()
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("div", { staticClass: "compose-suggestion" }, [
+                _c("div", { staticClass: "suggestion-row" }, [
+                  _c("div", { staticClass: "image-wrapper" }, [
+                    _c("img", {
+                      attrs: {
+                        src: _vm.base_url + "img/profile-avatar.png",
+                        alt: ""
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _vm._m(1)
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "suggestion-row" }, [
+                  _c("div", { staticClass: "image-wrapper" }, [
+                    _c("img", {
+                      attrs: {
+                        src: _vm.base_url + "img/profile-avatar.png",
+                        alt: ""
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _vm._m(2)
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "suggestion-row" }, [
+                  _c("div", { staticClass: "image-wrapper" }, [
+                    _c("img", {
+                      attrs: {
+                        src: _vm.base_url + "img/profile-avatar.png",
+                        alt: ""
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _vm._m(3)
+                ])
+              ]),
+              _vm._v(" "),
+              _c("span", {
+                staticClass: "add-contact ic-add-contact-messages",
+                on: { click: _vm.showContacts }
+              }),
+              _vm._v(" "),
+              _c("div", { staticClass: "contact-wrapper" }, [
+                _vm._m(4),
+                _vm._v(" "),
+                _c("div", { staticClass: "contact-row" }, [
+                  _c("div", { staticClass: "image-wrapper" }, [
+                    _c("img", {
+                      attrs: {
+                        src: _vm.base_url + "img/profile-avatar.png",
+                        alt: ""
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _vm._m(5)
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "contact-row" }, [
+                  _c("div", { staticClass: "image-wrapper" }, [
+                    _c("img", {
+                      attrs: {
+                        src: _vm.base_url + "img/profile-avatar.png",
+                        alt: ""
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _vm._m(6)
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "contact-row" }, [
+                  _c("div", { staticClass: "image-wrapper" }, [
+                    _c("img", {
+                      attrs: {
+                        src: _vm.base_url + "img/profile-avatar.png",
+                        alt: ""
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _vm._m(7)
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
+              _c("label", { attrs: { for: "email-subject" } }, [
+                _vm._v("Subject:")
+              ]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.composeMessage.subject,
+                    expression: "composeMessage.subject"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: {
+                  type: "text",
+                  id: "email-subject",
+                  name: "email-subject"
+                },
+                domProps: { value: _vm.composeMessage.subject },
+                on: {
+                  click: _vm.HideContacts,
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.composeMessage, "subject", $event.target.value)
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
+              _c("textarea", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.composeMessage.message,
+                    expression: "composeMessage.message"
+                  }
+                ],
+                staticClass: "form-control autoExpand",
+                attrs: { name: "", id: "" },
+                domProps: { value: _vm.composeMessage.message },
+                on: {
+                  click: _vm.HideContacts,
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.composeMessage, "message", $event.target.value)
+                  }
+                }
+              })
+            ])
+          ]
+        )
+      ])
+    ])
   ])
 }
 var staticRenderFns = [
@@ -48516,78 +50027,88 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      { staticClass: "input-ic ic-search messages-search-wrapper" },
-      [
-        _c("input", {
-          staticClass: "form-control messages-search",
-          attrs: {
-            type: "text",
-            name: "messages-search",
-            placeholder: "Search Messages"
-          }
-        })
-      ]
-    )
+    return _c("div", { staticClass: "suggestion-content" }, [
+      _c("div", { staticClass: "suggestion-name" }, [_vm._v("Waylon Dalton")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "suggestion-email" }, [
+        _vm._v("waylon.dalton@gmail.com")
+      ]),
+      _vm._v(" "),
+      _c("i", { staticClass: "suggestion-ic ic-check-contact" })
+    ])
   },
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      { staticClass: "messages-content", attrs: { id: "compose" } },
-      [
-        _c("div", { staticClass: "compose-wrapper" }, [
-          _c("h2", [_vm._v("Compose Message")]),
-          _vm._v(" "),
-          _c("button", { staticClass: "btn btn-success" }, [_vm._v("Send")]),
-          _vm._v(" "),
-          _c(
-            "form",
-            { attrs: { action: "", method: "post", id: "ComposeForm" } },
-            [
-              _c("div", { staticClass: "form-group" }, [
-                _c("label", { attrs: { for: "email-to" } }, [_vm._v("To:")]),
-                _vm._v(" "),
-                _c("input", {
-                  attrs: {
-                    type: "text",
-                    id: "email-to",
-                    name: "email-to",
-                    value: "waylon.dalton@gmail.com,emilia.maria@yahoo.com",
-                    "data-role": "tagsinput"
-                  }
-                })
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "form-group" }, [
-                _c("label", { attrs: { for: "email-subject" } }, [
-                  _vm._v("Subject:")
-                ]),
-                _vm._v(" "),
-                _c("input", {
-                  staticClass: "form-control",
-                  attrs: {
-                    type: "text",
-                    id: "email-subject",
-                    name: "email-subject"
-                  }
-                })
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "form-group" }, [
-                _c("textarea", {
-                  staticClass: "form-control autoExpand",
-                  attrs: { name: "", id: "" }
-                })
-              ])
-            ]
-          )
+    return _c("div", { staticClass: "suggestion-content" }, [
+      _c("div", { staticClass: "suggestion-name" }, [_vm._v("Drei")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "suggestion-email" }, [_vm._v("drei@gmail.com")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "suggestion-content" }, [
+      _c("div", { staticClass: "suggestion-name" }, [_vm._v("Waylon Dalton")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "suggestion-email" }, [
+        _vm._v("waylon.dalton@gmail.com")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "contact-search" }, [
+      _c("form", { attrs: { action: "", method: "post" } }, [
+        _c("div", { staticClass: "form-group input-ic ic-search" }, [
+          _c("input", {
+            staticClass: "form-control contact-search-input",
+            attrs: { type: "text", placeholder: "Search Email Address" }
+          })
         ])
-      ]
-    )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "contact-content" }, [
+      _c("div", { staticClass: "contact-name" }, [_vm._v("Waylon Dalton")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "contact-email" }, [
+        _vm._v("waylon.dalton@gmail.com")
+      ]),
+      _vm._v(" "),
+      _c("i", { staticClass: "contact-ic ic-check-contact" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "contact-content" }, [
+      _c("div", { staticClass: "contact-name" }, [_vm._v("Drei")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "contact-email" }, [_vm._v("drei@gmail.com")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "contact-content" }, [
+      _c("div", { staticClass: "contact-name" }, [_vm._v("Waylon Dalton")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "contact-email" }, [
+        _vm._v("waylon.dalton@gmail.com")
+      ])
+    ])
   }
 ]
 render._withStripped = true
@@ -48600,7 +50121,7 @@ if (false) {
 }
 
 /***/ }),
-/* 60 */
+/* 63 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

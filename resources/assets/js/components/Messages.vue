@@ -16,12 +16,12 @@
             <form action="" method="post">
                 <input type="hidden" :value="csrf">
                 <div class="input-ic ic-search messages-search-wrapper">
-                    <input type="text"  name="messages-search" class="form-control messages-search" placeholder="Search Messages">
+                    <input v-model="search" @keyup="getAxios()" type="text"  name="messages-search" class="form-control messages-search" placeholder="Search Messages">
                 </div>
             </form>
             <div class="messages-row-wrapper scrollbar-outer">
                 <ul class="message-row-menu" v-for="message in messages">
-                    <li class="messages-row" @click="viewMessage(message)" :id="'messages-row' + message.id">
+                    <li class="messages-row" @click="viewMessage(message)">
                         <div class="message-header row">
                             <div class="col-md-2">
                                 <div class="image-wrapper ">
@@ -84,7 +84,7 @@
             <div class="message-reply-input" v-if="replyContent.message == ''">
                 <form action="" method="post">
                     <textarea v-model="formData.message" name="" id=""></textarea>
-                    <button @click="sendMessage()" class="btn btn-success pull-right" type="button">Send</button>
+                    <button @click="sendReply()" class="btn btn-success pull-right" type="button" :disabled="sendButton.disable">{{ sendButton.text }}</button>
                 </form>
             </div>
         </div>
@@ -92,11 +92,11 @@
         <div class="messages-content" id="compose">
             <div class="compose-wrapper">
                 <h2>Compose Message</h2>
-                <button class="btn btn-success">Send</button>
+                <button @click="sendMessage()" class="btn btn-success" :disabled="sendButton.disable">{{ sendButton.text }}</button>
                 <form action="" method="post" id="ComposeForm">
                     <div class="form-group">
                         <label for="email-to">To:</label>
-                        <input type="text" id="email-to" name="email-to" value="waylon.dalton@gmail.com,emilia.maria@yahoo.com" data-role="tagsinput" v-on:click="HideContacts">
+                        <input type="text" id="email-to" name="email-to" data-role="tagsinput" @change="HideContacts()">
                         <div class="compose-suggestion">
                             <div class="suggestion-row">
                                 <div class="image-wrapper">
@@ -168,10 +168,10 @@
                     </div>
                     <div class="form-group">
                         <label for="email-subject">Subject:</label>
-                        <input type="text" id="email-subject" name="email-subject" class="form-control" v-on:click="HideContacts">
+                        <input v-model="composeMessage.subject" type="text" id="email-subject" name="email-subject" class="form-control" @click="HideContacts">
                     </div>
                     <div class="form-group">
-                        <textarea class="form-control autoExpand" name="" id="" v-on:click="HideContacts"></textarea>
+                        <textarea v-model="composeMessage.message" class="form-control autoExpand" name="" id="" @click="HideContacts"></textarea>
                     </div>
                 </form>
             </div>
@@ -180,6 +180,12 @@
 </template>
 
 <script>
+
+$(document).on('change',"#email-to",function(){
+    alert()
+});
+
+
     export default {
         data() {
             return {
@@ -188,12 +194,21 @@
 
                 messages: [],
 
-                types: [{
-                    'general': 'General',
-                    'reports': 'Report',
-                    'inquiries': 'Inquire',
-                    'account_cancellation': 'Account Cancellation'
-                }],
+                search: "",
+                type: "",
+                emailString: "",
+
+                sendButton:{
+                    disable: false,
+                    text: 'Send',
+                },
+
+                types:{
+                    general: 'General',
+                    reports: 'Report',
+                    inquiries: 'Inquire',
+                    account_cancellation: 'Account Cancellation'
+                },
 
                 messageContent: {
                     name: '',
@@ -202,6 +217,12 @@
                     time: '',
                     content: '',
                     id: 0,
+                },
+
+                composeMessage: {
+                    emailArray: [],
+                    subject: '',
+                    message: '',
                 },
 
                 replyContent: {
@@ -223,6 +244,7 @@
             this.resizeMessageContent()
         },
 
+
         filters: {
       
             truncate: function(string, value) {
@@ -231,10 +253,19 @@
         },
 
         methods: {
+            messageType(type){
+                return this.types[type]
+            },
+
             getContent(type){
                 let vue = this;
 
-                axios.get(base_url+'content?type='+type).then(function (response) {
+                if(typeof type != 'undefined'){
+                    vue.type = type;
+                }
+
+                vue.formData._method = 'GET';
+                axios.get(base_url+'messages/getMessages?type='+vue.type+'&search='+vue.search).then(function (response) {
                     vue.messages = response['data'];
                     vue.viewMessage(vue.messages[0]);
                 }).catch(function (error) {
@@ -242,8 +273,23 @@
 
             },
 
-            messageType(type){
-                return this.types[0][type]
+            getReply(id){
+                let vue = this;
+
+                vue.formData._method = 'GET';
+                axios.get(base_url+'messages/getReplies?id='+id).then(function (response) {
+
+                    if(response['data'].length > 0){
+                        vue.replyContent.message = response['data'][0].message
+                        vue.replyContent.date = response['data'][0].date_created
+                        vue.replyContent.time = response['data'][0].time_created
+                    }else{
+                        vue.replyContent.message = ''
+                        vue.replyContent.date = ''
+                        vue.replyContent.time = ''
+                    }
+                }).catch(function (error) {
+                });
             },
 
             viewMessage(message){
@@ -257,34 +303,51 @@
                 this.messageContent.content = message.content;
                 this.messageContent.id = message.id;
 
-                axios.get(base_url+'reply?id='+message.id).then(function (response) {
-
-                    if(response['data'].length > 0){
-                        vue.replyContent.message = response['data'][0].message
-                        vue.replyContent.date = response['data'][0].date_created
-                        vue.replyContent.time = response['data'][0].time_created
-                    }else{
-                        vue.replyContent.message = ''
-                        vue.replyContent.date = ''
-                        vue.replyContent.time = ''
-                    }
-                }).catch(function (error) {
-                });
+                this.getReply(message.id);
 
                 $(".messages-row").removeClass('active');
                 $("#messages-row" + message.id).addClass('active');
                 $("#compose").hide();
-                $("#messagedisplay").fadeIn();
+                $("#messagedisplay").hide();
+                $("#messagedisplay").fadeIn(500);
+            },
+
+            sendReply(){
+                this.formData.contact_message_id = this.messageContent.id;
+                this.formData._method = 'PUT';
+                this.submit('messages/sendReply', this.formData, 'clearFormData')
             },
 
             sendMessage(){
+                this.emailString = $('#email-to').val()
+                this.composeMessage.emailArray = this.emailString.split(",");
+                this.composeMessage._method = 'PUT';
+
+                this.submit('messages/sendMessage', this.composeMessage, 'clearComposeMessage')
+            },
+
+            submit(url, data, successAction){
                 let vue = this;
 
-                vue.formData.contact_message_id = vue.messageContent.id;
+                vue.sendButton.disable = true;
+                vue.sendButton.text = 'Sending';
 
-                axios.post(base_url+'messages', this.formData).then(function (response) {
-                    // vue.messages = response['data'];
-                    // vue.viewMessage(vue.messages[0]);
+                axios.post(base_url+url, data).then(function (response) {
+                    vue.sendButton.disable = false;
+                    vue.sendButton.text = 'Send';
+
+                    if(successAction == 'clearFormData'){
+                        vue.formData.contact_message_id = 0;
+                        vue.formData.message = '';
+                        vue.getReply(vue.messageContent.id);
+                    }else if(successAction == 'clearComposeMessage'){
+                        vue.composeMessage.emailArray = [];
+                        vue.composeMessage.subject = '';
+                        vue.composeMessage.message = '';
+                        $('#email-to').val('');
+                        $('#email-to').tagsinput('removeAll');
+                    }
+                    
                 }).catch(function (error) {
                 });
             },
@@ -306,17 +369,26 @@
                     $("#messagedisplay1").show();
                 }
             },
+
             ComposeMessage(){
                 $(".messages-row").removeClass('active');
                 $(".messages-content").hide();
                 $("#compose").fadeIn();
             },
+
             showContacts(){
                 $(".contact-wrapper").show();  
             },
+
             HideContacts(){
                 $(".contact-wrapper").hide();
-            }
+            },
+
+            getAxios: _.debounce(
+                function () {
+                    this.getContent()
+                },500
+            )
         }
     }
 </script>

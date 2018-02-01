@@ -58,6 +58,7 @@ $(document)
 });
 
 $(document).on('click keyup change',".bootstrap-tagsinput > input",function(){
+
     if($(this).val().length){
         var input = $(this).val();
 

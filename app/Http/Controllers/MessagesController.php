@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use App\Message;
 use App\Reply;
+use App\SentMessage;
 
 class MessagesController extends Controller
 {
@@ -13,7 +14,6 @@ class MessagesController extends Controller
 	function __construct(){
         #title panels
         $this->title   = 'Message';
-        $this->eloquentModel = new Reply();
         $this->controller    = $this;
 
     }
@@ -31,17 +31,13 @@ class MessagesController extends Controller
 
     public function store(Request $request)
     {
-        $data = Input::all();
-
-        $res = $this->get_store($data,$this->eloquentModel);
-        ////////////////// email //////////////////// 
-
-        return $res;
+        
     }
 
-    public function show($id)
+    public function show($module)
     {
-        //
+
+        return $this->$module();
     }
 
     public function edit($id)
@@ -49,9 +45,9 @@ class MessagesController extends Controller
         //
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $module)
     {
-        //
+        $result = $this->$module();
     }
 
     public function destroy($id)
@@ -59,7 +55,7 @@ class MessagesController extends Controller
         //
     }
 
-    public function messages(){
+    public function getMessages(){
         $data = Input::all();
 
     	$messages = Message::selectraw("contact_message.id, users.name, contact_message.type, content, DATE_FORMAT(contact_message.created_at, '%Y-%m-%d') as date_created, DATE_FORMAT(contact_message.created_at, '%r') as time_created")
@@ -71,13 +67,21 @@ class MessagesController extends Controller
 				$messages = $messages->where('type',$data['type']);
 	    	}
 
+	    	if($data['search'] != '' && $data['search'] != null){
+				$messages = $messages->where(function($query) use($data){
+					$query->where('users.name','like','%'.$data['search'].'%');
+					$query->orWhere('contact_message.type','like','%'.$data['search'].'%');
+					$query->orWhere('content','like','%'.$data['search'].'%');
+				});
+	    	}
+
 	    $messages = $messages->orderBy('contact_message.id', 'DESC')
 	    	->get();
 
     	return $messages->toArray();
     }
 
-    public function replies(){
+    public function getReplies(){
         $data = Input::all();
 
     	$replies = Reply::selectraw("message, DATE_FORMAT(created_at, '%Y-%m-%d') as date_created, DATE_FORMAT(created_at, '%r') as time_created")
@@ -85,5 +89,27 @@ class MessagesController extends Controller
     				->get();
 
     	return $replies->toArray();
+    }
+
+    public function sendReply(){
+        $data = Input::all();
+
+        $res = $this->get_store($data,new Reply());
+        ////////////////// email //////////////////// 
+
+        return $res;
+    }
+
+    public function sendMessage(){
+        $data = Input::all();
+print_r($data);
+        foreach($data['emailArray'] as $key => $value){
+        	$data['email'] = $value;
+        	$res = $this->get_store($data,new SentMessage());
+        }
+
+        ////////////////// email //////////////////// 
+
+        return $res;
     }
 }

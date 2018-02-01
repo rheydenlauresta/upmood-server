@@ -36,7 +36,5 @@ Route::get('/userprofile', function () {
 Route::resources([
     'messages' => 'MessagesController'
 ]);
-Route::get('/content', 'MessagesController@messages');
-Route::get('/reply', 'MessagesController@replies');
 
 Route::get('/', 'DashboardController@index');
