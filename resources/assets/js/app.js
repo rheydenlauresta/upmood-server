@@ -21,6 +21,7 @@ Vue.component('login', require('./components/Login.vue'));
 Vue.component('passwordreset', require('./components/PasswordReset.vue'));
 Vue.component('dashboard', require('./components/Dashboard.vue'));
 Vue.component('users-component', require('./components/Users.vue'));
+Vue.component('usersprofile-component', require('./components/UsersProfile.vue'));
 Vue.component('messages-component', require('./components/Messages.vue'));
 
 const app = new Vue({
@@ -30,18 +31,6 @@ const app = new Vue({
 
 $(document).ready(function(){
 	$('.scrollbar-outer').scrollbar();
-
-  // $(document).on('click','.messages-row',function(){
-  //     if (!$(this).hasClass('active')){
-  //       var messageID = $(this).data('message');      
-
-  //       $(".messages-row").removeClass('active');
-  //       $(this).addClass('active');
-
-  //       $(".messages-content").hide();
-  //       $(messageID).fadeIn();
-  //     }
-
 });
 
 $(window).on('resize', function(){

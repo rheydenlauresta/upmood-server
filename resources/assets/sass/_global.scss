@@ -13,6 +13,74 @@
 
 // END FOR BUTTONS
 
+// TABLES
+
+.table{
+
+      thead{
+
+
+          th{
+              text-align: center;
+              padding: 10px;
+              background-color: #16A085;
+              font-size: 12px;
+              font-weight: 600;
+              color: #fff;
+              padding-right: 5px;
+              vertical-align: middle !important;
+
+              &:last-child{
+                  border-top-right-radius: 5px;
+                  padding-left: 15px;
+              }
+          }
+      }
+
+      tbody{
+
+        tr{
+          background-color: #F2F2F2;
+
+          &:nth-child(2n){
+            background-color: #fff;
+          }
+
+
+
+          td{
+            line-height: 3;
+            text-align: center;
+            vertical-align: middle !important;
+
+            .table-profile-image{
+              height: 40px;
+              width: 40px;
+              border-radius: 150px;
+              overflow: hidden;
+
+              img{
+                height: 100%;
+                width: 100%;
+              }
+            }
+
+            .status-online{
+              font-weight: 700;
+              color: #FBBD08;
+            }
+
+            .status-offline{
+              font-weight: 700;
+              color: #DB2828;
+            }
+          }
+        }
+      }
+    }
+
+// END FOR TABLES
+
 .content-center{
 	display: block;
 	margin: 0 auto;
@@ -34,6 +102,22 @@
     padding-right: 50px;
     color: #000;
     box-sizing: border-box;
+}
+
+.text-light{
+	font-weight: 300;
+}
+
+.text-regular{
+  font-weight: 400;
+}
+
+.text-semibold{
+  font-weight: 600;
+}
+
+.text-bold{
+	font-weight: 700;
 }
 
 input::placeholder{
