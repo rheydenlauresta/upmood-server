@@ -44,6 +44,10 @@
   left: 40px;
 }
 
+.suggestion-ic {
+  position: absolute;
+}
+
 .ic-notification {
   background: url("../img/ic_notification.png") no-repeat;
   top: 17px;
@@ -84,6 +88,33 @@
   background: url("../img/ic_message_title.png") no-repeat;
   top: 7px;
   width: 41px;
+}
+
+.ic-check-contact {
+  background: url("../img/ic_check_contacts.png") no-repeat;
+  top: 9px;
+  right: 10px;
+  height: 16px;
+  width: 16px;
+}
+
+.ic-add-contact-messages {
+  position: absolute;
+  background: url("../img/ic_add_contact_messages.png") no-repeat;
+  bottom: 5px;
+  right: 0px;
+  height: 16px;
+  width: 16px;
+  cursor: pointer;
+}
+
+.ic-location {
+  position: absolute;
+  background: url(../img/ic_location.png) no-repeat;
+  bottom: -25px;
+  right: -2px;
+  height: 26px;
+  width: 26px;
 }
 
 .ic-search:before {
@@ -128,7 +159,59 @@
   background-color: #b2c375 !important;
 }
 
-.content-center, .users-wrapper .users-table-wrapper .pagination, .messages-wrapper .messages-nav .compose, .messages-wrapper .messages-nav .menu-list, .messages-wrapper .messages-nav .menu-list li.seperator, .messages-wrapper .messages-list .messages-search-wrapper .messages-search, .messages-wrapper .messages-content#compose .compose-wrapper {
+.table thead th {
+  text-align: center;
+  padding: 10px;
+  background-color: #16A085;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  padding-right: 5px;
+  vertical-align: middle !important;
+}
+
+.table thead th:last-child {
+  border-top-right-radius: 5px;
+  padding-left: 15px;
+}
+
+.table tbody tr {
+  background-color: #F2F2F2;
+}
+
+.table tbody tr:nth-child(2n) {
+  background-color: #fff;
+}
+
+.table tbody tr td {
+  line-height: 3;
+  text-align: center;
+  vertical-align: middle !important;
+}
+
+.table tbody tr td .table-profile-image {
+  height: 40px;
+  width: 40px;
+  border-radius: 150px;
+  overflow: hidden;
+}
+
+.table tbody tr td .table-profile-image img {
+  height: 100%;
+  width: 100%;
+}
+
+.table tbody tr td .status-online {
+  font-weight: 700;
+  color: #FBBD08;
+}
+
+.table tbody tr td .status-offline {
+  font-weight: 700;
+  color: #DB2828;
+}
+
+.content-center, .users-wrapper .users-table-wrapper .pagination, .messages-wrapper .messages-nav .compose, .messages-wrapper .messages-nav .menu-list, .messages-wrapper .messages-nav .menu-list li.seperator, .messages-wrapper .messages-list .messages-search-wrapper .messages-search, .messages-wrapper .messages-content#compose .compose-wrapper, .user-profile-wrapper .current-emotion .image-wrapper, .user-profile-wrapper .mood-steam .mood-steam-table table tbody tr td .image-wrapper, .user-profile-wrapper .featured-friends .featured-friends-table table tbody tr td .image-wrapper {
   display: block;
   margin: 0 auto;
 }
@@ -142,7 +225,7 @@
   margin-bottom: 20px;
 }
 
-.main-content-container, .dashboard-wrapper, .users-wrapper {
+.main-content-container, .dashboard-wrapper, .users-wrapper, .user-profile-wrapper {
   margin: 0 auto;
   width: 1230px;
   padding-left: 50px;
@@ -150,6 +233,22 @@
   color: #000;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
+}
+
+.text-light {
+  font-weight: 300;
+}
+
+.text-regular {
+  font-weight: 400;
+}
+
+.text-semibold {
+  font-weight: 600;
+}
+
+.text-bold {
+  font-weight: 700;
 }
 
 input::-webkit-input-placeholder {
@@ -4069,7 +4168,7 @@ fieldset[disabled] .btn-default.focus {
   border-color: #ccc;
 }
 
-.btn-default .badge {
+.btn-default .badge, .btn-default .user-profile-wrapper .profile-info-container .profile-info .name .badge-online, .user-profile-wrapper .profile-info-container .profile-info .name .btn-default .badge-online, .btn-default .user-profile-wrapper .profile-info-container .profile-info .name .badge-offline, .user-profile-wrapper .profile-info-container .profile-info .name .btn-default .badge-offline {
   color: #fff;
   background-color: #ffffff;
 }
@@ -4121,7 +4220,7 @@ fieldset[disabled] .btn-primary.focus {
   border-color: #2a88bd;
 }
 
-.btn-primary .badge {
+.btn-primary .badge, .btn-primary .user-profile-wrapper .profile-info-container .profile-info .name .badge-online, .user-profile-wrapper .profile-info-container .profile-info .name .btn-primary .badge-online, .btn-primary .user-profile-wrapper .profile-info-container .profile-info .name .badge-offline, .user-profile-wrapper .profile-info-container .profile-info .name .btn-primary .badge-offline {
   color: #3097D1;
   background-color: #fff;
 }
@@ -4173,7 +4272,7 @@ fieldset[disabled] .btn-success.focus {
   border-color: #259d6d;
 }
 
-.btn-success .badge {
+.btn-success .badge, .btn-success .user-profile-wrapper .profile-info-container .profile-info .name .badge-online, .user-profile-wrapper .profile-info-container .profile-info .name .btn-success .badge-online, .btn-success .user-profile-wrapper .profile-info-container .profile-info .name .badge-offline, .user-profile-wrapper .profile-info-container .profile-info .name .btn-success .badge-offline {
   color: #2ab27b;
   background-color: #fff;
 }
@@ -4225,7 +4324,7 @@ fieldset[disabled] .btn-info.focus {
   border-color: #7da8c3;
 }
 
-.btn-info .badge {
+.btn-info .badge, .btn-info .user-profile-wrapper .profile-info-container .profile-info .name .badge-online, .user-profile-wrapper .profile-info-container .profile-info .name .btn-info .badge-online, .btn-info .user-profile-wrapper .profile-info-container .profile-info .name .badge-offline, .user-profile-wrapper .profile-info-container .profile-info .name .btn-info .badge-offline {
   color: #8eb4cb;
   background-color: #fff;
 }
@@ -4277,7 +4376,7 @@ fieldset[disabled] .btn-warning.focus {
   border-color: #c5b143;
 }
 
-.btn-warning .badge {
+.btn-warning .badge, .btn-warning .user-profile-wrapper .profile-info-container .profile-info .name .badge-online, .user-profile-wrapper .profile-info-container .profile-info .name .btn-warning .badge-online, .btn-warning .user-profile-wrapper .profile-info-container .profile-info .name .badge-offline, .user-profile-wrapper .profile-info-container .profile-info .name .btn-warning .badge-offline {
   color: #cbb956;
   background-color: #fff;
 }
@@ -4329,7 +4428,7 @@ fieldset[disabled] .btn-danger.focus {
   border-color: #aa4a24;
 }
 
-.btn-danger .badge {
+.btn-danger .badge, .btn-danger .user-profile-wrapper .profile-info-container .profile-info .name .badge-online, .user-profile-wrapper .profile-info-container .profile-info .name .btn-danger .badge-online, .btn-danger .user-profile-wrapper .profile-info-container .profile-info .name .badge-offline, .user-profile-wrapper .profile-info-container .profile-info .name .btn-danger .badge-offline {
   color: #bf5329;
   background-color: #fff;
 }
@@ -5992,7 +6091,7 @@ a.label:hover, a.label:focus {
   background-color: #954120;
 }
 
-.badge {
+.badge, .user-profile-wrapper .profile-info-container .profile-info .name .badge-online, .user-profile-wrapper .profile-info-container .profile-info .name .badge-offline {
   display: inline-block;
   min-width: 10px;
   padding: 3px 7px;
@@ -6007,40 +6106,46 @@ a.label:hover, a.label:focus {
   border-radius: 10px;
 }
 
-.badge:empty {
+.badge:empty, .user-profile-wrapper .profile-info-container .profile-info .name .badge-online:empty, .user-profile-wrapper .profile-info-container .profile-info .name .badge-offline:empty {
   display: none;
 }
 
-.btn .badge {
+.btn .badge, .btn .user-profile-wrapper .profile-info-container .profile-info .name .badge-online, .user-profile-wrapper .profile-info-container .profile-info .name .btn .badge-online, .btn .user-profile-wrapper .profile-info-container .profile-info .name .badge-offline, .user-profile-wrapper .profile-info-container .profile-info .name .btn .badge-offline {
   position: relative;
   top: -1px;
 }
 
-.btn-xs .badge, .btn-group-xs > .btn .badge,
-.btn-group-xs > .btn .badge {
+.btn-xs .badge, .btn-group-xs > .btn .badge, .btn-xs .user-profile-wrapper .profile-info-container .profile-info .name .badge-online, .user-profile-wrapper .profile-info-container .profile-info .name .btn-xs .badge-online, .btn-group-xs > .btn .user-profile-wrapper .profile-info-container .profile-info .name .badge-online, .user-profile-wrapper .profile-info-container .profile-info .name .btn-group-xs > .btn .badge-online, .btn-xs .user-profile-wrapper .profile-info-container .profile-info .name .badge-offline, .user-profile-wrapper .profile-info-container .profile-info .name .btn-xs .badge-offline, .btn-group-xs > .btn .user-profile-wrapper .profile-info-container .profile-info .name .badge-offline, .user-profile-wrapper .profile-info-container .profile-info .name .btn-group-xs > .btn .badge-offline,
+.btn-group-xs > .btn .badge,
+.btn-group-xs > .btn .user-profile-wrapper .profile-info-container .profile-info .name .badge-online, .user-profile-wrapper .profile-info-container .profile-info .name
+.btn-group-xs > .btn .badge-online,
+.btn-group-xs > .btn .user-profile-wrapper .profile-info-container .profile-info .name .badge-offline, .user-profile-wrapper .profile-info-container .profile-info .name
+.btn-group-xs > .btn .badge-offline {
   top: 0;
   padding: 1px 5px;
 }
 
-.list-group-item.active > .badge,
-.nav-pills > .active > a > .badge {
+.list-group-item.active > .badge, .user-profile-wrapper .profile-info-container .profile-info .name .list-group-item.active > .badge-online, .user-profile-wrapper .profile-info-container .profile-info .name .list-group-item.active > .badge-offline,
+.nav-pills > .active > a > .badge, .user-profile-wrapper .profile-info-container .profile-info .name
+.nav-pills > .active > a > .badge-online, .user-profile-wrapper .profile-info-container .profile-info .name
+.nav-pills > .active > a > .badge-offline {
   color: #3097D1;
   background-color: #fff;
 }
 
-.list-group-item > .badge {
+.list-group-item > .badge, .user-profile-wrapper .profile-info-container .profile-info .name .list-group-item > .badge-online, .user-profile-wrapper .profile-info-container .profile-info .name .list-group-item > .badge-offline {
   float: right;
 }
 
-.list-group-item > .badge + .badge {
+.list-group-item > .badge + .badge, .user-profile-wrapper .profile-info-container .profile-info .name .list-group-item > .badge-online + .badge, .user-profile-wrapper .profile-info-container .profile-info .name .list-group-item > .badge-offline + .badge, .user-profile-wrapper .profile-info-container .profile-info .name .list-group-item > .badge + .badge-online, .user-profile-wrapper .profile-info-container .profile-info .name .list-group-item > .badge-online + .badge-online, .user-profile-wrapper .profile-info-container .profile-info .name .list-group-item > .badge-offline + .badge-online, .user-profile-wrapper .profile-info-container .profile-info .name .list-group-item > .badge + .badge-offline, .user-profile-wrapper .profile-info-container .profile-info .name .list-group-item > .badge-online + .badge-offline, .user-profile-wrapper .profile-info-container .profile-info .name .list-group-item > .badge-offline + .badge-offline {
   margin-right: 5px;
 }
 
-.nav-pills > li > a > .badge {
+.nav-pills > li > a > .badge, .user-profile-wrapper .profile-info-container .profile-info .name .nav-pills > li > a > .badge-online, .user-profile-wrapper .profile-info-container .profile-info .name .nav-pills > li > a > .badge-offline {
   margin-left: 3px;
 }
 
-a.badge:hover, a.badge:focus {
+a.badge:hover, .user-profile-wrapper .profile-info-container .profile-info .name a.badge-online:hover, .user-profile-wrapper .profile-info-container .profile-info .name a.badge-offline:hover, a.badge:focus, .user-profile-wrapper .profile-info-container .profile-info .name a.badge-online:focus, .user-profile-wrapper .profile-info-container .profile-info .name a.badge-offline:focus {
   color: #fff;
   text-decoration: none;
   cursor: pointer;
@@ -6884,7 +6989,7 @@ button.list-group-item-danger.active:focus {
   border-top-color: #ddd;
 }
 
-.panel-default > .panel-heading .badge {
+.panel-default > .panel-heading .badge, .panel-default > .panel-heading .user-profile-wrapper .profile-info-container .profile-info .name .badge-online, .user-profile-wrapper .profile-info-container .profile-info .name .panel-default > .panel-heading .badge-online, .panel-default > .panel-heading .user-profile-wrapper .profile-info-container .profile-info .name .badge-offline, .user-profile-wrapper .profile-info-container .profile-info .name .panel-default > .panel-heading .badge-offline {
   color: #fff;
   background-color: #333333;
 }
@@ -6907,7 +7012,7 @@ button.list-group-item-danger.active:focus {
   border-top-color: #3097D1;
 }
 
-.panel-primary > .panel-heading .badge {
+.panel-primary > .panel-heading .badge, .panel-primary > .panel-heading .user-profile-wrapper .profile-info-container .profile-info .name .badge-online, .user-profile-wrapper .profile-info-container .profile-info .name .panel-primary > .panel-heading .badge-online, .panel-primary > .panel-heading .user-profile-wrapper .profile-info-container .profile-info .name .badge-offline, .user-profile-wrapper .profile-info-container .profile-info .name .panel-primary > .panel-heading .badge-offline {
   color: #3097D1;
   background-color: #fff;
 }
@@ -6930,7 +7035,7 @@ button.list-group-item-danger.active:focus {
   border-top-color: #d6e9c6;
 }
 
-.panel-success > .panel-heading .badge {
+.panel-success > .panel-heading .badge, .panel-success > .panel-heading .user-profile-wrapper .profile-info-container .profile-info .name .badge-online, .user-profile-wrapper .profile-info-container .profile-info .name .panel-success > .panel-heading .badge-online, .panel-success > .panel-heading .user-profile-wrapper .profile-info-container .profile-info .name .badge-offline, .user-profile-wrapper .profile-info-container .profile-info .name .panel-success > .panel-heading .badge-offline {
   color: #dff0d8;
   background-color: #3c763d;
 }
@@ -6953,7 +7058,7 @@ button.list-group-item-danger.active:focus {
   border-top-color: #bce8f1;
 }
 
-.panel-info > .panel-heading .badge {
+.panel-info > .panel-heading .badge, .panel-info > .panel-heading .user-profile-wrapper .profile-info-container .profile-info .name .badge-online, .user-profile-wrapper .profile-info-container .profile-info .name .panel-info > .panel-heading .badge-online, .panel-info > .panel-heading .user-profile-wrapper .profile-info-container .profile-info .name .badge-offline, .user-profile-wrapper .profile-info-container .profile-info .name .panel-info > .panel-heading .badge-offline {
   color: #d9edf7;
   background-color: #31708f;
 }
@@ -6976,7 +7081,7 @@ button.list-group-item-danger.active:focus {
   border-top-color: #faebcc;
 }
 
-.panel-warning > .panel-heading .badge {
+.panel-warning > .panel-heading .badge, .panel-warning > .panel-heading .user-profile-wrapper .profile-info-container .profile-info .name .badge-online, .user-profile-wrapper .profile-info-container .profile-info .name .panel-warning > .panel-heading .badge-online, .panel-warning > .panel-heading .user-profile-wrapper .profile-info-container .profile-info .name .badge-offline, .user-profile-wrapper .profile-info-container .profile-info .name .panel-warning > .panel-heading .badge-offline {
   color: #fcf8e3;
   background-color: #8a6d3b;
 }
@@ -6999,7 +7104,7 @@ button.list-group-item-danger.active:focus {
   border-top-color: #ebccd1;
 }
 
-.panel-danger > .panel-heading .badge {
+.panel-danger > .panel-heading .badge, .panel-danger > .panel-heading .user-profile-wrapper .profile-info-container .profile-info .name .badge-online, .user-profile-wrapper .profile-info-container .profile-info .name .panel-danger > .panel-heading .badge-online, .panel-danger > .panel-heading .user-profile-wrapper .profile-info-container .profile-info .name .badge-offline, .user-profile-wrapper .profile-info-container .profile-info .name .panel-danger > .panel-heading .badge-offline {
   color: #f2dede;
   background-color: #a94442;
 }
@@ -8516,37 +8621,39 @@ body {
   position: absolute;
 }
 
-.dashboard-wrapper .dashboard-panel .table thead th {
+.dashboard-wrapper .dashboard-panel .table-population thead th {
   margin-bottom: none;
   border: none;
   text-align: center;
   font-size: 11px;
   font-weight: 400;
   padding: 15px 10px 15px 10px;
+  background: #fff;
+  color: #000 !important;
 }
 
-.dashboard-wrapper .dashboard-panel .table thead th:first-child {
+.dashboard-wrapper .dashboard-panel .table-population thead th:first-child {
   text-align: left;
 }
 
-.dashboard-wrapper .dashboard-panel .table tbody tr {
+.dashboard-wrapper .dashboard-panel .table-population tbody tr {
   background: #F0F0F0;
 }
 
-.dashboard-wrapper .dashboard-panel .table tbody tr td {
+.dashboard-wrapper .dashboard-panel .table-population tbody tr td {
   text-align: center;
   border: none;
 }
 
-.dashboard-wrapper .dashboard-panel .table tbody tr td:first-child {
+.dashboard-wrapper .dashboard-panel .table-population tbody tr td:first-child {
   text-align: left;
 }
 
-.dashboard-wrapper .dashboard-panel .table tbody tr:nth-child(2n) {
+.dashboard-wrapper .dashboard-panel .table-population tbody tr:nth-child(2n) {
   background: #FFFFFF;
 }
 
-.dashboard-wrapper .dashboard-panel .table tbody tr:hover {
+.dashboard-wrapper .dashboard-panel .table-population tbody tr:hover {
   background: #ebebeb;
 }
 
@@ -9336,4 +9443,370 @@ body {
 
 .messages-wrapper .messages-content#compose .compose-wrapper #ComposeForm .form-group .bootstrap-tagsinput .tag span[data-role="remove"] {
   color: #E74C3C;
+}
+
+.messages-wrapper .messages-content#compose .compose-wrapper #ComposeForm .compose-suggestion {
+  position: absolute;
+  left: -10px;
+  background: #fff;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  z-index: 1;
+  display: none;
+  -webkit-box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+          box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+}
+
+.messages-wrapper .messages-content#compose .compose-wrapper #ComposeForm .compose-suggestion .suggestion-row {
+  min-height: 40px;
+  cursor: pointer;
+  padding-right: 50px;
+  padding-left: 10px;
+  position: relative;
+}
+
+.messages-wrapper .messages-content#compose .compose-wrapper #ComposeForm .compose-suggestion .suggestion-row:hover {
+  background-color: #f7f9f1;
+}
+
+.messages-wrapper .messages-content#compose .compose-wrapper #ComposeForm .compose-suggestion .suggestion-row .image-wrapper {
+  float: left;
+  height: 30px;
+  width: 30px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  overflow: hidden;
+  border-radius: 150px;
+  margin-right: 8px;
+  position: relative;
+  top: 2px;
+}
+
+.messages-wrapper .messages-content#compose .compose-wrapper #ComposeForm .compose-suggestion .suggestion-row .image-wrapper img {
+  height: 100%;
+  width: 100%;
+}
+
+.messages-wrapper .messages-content#compose .compose-wrapper #ComposeForm .compose-suggestion .suggestion-row .suggestion-content {
+  float: left;
+}
+
+.messages-wrapper .messages-content#compose .compose-wrapper #ComposeForm .compose-suggestion .suggestion-row .suggestion-content .suggestion-name {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.messages-wrapper .messages-content#compose .compose-wrapper #ComposeForm .compose-suggestion .suggestion-row .suggestion-content .suggestion-email {
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 10px;
+}
+
+.messages-wrapper .messages-content#compose .compose-wrapper #ComposeForm .contact-wrapper {
+  min-width: 233px;
+  display: none;
+  position: absolute;
+  right: 0px;
+  background: #fff;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  z-index: 1;
+  -webkit-box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+          box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+}
+
+.messages-wrapper .messages-content#compose .compose-wrapper #ComposeForm .contact-wrapper .contact-search {
+  padding: 10px;
+}
+
+.messages-wrapper .messages-content#compose .compose-wrapper #ComposeForm .contact-wrapper .contact-search .ic-search:before {
+  left: 8px;
+}
+
+.messages-wrapper .messages-content#compose .compose-wrapper #ComposeForm .contact-wrapper .contact-search .contact-search-input {
+  border: 1px solid #BCBDBD;
+  border-radius: 2px;
+}
+
+.messages-wrapper .messages-content#compose .compose-wrapper #ComposeForm .contact-wrapper .contact-row {
+  min-height: 40px;
+  cursor: pointer;
+  padding-right: 50px;
+  padding-left: 10px;
+  position: relative;
+}
+
+.messages-wrapper .messages-content#compose .compose-wrapper #ComposeForm .contact-wrapper .contact-row:hover {
+  background-color: #f7f9f1;
+}
+
+.messages-wrapper .messages-content#compose .compose-wrapper #ComposeForm .contact-wrapper .contact-row .image-wrapper {
+  float: left;
+  height: 30px;
+  width: 30px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  overflow: hidden;
+  border-radius: 150px;
+  margin-right: 8px;
+  position: relative;
+  top: 2px;
+}
+
+.messages-wrapper .messages-content#compose .compose-wrapper #ComposeForm .contact-wrapper .contact-row .image-wrapper img {
+  height: 100%;
+  width: 100%;
+}
+
+.messages-wrapper .messages-content#compose .compose-wrapper #ComposeForm .contact-wrapper .contact-row .contact-content {
+  float: left;
+}
+
+.messages-wrapper .messages-content#compose .compose-wrapper #ComposeForm .contact-wrapper .contact-row .contact-content .contact-name {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.messages-wrapper .messages-content#compose .compose-wrapper #ComposeForm .contact-wrapper .contact-row .contact-content .contact-email {
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 10px;
+}
+
+.user-profile-wrapper {
+  margin-bottom: 15px;
+}
+
+.user-profile-wrapper .row .col-md-4, .user-profile-wrapper .row .users-wrapper .users-table-wrapper .filter-wrapper form .advance-filter .advance-filter-row .filter-width, .users-wrapper .users-table-wrapper .filter-wrapper form .advance-filter .advance-filter-row .user-profile-wrapper .row .filter-width {
+  padding-right: 0px;
+}
+
+.user-profile-wrapper .profile-info-container {
+  padding: 60px !important;
+  margin-top: 50px;
+  background: #fff;
+  border-radius: 5px;
+  -webkit-box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+          box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+}
+
+.user-profile-wrapper .profile-info-container .row {
+  margin-bottom: 15px;
+}
+
+.user-profile-wrapper .profile-info-container .image-wrapper {
+  height: 180px;
+  width: 180px;
+  border: 1px solid #9E9E9E;
+  border-radius: 150px;
+  overflow: hidden;
+}
+
+.user-profile-wrapper .profile-info-container .image-wrapper img {
+  height: 100%;
+  width: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+.user-profile-wrapper .profile-info-container .profile-info {
+  padding-left: 45px;
+  font-size: 16px;
+}
+
+.user-profile-wrapper .profile-info-container .profile-info .name {
+  font-size: 30px;
+  font-weight: 600;
+}
+
+.user-profile-wrapper .profile-info-container .profile-info .name .badge, .user-profile-wrapper .profile-info-container .profile-info .name .badge-online, .user-profile-wrapper .profile-info-container .profile-info .name .badge-offline {
+  display: inline-block !important;
+  height: 21px;
+  width: 20px;
+}
+
+.user-profile-wrapper .profile-info-container .profile-info .name .badge-online {
+  background-color: #F4D546;
+}
+
+.user-profile-wrapper .profile-info-container .profile-info .name .badge-offline {
+  background-color: #FEA0A0;
+}
+
+.user-profile-wrapper .profile-info-container .profile-info .age {
+  font-size: 16px;
+  padding-left: 25px;
+}
+
+.user-profile-wrapper .profile-info-container .profile-info .gender {
+  font-size: 16px;
+  padding-left: 25px;
+}
+
+.user-profile-wrapper .profile-info-container .profile-info .location {
+  font-size: 16px;
+}
+
+.user-profile-wrapper .profile-info-container .profile-info .description {
+  font-size: 14px;
+  font-weight: 300;
+  font-style: italic;
+  height: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-profile-wrapper .user-profile-modules, .user-profile-wrapper .current-emotion, .user-profile-wrapper .mood-steam, .user-profile-wrapper .featured-friends, .user-profile-wrapper .emotion-calendar {
+  height: 479px;
+  padding: 20px;
+  background: #fff;
+  border-radius: 5px;
+  -webkit-box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+          box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+}
+
+.user-profile-wrapper .user-profile-modules .title, .user-profile-wrapper .current-emotion .title, .user-profile-wrapper .mood-steam .title, .user-profile-wrapper .featured-friends .title, .user-profile-wrapper .emotion-calendar .title {
+  font-weight: 600;
+  font-size: 20px;
+  font-style: italic;
+}
+
+.user-profile-wrapper .current-emotion {
+  margin-top: 15px;
+}
+
+.user-profile-wrapper .current-emotion .image-wrapper {
+  margin-top: 15px;
+  margin-bottom: 25px;
+  height: 180px;
+  width: 180px;
+  overflow: hidden;
+}
+
+.user-profile-wrapper .current-emotion .image-wrapper img {
+  height: 100%;
+  width: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+.user-profile-wrapper .current-emotion .col-md-4, .user-profile-wrapper .current-emotion .users-wrapper .users-table-wrapper .filter-wrapper form .advance-filter .advance-filter-row .filter-width, .users-wrapper .users-table-wrapper .filter-wrapper form .advance-filter .advance-filter-row .user-profile-wrapper .current-emotion .filter-width {
+  padding-right: 0px;
+  font-weight: 600 !important;
+}
+
+.user-profile-wrapper .current-emotion .col-md-12 {
+  font-weight: 600 !important;
+}
+
+.user-profile-wrapper .current-emotion .BPM {
+  padding-left: 0px;
+}
+
+.user-profile-wrapper .current-emotion .stress-level {
+  padding-left: 0px;
+}
+
+.user-profile-wrapper .current-emotion .emotion-info {
+  padding: 15px;
+}
+
+.user-profile-wrapper .current-emotion .emotion-info .row {
+  margin-bottom: 5px;
+}
+
+.user-profile-wrapper .current-emotion .emotion-info .upmood-meter {
+  margin-top: 5px;
+}
+
+.user-profile-wrapper .current-emotion .emotion-info .upmood-meter .meter {
+  background: linear-gradient(45deg, #25b0a0 0%, #edc726 100%);
+  position: relative;
+  height: 39px;
+  border-radius: 150px;
+}
+
+.user-profile-wrapper .current-emotion .emotion-info .upmood-meter .meter .meter-control {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 39px;
+  width: 39px;
+  overflow: hidden;
+  border-radius: 150px;
+}
+
+.user-profile-wrapper .current-emotion .emotion-info .upmood-meter .meter .meter-control img {
+  height: 100%;
+  width: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+.user-profile-wrapper .current-emotion .emotion-info .upmood-meter .meter-description {
+  position: relative;
+  left: 18px;
+}
+
+.user-profile-wrapper .current-emotion .emotion-info .upmood-meter .meter-description .description-tag {
+  display: inline-block;
+  float: left;
+  margin-right: 33px;
+  font-size: 11px;
+  font-weight: 300;
+  font-style: italic;
+}
+
+.user-profile-wrapper .mood-steam {
+  margin-top: 15px;
+}
+
+.user-profile-wrapper .mood-steam .mood-steam-table {
+  height: 410px;
+}
+
+.user-profile-wrapper .mood-steam .mood-steam-table table {
+  margin-top: 15px;
+}
+
+.user-profile-wrapper .mood-steam .mood-steam-table table tbody tr td .image-wrapper {
+  height: 50px;
+  width: 50px;
+  overflow: hidden;
+}
+
+.user-profile-wrapper .mood-steam .mood-steam-table table tbody tr td .image-wrapper img {
+  height: 100%;
+  width: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+.user-profile-wrapper .featured-friends {
+  margin-top: 15px;
+}
+
+.user-profile-wrapper .featured-friends .featured-friends-table {
+  height: 410px;
+}
+
+.user-profile-wrapper .featured-friends .featured-friends-table table {
+  margin-top: 15px;
+}
+
+.user-profile-wrapper .featured-friends .featured-friends-table table tbody tr td .image-wrapper {
+  height: 50px;
+  width: 50px;
+  overflow: hidden;
+}
+
+.user-profile-wrapper .featured-friends .featured-friends-table table tbody tr td .image-wrapper img {
+  height: 100%;
+  width: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+.user-profile-wrapper .emotion-calendar {
+  margin-top: 15px;
 }
