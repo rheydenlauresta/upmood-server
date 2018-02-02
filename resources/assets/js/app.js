@@ -29,8 +29,8 @@ Vue.component('usersprofile-component', require('./components/UsersProfile.vue')
 Vue.component('messages-component', require('./components/Messages.vue'));
 
 const app = new Vue({
-   el: '#app',
-   router: router,
+    el: '#app',
+    router: router,
 });
 
 $(document).ready(function(){
@@ -38,13 +38,13 @@ $(document).ready(function(){
 });
 
 $(window).on('resize', function(){
-      if ($(".messages-wrapper").length){
-      	var wrapper_width = parseInt($(".messages-wrapper").css('width').replace('px',''));
+    if ($(".messages-wrapper").length){
+    	var wrapper_width = parseInt($(".messages-wrapper").css('width').replace('px',''));
         var nav = parseInt($(".messages-nav").css('width').replace('px',''));
         var list = parseInt($(".messages-list").css('width').replace('px',''));
         var new_width = wrapper_width - (nav + list);
         $(".messages-content").css('width',new_width + "px");
-      }
+    }
 });
 
 $(document)
@@ -62,19 +62,17 @@ $(document)
 });
 
 $(document).on('click keyup change',".bootstrap-tagsinput > input",function(){
-
     if($(this).val().length){
         var input = $(this).val();
-
         $(".suggestion-row").each(function(index){
             var name = $(this).children('.suggestion-content').children('.suggestion-name').html();
             var email = $(this).children('.suggestion-content').children('.suggestion-email').html(); 
 
             if (name.indexOf(input) >= 0){
-              $(this).show();
+                $(this).show();
             }
             else if (email.indexOf(input) >= 0){
-              $(this).show();
+                $(this).show();
             }
             else{
               $(this).hide();
@@ -115,5 +113,5 @@ $(document).on('keyup change',".contact-search-input",function(){
 });
 
 $(document).on('blur',".bootstrap-tagsinput > input",function(){
-    $(".compose-suggestion").hide();
+    $(this).val('');
 });

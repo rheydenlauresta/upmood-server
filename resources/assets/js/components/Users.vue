@@ -123,7 +123,7 @@
                     </thead>
                     <tbody>
                         <tr v-for="user in recordData.data">
-                            <td><div class="table-profile-image"><img :src="base_url+'img/profile-avatar.png'" alt=""></div></td>
+                            <td><div class="table-profile-image"><img :src="base_url+'img/'+user.image" alt=""></div></td>
                             <td><a :href="base_url + 'userprofile'">{{ user.name }}</a></td>
                             <td>{{ user.gender }}</td>
                             <td>{{ user.age }}</td>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use App\User;
 use App\Message;
 use App\Reply;
 use App\SentMessage;
@@ -55,10 +56,14 @@ class MessagesController extends Controller
         //
     }
 
-    public function getMessages(){
+    public function getMessages(){ // Get Messages
         $data = Input::all();
 
-    	$messages = Message::selectraw("contact_message.id, users.name, contact_message.type, content, DATE_FORMAT(contact_message.created_at, '%Y-%m-%d') as date_created, DATE_FORMAT(contact_message.created_at, '%r') as time_created")
+        if($data['type'] == 'sentMessage'){
+        	return $this->getSentmessage();
+        }
+
+    	$messages = Message::selectraw("contact_message.id, users.image, users.name, contact_message.type, content, DATE_FORMAT(contact_message.created_at, '%Y-%m-%d') as date_created, DATE_FORMAT(contact_message.created_at, '%r') as time_created")
 	    	->leftjoin('users',function($query){
 	    		$query->on('users.id','=','contact_message.user_id');
 	    	});
@@ -81,7 +86,7 @@ class MessagesController extends Controller
     	return $messages->toArray();
     }
 
-    public function getReplies(){
+    public function getReplies(){ // Get Messages Replies
         $data = Input::all();
 
     	$replies = Reply::selectraw("message, DATE_FORMAT(created_at, '%Y-%m-%d') as date_created, DATE_FORMAT(created_at, '%r') as time_created")
@@ -91,7 +96,34 @@ class MessagesController extends Controller
     	return $replies->toArray();
     }
 
-    public function sendReply(){
+    public function getSentmessage(){ // Get Send Messages
+        $data = Input::all();
+
+    	$sentMessages = SentMessage::selectraw("subject, message,GROUP_CONCAT(email) as emails, DATE_FORMAT(created_at, '%Y-%m-%d') as date_created, DATE_FORMAT(created_at, '%r') as time_created")
+    				->orderBy('id', 'DESC')
+    				->groupBy('batch')
+    				->get();
+
+    	return $sentMessages->toArray();
+    }
+
+    public function emailSearch(){ // Get Available emails
+        $data = Input::all();
+
+    	$emails = User::selectraw("name, image, email")
+    				->where(function($query) use($data){
+    					$query->where('email','like','%'.$data['email'].'%');
+    					$query->orWhere('name','like','%'.$data['email'].'%');
+    					// $query->where('email','like','%'.$data['conemail'].'%');
+    					// $query->orWhere('name','like','%'.$data['conemail'].'%');
+    				})
+    				->take(10)
+    				->get();
+
+    	return $emails->toArray();
+    }
+
+    public function sendReply(){ // Send Messages Replies
         $data = Input::all();
 
         $res = $this->get_store($data,new Reply());
@@ -100,9 +132,12 @@ class MessagesController extends Controller
         return $res;
     }
 
-    public function sendMessage(){
+    public function sendMessage(){ // Send Compose Messages
         $data = Input::all();
-print_r($data);
+
+        $last_batch = SentMessage::selectraw('max(batch) as batch')->first();
+        $data['batch'] = $last_batch->batch + 1;
+
         foreach($data['emailArray'] as $key => $value){
         	$data['email'] = $value;
         	$res = $this->get_store($data,new SentMessage());

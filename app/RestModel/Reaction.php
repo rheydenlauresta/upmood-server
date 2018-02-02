@@ -35,10 +35,11 @@ class Reaction extends Model
 
 		$react->user_id              = request()->user()->id;
 		$react->friend_id            = request('id');
-		$react->heartbeat_count      = request('heartbeat_count');
-		$react->emoji_resource_id    = request('emoji_resource_id');
+		// $react->heartbeat_count      = request('heartbeat_count');
+		// $react->emoji_resource_id    = request('emoji_resource_id');
 		$react->reaction_resource_id = request('reaction_resource_id');
-		$react->post_id              = request('post_id');
+        $react->post_id              = request('post_id');
+		$react->record_id            = request('record_id');
 
 		$user->reaction_count = $user->reaction_count + 1;
 
@@ -55,7 +56,7 @@ class Reaction extends Model
         $user = User::find(request('id'));
 
         $reaction = Resources::find(request('reaction_resource_id'));
-        $emoji = Resources::find(request('emoji_resource_id'));
+        $record = Resources::find(request('record_id'));
         $post = Post::find(request('post_id'));
                             
         $data = [
@@ -65,8 +66,8 @@ class Reaction extends Model
             'heartbeat'    => request('heartbeat_count'),
             'post'         => @$post->content,
             'emoji'        => [
-                'emoji_id'    => $emoji->id,
-                'emoji_path' => $emoji->set_name.'/'.$emoji->type.'/'.$emoji->filename
+                'emoji_id'    => $record->resources_id,
+                'emoji_path' => $record->emotion_set.'/emoji/'.$record->filename.'.png'
             ],
             'reaction'     => [
                 'reaction_id'   => $reaction->id,
