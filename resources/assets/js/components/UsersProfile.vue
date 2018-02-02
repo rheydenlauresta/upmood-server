@@ -222,6 +222,9 @@
             <div class="col-md-4">
                 <div class="emotion-calendar">
                     <div class="title">Upmood Emotion Calendar</div>
+                    <div class="calendar-wrapper">
+                        <vue-event-calendar :events="demoEvents"></vue-event-calendar>
+                    </div>
                 </div>
             </div>
         </div>
@@ -235,10 +238,40 @@
             return {
                 csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                 base_url: window.base_url,
+                demoEvents: [{
+                    date: '2016/11/12', // Required
+                    title: 'Foo' // Required
+                  }, {
+                    date: '2018/02/5',
+                    title: 'Bar',
+                    desc: 'description',
+                    customClass: 'calendar-ic emoji-gummybear-pleasant' // Custom classes to an calendar cell
+                  },{
+                    date: '2018/02/1',
+                    title: 'asd',
+                    desc: 'description',
+                    customClass: 'calendar-ic emoji-pancake-sad' // Custom classes to an calendar cell
+                  },{
+                    date: '2018/02/2',
+                    title: 'asd',
+                    desc: 'description',
+                    customClass: 'calendar-ic emoji-pancake-sad' // Custom classes to an calendar cell
+                  },{
+                    date: '2018/02/3',
+                    title: 'asd',
+                    desc: 'description',
+                    customClass: 'calendar-ic emoji-regular-happy' // Custom classes to an calendar cell
+                  },{
+                    date: '2018/02/4',
+                    title: 'asd',
+                    desc: 'description',
+                    customClass: 'calendar-ic emoji-regular-happy' // Custom classes to an calendar cell
+                  }]
             }
         },
         mounted() {
             $(".main-header > .title").html('<i class="header-ic ic-user-green"></i>Users');
+            this.Notify("Well Done!","You're message has been successfully sent");
             this.UpdateMoodMeter('sad');
         },
         methods: {
@@ -258,6 +291,11 @@
                 else if (mood == 'Happy' || mood == 'happy'){
                     $(".meter-control").css('left','263px');
                 }
+            },
+            Notify(title,message){
+                $('.notification-title').html(title);
+                $('.notification-description').html(message);
+                $('#notification-modal').modal('toggle');
             }
         }
     }

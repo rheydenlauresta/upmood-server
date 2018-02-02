@@ -7,8 +7,12 @@
 
 require('./bootstrap');
 import router from './router';
+import 'vue-event-calendar/dist/style.css'; //^1.1.10, CSS has been extracted as one file, so you can easily update it.
+import vueEventCalendar from 'vue-event-calendar';
 
 window.Vue = require('vue');
+
+Vue.use(vueEventCalendar, {locale: 'en'}) //locale can be 'zh' , 'en' , 'es', 'pt-br', 'ja', 'ko', 'fr', 'it', 'ru', 'de', 'vi'
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

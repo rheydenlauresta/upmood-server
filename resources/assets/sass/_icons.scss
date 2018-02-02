@@ -49,6 +49,21 @@
 	position: absolute;
 }
 
+.calendar-ic{
+	
+	&:before{
+		content: '';
+		position: absolute;
+		display: inline-block;
+		height: 28px;
+	    width: 28px;
+	    background-size: cover;
+	    background-position: center center;
+	    top: 19px;
+	    left: 9px;
+	}
+}
+
 .ic-notification{
 	background: url('../img/ic_notification.png') no-repeat;
 	top: 17px;
@@ -165,5 +180,44 @@
 }
 
 // END ICONS FOR SELECT INPUTS
+
+/* PANCAKE */
+
+.emoji-pancake-sad{
+	
+	&:before{
+		background-image: url(../img/resources/pancake/emoji/sad.png);
+	}
+}
+
+/* END OF PANCAKE */
+
+/* GUMMY BEAR */
+
+.emoji-gummybear-pleasant{
+	
+	&:before{
+		background-image: url(../img/resources/gummybear/emoji/pleasant.png);
+	}
+}
+
+/* END OF GUMMY BEAR */
+
+/*  REGULAR */
+
+.emoji-regular-happy{
+	
+	&:before{
+		background-image: url(../img/resources/regular/emoji/happy.png);
+	}
+}
+
+/* END OF REGULAR */
+
+// EMOJIS FOR CALENDAR
+
+
+
+// EMOJIS FOR CALENDAR
 
 // END OF ICONS

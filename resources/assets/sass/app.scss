@@ -1704,9 +1704,144 @@ body{
     }
 
     .emotion-calendar{
-      @extend .user-profile-modules;
-      margin-top: 15px;
+        @extend .user-profile-modules;
+        margin-top: 15px;
 
+        .calendar-wrapper{
 
+            .__vev_calendar-wrapper{
+
+                .cal-wrapper{
+                  padding: 10px;
+                  width: 100%;
+
+                  .cal-header{
+                      background-color:#FFF2F2;
+                      color: #4B4747;
+                      border: 1px solid #95989A;
+                      border-top-right-radius: 3px;
+                      border-top-left-radius: 3px;
+                  }
+
+                  .cal-body{
+
+                      .weeks{
+
+                          .item{
+                              border-left: 1px solid #a5a5a5;
+                              border-bottom: 1px solid #a5a5a5;
+
+                              &:nth-child(7n){
+                                border-right: 1px solid #a5a5a5;                              
+                              }
+
+                              text-transform: uppercase;
+                              font-weight: 600;
+                              line-height: 28px;
+                              font-size: 11px;
+                              color: #333333;
+                          }
+                      }
+
+                      .dates{
+
+                          .item{
+                            border-left: 1px solid #a5a5a5;
+                            border-bottom: 1px solid #a5a5a5;
+
+                            &:nth-child(7n){
+                              border-right: 1px solid #a5a5a5;                              
+                            }
+                            
+                            .date-num{
+                              line-height: 50px;
+                              font-weight: 300;
+                              font-size: 12px;
+                              top: -13px;
+                              left: -13px;
+                              color: #333333 !important;
+                            }
+
+                            .is-event{
+                                display: none;
+                            }
+
+                            &.today{
+
+                              .date-num{
+                                  color: #27AE60 !important;
+                                  font-weight: 700;
+                              }
+
+                              .is-today{
+                                  display: none;
+                              }
+
+                              .is-event{
+                                  display: none;
+                              }
+                            }
+                          }
+                      }
+                  }
+                }
+
+                .events-wrapper{
+                  display: none;
+                }
+
+            }
+        }
+    }
+}
+
+#notification-modal{
+    background-color:rgba(0,0,0,0.60);
+    
+    .modal-dialog{
+      padding: 25px;
+      color: #fff;
+      top: 40%;
+      width: 407px;
+
+      .modal-body{
+        background-color:#BCCB87;
+
+        .notification-content{
+            padding: 10px 20px 10px 20px;
+
+            .image-wrapper{
+              float: left;
+              margin-right: 20px;
+              top: 7px;
+              position: relative;
+            }
+
+            .text-content{
+              padding-left: 54px;
+
+              .notification-title{
+                font-size: 16px;
+                font-weight: 600;
+                margin-bottom: 0px;
+              }
+
+              .notification-description{
+                font-size: 12px;
+                font-weight: 400;
+              }
+            }
+        }
+
+        .close{
+          color: #fff;
+          opacity: 1.0;
+          transition: 0.2s ease-out all;
+
+          &:hover{
+            color: #FF0000;
+          }
+        }
+      }
     }
 }
