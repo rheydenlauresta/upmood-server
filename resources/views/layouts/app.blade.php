@@ -53,6 +53,27 @@
         </div>
     @endif
 
+    <div class="modal fade" id="notification-modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-body">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="notification-content">
+                <div class="image-wrapper">
+                    <img src="{{asset('img/ic_check_notification.png')}}" alt="">
+                </div>
+                <div class="text-content">
+                    <div class="notification-title"></div>
+                    <div class="notification-description"></div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
     <script src="{{ asset('js/jquery.min.js') }}"></script>
