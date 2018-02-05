@@ -13,5 +13,6 @@ class SentMessage extends Model
         'email',
         'subject',
         'message',
+        'batch',
     ];
 }

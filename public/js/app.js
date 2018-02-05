@@ -11958,10 +11958,8 @@ $(document).one('focus.autoExpand', 'textarea.autoExpand', function () {
 });
 
 $(document).on('click keyup change', ".bootstrap-tagsinput > input", function () {
-
     if ($(this).val().length) {
         var input = $(this).val();
-
         $(".suggestion-row").each(function (index) {
             var name = $(this).children('.suggestion-content').children('.suggestion-name').html();
             var email = $(this).children('.suggestion-content').children('.suggestion-email').html();
@@ -12005,7 +12003,7 @@ $(document).on('keyup change', ".contact-search-input", function () {
 });
 
 $(document).on('blur', ".bootstrap-tagsinput > input", function () {
-    $(".compose-suggestion").hide();
+    $(this).val('');
 });
 
 /***/ }),
@@ -47823,7 +47821,7 @@ var render = function() {
                   _c("div", { staticClass: "table-profile-image" }, [
                     _c("img", {
                       attrs: {
-                        src: _vm.base_url + "img/profile-avatar.png",
+                        src: _vm.base_url + "img/" + user.image,
                         alt: ""
                       }
                     })
@@ -49286,40 +49284,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-$(document).on('change', "#email-to", function () {
-    alert();
-});
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -49328,10 +49292,12 @@ $(document).on('change', "#email-to", function () {
             base_url: window.base_url,
 
             messages: [],
+            availableEmails: [],
 
             search: "",
             type: "",
             emailString: "",
+            contactEmail: "",
 
             sendButton: {
                 disable: false,
@@ -49351,19 +49317,20 @@ $(document).on('change', "#email-to", function () {
                 date: '',
                 time: '',
                 content: '',
+                image: '',
                 id: 0
-            },
-
-            composeMessage: {
-                emailArray: [],
-                subject: '',
-                message: ''
             },
 
             replyContent: {
                 message: '',
                 date: '',
                 time: ''
+            },
+
+            composeMessage: {
+                emailArray: [],
+                subject: '',
+                message: ''
             },
 
             formData: {
@@ -49398,7 +49365,6 @@ $(document).on('change', "#email-to", function () {
                 vue.type = type;
             }
 
-            vue.formData._method = 'GET';
             axios.get(base_url + 'messages/getMessages?type=' + vue.type + '&search=' + vue.search).then(function (response) {
                 vue.messages = response['data'];
                 vue.viewMessage(vue.messages[0]);
@@ -49407,7 +49373,6 @@ $(document).on('change', "#email-to", function () {
         getReply: function getReply(id) {
             var vue = this;
 
-            vue.formData._method = 'GET';
             axios.get(base_url + 'messages/getReplies?id=' + id).then(function (response) {
 
                 if (response['data'].length > 0) {
@@ -49430,6 +49395,7 @@ $(document).on('change', "#email-to", function () {
             this.messageContent.date = message.date_created;
             this.messageContent.time = message.time_created;
             this.messageContent.content = message.content;
+            this.messageContent.image = message.image;
             this.messageContent.id = message.id;
 
             this.getReply(message.id);
@@ -49475,6 +49441,26 @@ $(document).on('change', "#email-to", function () {
                 }
             }).catch(function (error) {});
         },
+
+
+        emailSearch: _.debounce(function () {
+            var vue = this;
+
+            var searchEmail = $('.bootstrap-tagsinput > input').val();
+
+            axios.get(base_url + 'messages/emailSearch?email=' + searchEmail + '&conemail=' + vue.contactEmail).then(function (response) {
+                vue.availableEmails = response['data'];
+                $(".suggestion-row").show();
+            }).catch(function (error) {});
+        }, 100),
+
+        selectEmail: function selectEmail(val) {
+            // alert()
+            $('#email-to').tagsinput('add', val);
+            $('#email-to').tagsinput('refresh');
+            $(".contact-wrapper").hide();
+            $(".compose-suggestion").hide();
+        },
         resizeMessageContent: function resizeMessageContent() {
             var wrapper_width = parseInt($(".messages-wrapper").css('width').replace('px', ''));
             var nav = parseInt($(".messages-nav").css('width').replace('px', ''));
@@ -49498,6 +49484,7 @@ $(document).on('change', "#email-to", function () {
         },
         showContacts: function showContacts() {
             $(".contact-wrapper").show();
+            $(".compose-suggestion").hide();
         },
         HideContacts: function HideContacts() {
             $(".contact-wrapper").hide();
@@ -49545,7 +49532,20 @@ var render = function() {
           )
         ]),
         _vm._v(" "),
-        _vm._m(0),
+        _c("li", [
+          _c(
+            "a",
+            {
+              attrs: { href: "javascript:;" },
+              on: {
+                click: function($event) {
+                  _vm.getContent("sentMessage")
+                }
+              }
+            },
+            [_vm._v("Send")]
+          )
+        ]),
         _vm._v(" "),
         _c("li", { staticClass: "seperator" }),
         _vm._v(" "),
@@ -49675,7 +49675,7 @@ var render = function() {
                     _c("div", { staticClass: "image-wrapper " }, [
                       _c("img", {
                         attrs: {
-                          src: _vm.base_url + "img/profile-avatar.png",
+                          src: _vm.base_url + "img/" + message.image,
                           alt: ""
                         }
                       })
@@ -49723,7 +49723,10 @@ var render = function() {
           _c("div", { staticClass: "message-header" }, [
             _c("div", { staticClass: "image-wrapper pull-left" }, [
               _c("img", {
-                attrs: { src: _vm.base_url + "img/profile-avatar.png", alt: "" }
+                attrs: {
+                  src: _vm.base_url + "img/" + _vm.messageContent.image,
+                  alt: ""
+                }
               })
             ]),
             _vm._v(" "),
@@ -49845,110 +49848,70 @@ var render = function() {
           { attrs: { action: "", method: "post", id: "ComposeForm" } },
           [
             _c("div", { staticClass: "form-group" }, [
-              _c("label", { attrs: { for: "email-to" } }, [_vm._v("To:")]),
-              _vm._v(" "),
-              _c("input", {
-                attrs: {
-                  type: "text",
-                  id: "email-to",
-                  name: "email-to",
-                  "data-role": "tagsinput"
-                },
-                on: {
-                  change: function($event) {
-                    _vm.HideContacts()
+              _c(
+                "div",
+                {
+                  on: {
+                    keyup: function($event) {
+                      _vm.emailSearch()
+                    }
                   }
-                }
-              }),
+                },
+                [
+                  _c("label", { attrs: { for: "email-to" } }, [_vm._v("To:")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    attrs: {
+                      type: "text",
+                      id: "email-to",
+                      name: "email-to",
+                      "data-role": "tagsinput"
+                    }
+                  })
+                ]
+              ),
               _vm._v(" "),
-              _c("div", { staticClass: "compose-suggestion" }, [
-                _c("div", { staticClass: "suggestion-row" }, [
-                  _c("div", { staticClass: "image-wrapper" }, [
-                    _c("img", {
-                      attrs: {
-                        src: _vm.base_url + "img/profile-avatar.png",
-                        alt: ""
+              _c(
+                "div",
+                { staticClass: "compose-suggestion" },
+                _vm._l(_vm.availableEmails, function(availableEmail) {
+                  return _c(
+                    "div",
+                    {
+                      staticClass: "suggestion-row",
+                      on: {
+                        click: function($event) {
+                          _vm.selectEmail(availableEmail.email)
+                        }
                       }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _vm._m(1)
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "suggestion-row" }, [
-                  _c("div", { staticClass: "image-wrapper" }, [
-                    _c("img", {
-                      attrs: {
-                        src: _vm.base_url + "img/profile-avatar.png",
-                        alt: ""
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _vm._m(2)
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "suggestion-row" }, [
-                  _c("div", { staticClass: "image-wrapper" }, [
-                    _c("img", {
-                      attrs: {
-                        src: _vm.base_url + "img/profile-avatar.png",
-                        alt: ""
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _vm._m(3)
-                ])
-              ]),
-              _vm._v(" "),
-              _c("span", {
-                staticClass: "add-contact ic-add-contact-messages",
-                on: { click: _vm.showContacts }
-              }),
-              _vm._v(" "),
-              _c("div", { staticClass: "contact-wrapper" }, [
-                _vm._m(4),
-                _vm._v(" "),
-                _c("div", { staticClass: "contact-row" }, [
-                  _c("div", { staticClass: "image-wrapper" }, [
-                    _c("img", {
-                      attrs: {
-                        src: _vm.base_url + "img/profile-avatar.png",
-                        alt: ""
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _vm._m(5)
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "contact-row" }, [
-                  _c("div", { staticClass: "image-wrapper" }, [
-                    _c("img", {
-                      attrs: {
-                        src: _vm.base_url + "img/profile-avatar.png",
-                        alt: ""
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _vm._m(6)
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "contact-row" }, [
-                  _c("div", { staticClass: "image-wrapper" }, [
-                    _c("img", {
-                      attrs: {
-                        src: _vm.base_url + "img/profile-avatar.png",
-                        alt: ""
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _vm._m(7)
-                ])
-              ])
+                    },
+                    [
+                      _c("div", { staticClass: "image-wrapper" }, [
+                        _c("img", {
+                          attrs: {
+                            src: _vm.base_url + "img/" + availableEmail.image,
+                            alt: ""
+                          }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "suggestion-content" }, [
+                        _c("div", { staticClass: "suggestion-name" }, [
+                          _vm._v(_vm._s(availableEmail.name))
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "suggestion-email" }, [
+                          _vm._v(_vm._s(availableEmail.email))
+                        ]),
+                        _vm._v(" "),
+                        _c("i", {
+                          staticClass: "suggestion-ic ic-check-contact"
+                        })
+                      ])
+                    ]
+                  )
+                })
+              )
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "form-group" }, [
@@ -50014,103 +49977,7 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("li", [
-      _c("a", { attrs: { href: "javascript:;" } }, [_vm._v("Send")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "suggestion-content" }, [
-      _c("div", { staticClass: "suggestion-name" }, [_vm._v("Waylon Dalton")]),
-      _vm._v(" "),
-      _c("div", { staticClass: "suggestion-email" }, [
-        _vm._v("waylon.dalton@gmail.com")
-      ]),
-      _vm._v(" "),
-      _c("i", { staticClass: "suggestion-ic ic-check-contact" })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "suggestion-content" }, [
-      _c("div", { staticClass: "suggestion-name" }, [_vm._v("Drei")]),
-      _vm._v(" "),
-      _c("div", { staticClass: "suggestion-email" }, [_vm._v("drei@gmail.com")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "suggestion-content" }, [
-      _c("div", { staticClass: "suggestion-name" }, [_vm._v("Waylon Dalton")]),
-      _vm._v(" "),
-      _c("div", { staticClass: "suggestion-email" }, [
-        _vm._v("waylon.dalton@gmail.com")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "contact-search" }, [
-      _c("form", { attrs: { action: "", method: "post" } }, [
-        _c("div", { staticClass: "form-group input-ic ic-search" }, [
-          _c("input", {
-            staticClass: "form-control contact-search-input",
-            attrs: { type: "text", placeholder: "Search Email Address" }
-          })
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "contact-content" }, [
-      _c("div", { staticClass: "contact-name" }, [_vm._v("Waylon Dalton")]),
-      _vm._v(" "),
-      _c("div", { staticClass: "contact-email" }, [
-        _vm._v("waylon.dalton@gmail.com")
-      ]),
-      _vm._v(" "),
-      _c("i", { staticClass: "contact-ic ic-check-contact" })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "contact-content" }, [
-      _c("div", { staticClass: "contact-name" }, [_vm._v("Drei")]),
-      _vm._v(" "),
-      _c("div", { staticClass: "contact-email" }, [_vm._v("drei@gmail.com")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "contact-content" }, [
-      _c("div", { staticClass: "contact-name" }, [_vm._v("Waylon Dalton")]),
-      _vm._v(" "),
-      _c("div", { staticClass: "contact-email" }, [
-        _vm._v("waylon.dalton@gmail.com")
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {

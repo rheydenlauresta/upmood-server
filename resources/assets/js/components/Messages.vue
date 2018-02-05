@@ -4,7 +4,7 @@
             <button class="btn btn-success compose" v-on:click="ComposeMessage">Compose</button>
             <ul class="menu-list">
                 <li><a href="javascript:;" @click="getContent('')">Inbox</a></li>
-                <li><a href="javascript:;">Send</a></li>
+                <li><a href="javascript:;" @click="getContent('sentMessage')">Send</a></li>
                 <li class="seperator"></li>
                 <li><a href="javascript:;" @click="getContent('general')">General</a></li>
                 <li><a href="javascript:;" @click="getContent('inquiries')">Inquires</a></li>
@@ -25,7 +25,7 @@
                         <div class="message-header row">
                             <div class="col-md-2">
                                 <div class="image-wrapper ">
-                                    <img :src="base_url+'img/profile-avatar.png'" alt="">
+                                    <img :src="base_url+'img/'+message.image" alt="">
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -50,7 +50,7 @@
             <div class="message-content-row">
                 <div class="message-header">
                     <div class="image-wrapper pull-left">
-                        <img :src="base_url+'img/profile-avatar.png'" alt="">
+                        <img :src="base_url+'img/'+messageContent.image" alt="">
                     </div>
                     <div class="message-to">{{ messageContent.name }} to Upmood admin</div>
                     <div class="message-subject">{{ messageType(messageContent.type) }}</div>
@@ -95,76 +95,47 @@
                 <button @click="sendMessage()" class="btn btn-success" :disabled="sendButton.disable">{{ sendButton.text }}</button>
                 <form action="" method="post" id="ComposeForm">
                     <div class="form-group">
-                        <label for="email-to">To:</label>
-                        <input type="text" id="email-to" name="email-to" data-role="tagsinput" @change="HideContacts()">
-                        <div class="compose-suggestion">
-                            <div class="suggestion-row">
-                                <div class="image-wrapper">
-                                    <img :src="base_url + 'img/profile-avatar.png'" alt="">
-                                </div>
-                                <div class="suggestion-content">
-                                    <div class="suggestion-name">Waylon Dalton</div>
-                                    <div class="suggestion-email">waylon.dalton@gmail.com</div>
-                                    <i class="suggestion-ic ic-check-contact"></i>
-                                </div>
-                            </div>
-                            <div class="suggestion-row">
-                                <div class="image-wrapper">
-                                    <img :src="base_url + 'img/profile-avatar.png'" alt="">
-                                </div>
-                                <div class="suggestion-content">
-                                    <div class="suggestion-name">Drei</div>
-                                    <div class="suggestion-email">drei@gmail.com</div>
-                                </div>
-                            </div>
-                            <div class="suggestion-row">
-                                <div class="image-wrapper">
-                                    <img :src="base_url + 'img/profile-avatar.png'" alt="">
-                                </div>
-                                <div class="suggestion-content">
-                                    <div class="suggestion-name">Waylon Dalton</div>
-                                    <div class="suggestion-email">waylon.dalton@gmail.com</div>
-                                </div>
-                            </div>
+                        <div @keyup="emailSearch()">
+                            <label for="email-to">To:</label>
+                            <input type="text" id="email-to" name="email-to"  data-role="tagsinput">
                         </div>
-                        <span class="add-contact ic-add-contact-messages" v-on:click="showContacts"></span>
-                        <div class="contact-wrapper">
+                        <div class="compose-suggestion" >
+
+                            <div class="suggestion-row" v-for="availableEmail in availableEmails" @click="selectEmail(availableEmail.email)">
+                                <div class="image-wrapper">
+                                    <img :src="base_url + 'img/'+availableEmail.image" alt="">
+                                </div>
+                                <div class="suggestion-content">
+                                    <div class="suggestion-name">{{availableEmail.name}}</div>
+                                    <div class="suggestion-email">{{availableEmail.email}}</div>
+                                    <i class="suggestion-ic ic-check-contact" ></i>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- <span class="add-contact ic-add-contact-messages" @click="showContacts"></span> -->
+
+    <!--                     <div class="contact-wrapper">
                             <div class="contact-search">
                                 <form action="" method="post">
                                     <div class="form-group input-ic ic-search">
-                                        <input type="text" class="form-control contact-search-input" placeholder="Search Email Address">
+                                        <input v-model="contactEmail" type="text" class="form-control contact-search-input" placeholder="Search Email Address" @keyup="emailSearch()">
                                     </div>
                                 </form>
                             </div>
-                            <div class="contact-row">
+                            <div class="contact-row" v-for="availableEmail in availableEmails" @click="selectEmail(availableEmail.email)">
                                 <div class="image-wrapper">
-                                    <img :src="base_url + 'img/profile-avatar.png'" alt="">
+                                    <img :src="base_url + 'img/'+availableEmail.image" alt="">
                                 </div>
                                 <div class="contact-content">
-                                    <div class="contact-name">Waylon Dalton</div>
-                                    <div class="contact-email">waylon.dalton@gmail.com</div>
+                                    <div class="contact-name">{{availableEmail.name}}</div>
+                                    <div class="contact-email">{{availableEmail.email}}</div>
                                     <i class="contact-ic ic-check-contact"></i>
                                 </div>
                             </div>
-                            <div class="contact-row">
-                                <div class="image-wrapper">
-                                    <img :src="base_url + 'img/profile-avatar.png'" alt="">
-                                </div>
-                                <div class="contact-content">
-                                    <div class="contact-name">Drei</div>
-                                    <div class="contact-email">drei@gmail.com</div>
-                                </div>
-                            </div>
-                            <div class="contact-row">
-                                <div class="image-wrapper">
-                                    <img :src="base_url + 'img/profile-avatar.png'" alt="">
-                                </div>
-                                <div class="contact-content">
-                                    <div class="contact-name">Waylon Dalton</div>
-                                    <div class="contact-email">waylon.dalton@gmail.com</div>
-                                </div>
-                            </div>
-                        </div>
+                        </div> -->
+
                     </div>
                     <div class="form-group">
                         <label for="email-subject">Subject:</label>
@@ -180,12 +151,6 @@
 </template>
 
 <script>
-
-$(document).on('change',"#email-to",function(){
-    alert()
-});
-
-
     export default {
         data() {
             return {
@@ -193,10 +158,12 @@ $(document).on('change',"#email-to",function(){
                 base_url: window.base_url,
 
                 messages: [],
+                availableEmails: [],
 
                 search: "",
                 type: "",
                 emailString: "",
+                contactEmail: "",
 
                 sendButton:{
                     disable: false,
@@ -216,19 +183,21 @@ $(document).on('change',"#email-to",function(){
                     date: '',
                     time: '',
                     content: '',
+                    image: '',
                     id: 0,
+                },
+
+
+                replyContent: {
+                    message: '',
+                    date: '',
+                    time: '',
                 },
 
                 composeMessage: {
                     emailArray: [],
                     subject: '',
                     message: '',
-                },
-
-                replyContent: {
-                    message: '',
-                    date: '',
-                    time: '',
                 },
 
                 formData: {
@@ -243,7 +212,6 @@ $(document).on('change',"#email-to",function(){
             this.highlightFirstMessage();
             this.resizeMessageContent()
         },
-
 
         filters: {
       
@@ -264,19 +232,16 @@ $(document).on('change',"#email-to",function(){
                     vue.type = type;
                 }
 
-                vue.formData._method = 'GET';
                 axios.get(base_url+'messages/getMessages?type='+vue.type+'&search='+vue.search).then(function (response) {
                     vue.messages = response['data'];
                     vue.viewMessage(vue.messages[0]);
                 }).catch(function (error) {
                 });
-
             },
 
             getReply(id){
                 let vue = this;
 
-                vue.formData._method = 'GET';
                 axios.get(base_url+'messages/getReplies?id='+id).then(function (response) {
 
                     if(response['data'].length > 0){
@@ -301,6 +266,7 @@ $(document).on('change',"#email-to",function(){
                 this.messageContent.date = message.date_created;
                 this.messageContent.time = message.time_created;
                 this.messageContent.content = message.content;
+                this.messageContent.image = message.image;
                 this.messageContent.id = message.id;
 
                 this.getReply(message.id);
@@ -352,6 +318,29 @@ $(document).on('change',"#email-to",function(){
                 });
             },
 
+            emailSearch: _.debounce(
+                function(){
+                    let vue = this;
+
+                    var searchEmail = $('.bootstrap-tagsinput > input').val(); 
+
+                    axios.get(base_url+'messages/emailSearch?email='+searchEmail+'&conemail='+vue.contactEmail).then(function (response) {
+                        vue.availableEmails = response['data'];
+                        $(".suggestion-row").show();
+
+                    }).catch(function (error) {
+                    });
+                },100
+            ),
+
+            selectEmail(val){
+                // alert()
+                $('#email-to').tagsinput('add', val);
+                $('#email-to').tagsinput('refresh');
+                $(".contact-wrapper").hide();
+                $(".compose-suggestion").hide();
+            },
+
             resizeMessageContent(){
                 var wrapper_width = parseInt($(".messages-wrapper").css('width').replace('px',''));
                 var nav = parseInt($(".messages-nav").css('width').replace('px',''));
@@ -378,6 +367,7 @@ $(document).on('change',"#email-to",function(){
 
             showContacts(){
                 $(".contact-wrapper").show();  
+                $(".compose-suggestion").hide();
             },
 
             HideContacts(){

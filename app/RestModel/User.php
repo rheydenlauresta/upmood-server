@@ -498,17 +498,17 @@ class User extends Authenticatable
             'image'=>$user->image,
         ];
 
-        if(isset($user_group->my_mood) && $user_group->my_mood != 0){
-            if(isset($user_group->emotion) && $user_group->emotion == 1){
+        // if(isset($user_group->my_mood) && $user_group->my_mood != 0){
+        //     if(isset($user_group->emotion) && $user_group->emotion == 1){
                 $data['emotion_value'] = $record->emotion_value;
-            }
-            if(isset($user_group->heartbeat) && $user_group->heartbeat == 1 && $record->type == 'automated'){
+            // }
+            // if(isset($user_group->heartbeat) && $user_group->heartbeat == 1 && $record->type == 'automated'){
                 $data['heartbeat_count'] = $record->heartbeat_count;
-            }
-            if(isset($user_group->stress_level) && $user_group->stress_level == 1){
+            // }
+            // if(isset($user_group->stress_level) && $user_group->stress_level == 1){
                 $data['stress_level'] = $record->stress_level;
-            }
-        }
+            // }
+        // }
 
         return $data;
     }

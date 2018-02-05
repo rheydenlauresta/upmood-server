@@ -16,10 +16,13 @@ class Feature extends Model
     {
 
     	$query = $this->where('features.user_id',request()->user()->id)
-            ->selectraw('users.id,users.name,users.email,users.image,users.profile_post,CONCAT(r.emotion_set,"/emoji/",r.emotion_value,".png") as emotion_value,r.heartbeat_count,r.stress_level,r.resources_id,features.order')
+            ->selectraw('users.id,users.name,users.email,users.image,posts.id as post_id,posts.content as profile_post,CONCAT(r.emotion_set,"/emoji/",r.emotion_value,".png") as emotion_value,r.heartbeat_count,r.stress_level,r.id as record_id,features.order')
     		->join('users','users.id','=','features.friend_id')
             ->leftJoin('records as r',function($qry){
                 $qry->on('r.user_id', '=', 'users.id')->where('r.id','=',DB::raw('(select max(records.id) from records where records.user_id = users.id)'));
+            })
+            ->leftJoin('posts',function($qry){
+                $qry->on('posts.user_id', '=', 'users.id')->where('posts.id','=',DB::raw('(select max(posts.id) from posts where posts.user_id = users.id)'));
             })
     		->selectraw('users.id,users.name,users.email,users.image')->orderBy('order','ASC')
     		->get()->toArray();

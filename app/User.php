@@ -46,29 +46,6 @@ class User extends Authenticatable
     }
 
     public static function advCardCounts($data){
-
-        // $query = DB::table('users as u')
-        //         ->selectRaw('u.image, u.name, u.gender,
-        //                     u.age, u.country, r.heartbeat_count, u.profile_post,
-        //                     if(u.is_online,"online","offline") as active_level,
-        //                     r.emotion_value, r.stress_level, COUNT( CASE WHEN gender = "male" THEN 1 END ) as maleRatio, COUNT( CASE WHEN gender = "female" THEN 1 END ) as femaleRatio,  COUNT(DISTINCT country) as countryCount,
-        //                     SUM(CASE WHEN up_meter.emotion_value = "sad" OR up_meter.emotion_value = "anxious"THEN -3
-        //                     WHEN up_meter.emotion_value = "happy" OR up_meter.emotion_value = "zen" OR up_meter.emotion_value = "excitement" THEN 3
-        //                     WHEN up_meter.emotion_value = "pleasant" OR up_meter.emotion_value = "calm" THEN 1
-        //                     WHEN up_meter.emotion_value = "unpleasant" OR up_meter.emotion_value = "confused" OR up_meter.emotion_value = "challenged" OR up_meter.emotion_value = "hyped" THEN -1
-        //                     WHEN up_meter.emotion_value = "loading" THEN 0
-        //                     ELSE 0 END) as upmood_meter')
-        //         ->leftJoin('records as r',function($qry){
-        //             $qry->on('r.user_id', '=', 'u.id')->where('r.id','=',DB::raw('(select max(records.id) from records where records.user_id = u.id)'));
-        //         })
-        //         ->leftJoin('records as up_meter',function($qry){
-        //             $qry->on('up_meter.user_id', '=', 'u.id');
-        //         });
-
-        // $res = User::filters($query, $data)->first();
-
-        // return $res;
-
         $query = DB::table('users as u')
                 ->selectRaw('u.image, u.name, u.gender,
                             u.age, u.country, r.heartbeat_count, u.profile_post,

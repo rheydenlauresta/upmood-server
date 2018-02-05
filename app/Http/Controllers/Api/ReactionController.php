@@ -39,10 +39,11 @@ class ReactionController extends BaseController
 
         $validator = $this->validator(request()->all(), [
             'id'                   => 'required',
-            'heartbeat_count'      => 'required',
-            'emoji_resource_id'    => 'required',
+            // 'heartbeat_count'      => 'required',
+            // 'emoji_resource_id'    => 'required',
             'post_id'              => 'required',
             'reaction_resource_id' => 'required',
+            'record_id' => 'required',
         ], 'send-reaction');
 
         if($validator['status'] == 422) return json_encode($validator);
