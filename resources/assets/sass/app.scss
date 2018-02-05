@@ -673,6 +673,83 @@ body{
     }
 
     .filter-wrapper{
+        .sort-by-wrapper{
+          display: none;
+          background-color: #fff;
+          position: absolute;
+          width: 100%;
+          z-index: 999;
+          box-shadow: 0px 3px 6px rgba(0,0,0,0.16);
+
+          .order-sort{
+
+            &:before{
+                @extend .content-center;
+                content:'';
+                height: 1px;
+                width: 90%;
+                border-top: 1px solid #BCBDBD;
+                margin-top: 5px;
+                margin-bottom: 5px;
+            }
+          }
+
+          .form-group{
+              transition: 0.3s ease-out all;
+              padding-left: 10px;
+              padding-right: 10px;
+              padding-top:2px;
+              padding-bottom: 2px;
+              
+              &:hover{
+                  background-color: #BCCB87;
+                  
+                  .radio-label{
+                    color: #fff !important;
+                    display: inline-block;
+                  }
+              }
+
+              input[type="radio"]{
+              appearance: none;
+              height: 20px;
+              width: 20px;
+              background-color:transparent;
+              margin-right: 10px;
+              position: relative;
+              border:none;
+
+              &:before{
+                content:'';
+                transition: 0.3s ease-out all;
+                background-image: none;
+              }
+
+              &:checked{
+                  
+                  &:before{
+                      position: absolute;
+                      top: 0px;
+                      left: 0px;
+                      width: 100%;
+                      height: 100%;
+                      background-image: url(../img/ic_check_contacts.png);
+                      background-repeat: no-repeat;
+                      background-size: cover;
+                  }
+              }
+            }
+
+            .radio-label{
+              position: relative;
+              top: -5px;
+              display: inline-block;
+              font-size: 12px;
+              font-weight: 400;
+            }
+          }
+        }
+
         form{
 
             label{

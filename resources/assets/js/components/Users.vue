@@ -2,7 +2,7 @@
     <div class="users-wrapper">
         <div class="users-table-wrapper">
             <div class="row">
-                <a href="javascript:;" class="btn btn-success pull-right downloadfile">Download File</a>
+                <a href="javascript:;" class="btn btn-success pull-right downloadfile" @click="HideSortWrapper">Download File</a>
             </div>
             <div class="row">
                 <div class="filter-wrapper">
@@ -11,18 +11,18 @@
                             <div class="form-group col-md-6">
                                 <label for="search">Search:</label>
                                 <div class="input-ic ic-search">
-                                    <input v-model="formdata.search" placeholder="e.g. Name, Emotions or Status" type="text" class="form-control" name="search" id="search" @keyup="getAxios()">
+                                    <input v-model="formdata.search" placeholder="e.g. Name, Emotions or Status" type="text" class="form-control" name="search" id="search" @keyup="getAxios()" @click="HideSortWrapper">
                                 </div>
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="filter">Filter By:</label>
                                 <div class="select-ic ic-filter half-input">
-                                    <select v-model="formdata.filter" id="filter" name="filter"  @change="selectAdvanceFilter(null,formdata.filter)" class="form-control">
+                                    <select v-model="formdata.filter" id="filter" name="filter"  @change="selectAdvanceFilter(null,formdata.filter)" class="form-control" @click="HideSortWrapper">
                                         <option value="" selected hidden>Select Filter</option>
                                         <option v-for="(item,key) in filters"  v-if="checkFilterSelected(item.value,formdata.filter)"  :value="item.value">{{item.text}}</option>
                                     </select>
                                 </div>
-                                <select v-model="formdata.filterValue" id="filter-value" name="filter-value" class="form-control half-input" :disabled="disableFilterValue" @change="getAxios()">
+                                <select v-model="formdata.filterValue" id="filter-value" name="filter-value" class="form-control half-input" :disabled="disableFilterValue" @change="getAxios()" @click="HideSortWrapper">
                                     <option v-for="item in filterOptions" v-if="":value="item.value">
                                         {{item.text}}
                                     </option>
@@ -31,13 +31,39 @@
                             <div class="form-group col-md-2">
                                 <label for="sort">Sort By:</label>
                                 <div class="select-ic ic-sort">
-                                    <select v-model="formdata.sortValue" id="sort" name="sort" class="form-control" @change="getAxios()">
-                                        <option value="" selected hidden>Select Filter</option>
-                                        <option value="name">Name</option>
-                                        <option value="emotion_value">Current Emotion</option>
-                                        <option value="profile_post">Status</option>
-                                        <option value="country">Location</option>
+                                    <select v-model="formdata.sortValue" id="sort" name="sort" class="form-control" @change="getAxios()" @click="ToggleSortWrapper">
+                                        <option value="" selected hidden>{{ this.category }}</option>
                                     </select>
+                                    <div class="sort-by-wrapper">
+                                        <div class="category-sort">
+                                            <label class="form-group category-group" for="category-name">
+                                                <input type="radio" id="category-name" name="category" value="Name" v-model="category">
+                                                <span class="radio-label" for="category-name">Name</span>
+                                            </label>
+                                            <label class="form-group category-group" for="category-emotion">
+                                                <input type="radio"  id="category-emotion" name="category" value="Current Emotion" v-model="category">
+                                                <span class="radio-label">Current Emotion</span>
+                                            </label>
+                                            <label class="form-group category-group" for="category-status">
+                                                <input type="radio"  id="category-status" name="category" value="Status" v-model="category">
+                                                <span class="radio-label">Status</span>
+                                            </label>
+                                            <label class="form-group category-group" for="category-location">
+                                                <input type="radio" id="category-location" name="category" value="Location" v-model="category">
+                                                <span class="radio-label">Location</span>
+                                            </label>
+                                        </div>
+                                        <div class="order-sort">
+                                            <label class="form-group order-group" for="order-ascending">
+                                                <input type="radio" id="order-ascending" name="order" value="Ascending" v-model="order">
+                                                <span class="radio-label">Ascending</span>
+                                            </label>
+                                            <label class="form-group order-group" for="order-descending">
+                                                <input type="radio" id="order-descending" name="order" value="Descending" v-model="order">
+                                                <span class="radio-label">Descending</span>
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -75,11 +101,11 @@
                         </div>
 
                         <div class="scoreboard">
-                            <div class="advance-card advance-user col-md-3">
+                            <div class="advance-card advance-user col-md-3" @click="HideSortWrapper">
                                 <div class="user-value">{{recordData.total}}</div>
                                 <div class="advance-card-label">User Selected</div>
                             </div>
-                            <div class="advance-card advance-gender col-md-3">
+                            <div class="advance-card advance-gender col-md-3" @click="HideSortWrapper">
                                 <div class="gender-value">
                                     <div class="col-md-6 male"  v-if="formdata.filterValue != 'female'">
                                         <span>Male</span>
@@ -92,22 +118,22 @@
                                 </div>
                                 <div class="advance-card-label">Gender</div>
                             </div>
-                            <div class="advance-card advance-country col-md-3" v-if="formdata.filter == 'location'">
+                            <div class="advance-card advance-country col-md-3" v-if="formdata.filter == 'location'" @click="HideSortWrapper">
                                 <div class="country-value">{{ formdata.filterValue }}</div>
                                 <div class="advance-card-label">Country</div>
                             </div>
-                            <div class="advance-card advance-country col-md-3" v-if="formdata.filter != 'location'">
+                            <div class="advance-card advance-country col-md-3" v-if="formdata.filter != 'location'" @click="HideSortWrapper">
                                 <div class="country-value">{{ countryCount }}</div>
                                 <div class="advance-card-label">No. of Location</div>
                             </div>
-                            <div class="advance-card advance-meter col-md-3">
+                            <div class="advance-card advance-meter col-md-3" @click="HideSortWrapper">
                                 <div class="meter-value">{{ up_meter(avgUpmoodmeter) }}</div>
                                 <div class="advance-card-label">Average Upmood Meter</div>
                             </div>
                         </div>
                     </form>
                 </div>
-                <table class="table table-stripe users-table">
+                <table class="table table-stripe users-table" @click="HideSortWrapper">
                     <thead>
                         <th>Image</th>
                         <th>Name</th>
@@ -139,7 +165,7 @@
                         </tr>
                     </tbody>
                 </table>
-                <div class="pagination">
+                <div class="pagination" @click="HideSortWrapper">
                     <a v-on:click="preventPrev($event)" class="prev" :href="recordData.prev_page_url">Prev</a>
                     <div class="pagination-number" v-for="page in pageNumber">
                         <a :class="{ active: page.isActive }"  href="javascript:;" @click="preventPage(page.counter)">{{page.counter}}</a>
@@ -213,7 +239,9 @@
                     {value:['41','45'],text:'41 - 45'},
                 ],
 
-                pageNumber: []
+                pageNumber: [],
+                category:'',
+                order:''
             }
         },
         watch: {
@@ -478,6 +506,14 @@
 
                 this.advanceFilter.splice(event,1);
                 this.searchFilters()
+            },
+
+            ToggleSortWrapper(){
+                $(".sort-by-wrapper").toggle();
+            },
+
+            HideSortWrapper(){
+                $(".sort-by-wrapper").hide();
             },
 
             getAxios: _.debounce(
