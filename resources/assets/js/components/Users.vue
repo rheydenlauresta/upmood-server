@@ -31,35 +31,35 @@
                             <div class="form-group col-md-2">
                                 <label for="sort">Sort By:</label>
                                 <div class="select-ic ic-sort">
-                                    <select v-model="formdata.sortValue" id="sort" name="sort" class="form-control" @change="getAxios()" @click="ToggleSortWrapper">
-                                        <option value="" selected hidden>{{ this.category }}</option>
+                                    <select v-model="sortValue" id="sort" name="sort" class="form-control"  @click="ToggleSortWrapper" @blur="showVal()">
+                                        <option value="" selected hidden>{{ this.formdata.sortCategory }}</option>
                                     </select>
                                     <div class="sort-by-wrapper">
                                         <div class="category-sort">
                                             <label class="form-group category-group" for="category-name">
-                                                <input type="radio" id="category-name" name="category" value="Name" v-model="category">
+                                                <input type="radio" id="category-name" name="category" value="Name" @change="showVal()" v-model="formdata.sortCategory">
                                                 <span class="radio-label" for="category-name">Name</span>
                                             </label>
                                             <label class="form-group category-group" for="category-emotion">
-                                                <input type="radio"  id="category-emotion" name="category" value="Current Emotion" v-model="category">
+                                                <input type="radio"  id="category-emotion" name="category" value="Current Emotion" @change="showVal()" v-model="formdata.sortCategory">
                                                 <span class="radio-label">Current Emotion</span>
                                             </label>
                                             <label class="form-group category-group" for="category-status">
-                                                <input type="radio"  id="category-status" name="category" value="Status" v-model="category">
+                                                <input type="radio"  id="category-status" name="category" value="Status" @change="showVal()" v-model="formdata.sortCategory">
                                                 <span class="radio-label">Status</span>
                                             </label>
                                             <label class="form-group category-group" for="category-location">
-                                                <input type="radio" id="category-location" name="category" value="Location" v-model="category">
+                                                <input type="radio" id="category-location" name="category" value="Location" @change="showVal()" v-model="formdata.sortCategory">
                                                 <span class="radio-label">Location</span>
                                             </label>
                                         </div>
                                         <div class="order-sort">
                                             <label class="form-group order-group" for="order-ascending">
-                                                <input type="radio" id="order-ascending" name="order" value="Ascending" v-model="order">
+                                                <input type="radio" id="order-ascending" name="order" value="ASC" @change="showVal()" v-model="formdata.sortOrder">
                                                 <span class="radio-label">Ascending</span>
                                             </label>
                                             <label class="form-group order-group" for="order-descending">
-                                                <input type="radio" id="order-descending" name="order" value="Descending" v-model="order">
+                                                <input type="radio" id="order-descending" name="order" value="DESC" @change="showVal()" v-model="formdata.sortOrder">
                                                 <span class="radio-label">Descending</span>
                                             </label>
                                         </div>
@@ -192,7 +192,8 @@
                     search: '',
                     filter: '',
                     filterValue: '',
-                    sortValue: '',
+                    sortCategory:'Name',
+                    sortOrder:'Ascending',
                     page: 1,
                     advanceFilterValues: '',
                     filterSelected: '',
@@ -239,8 +240,7 @@
                 ],
 
                 pageNumber: [],
-                category:'',
-                order:''
+                sortValue: '',
             }
         },
         watch: {
@@ -377,24 +377,30 @@
                 if(filters[1]){
                     var data = filters[1].split('&') 
 
-                    this.formdata.search = data[0].split('=')[1];
+                    this.formdata.search = decodeURIComponent(data[0].split('=')[1]);
                     this.formdata.filter = data[1].split('=')[1];
                     this.formdata.filterValue = data[2].split('=')[1];
-                    this.formdata.sortValue = data[3].split('=')[1];
-                    this.formdata.page = parseInt(data[4].split('=')[1]);
 
-                    if(data[5].split('=')[1] != ''){
-                        this.formdata.advanceFilterValues = decodeURIComponent(data[5].split('=')[1]);
-                        this.advanceFilter = JSON.parse(decodeURIComponent(data[5].split('=')[1]));
+                    if(data[3].split('=')[1] != ''){
+                        this.formdata.sortCategory = decodeURIComponent(data[3].split('=')[1]);
                     }
+
+                    if(data[4].split('=')[1] != ''){
+                        this.formdata.sortOrder = decodeURIComponent(data[4].split('=')[1]);
+                    }
+                    this.formdata.page = parseInt(decodeURIComponent(data[5].split('=')[1]));
 
                     if(data[6].split('=')[1] != ''){
-                        this.formdata.filterSelected = decodeURIComponent(data[6].split('=')[1]);
-                        this.filterSelected = JSON.parse(decodeURIComponent(data[6].split('=')[1]));
+                        this.formdata.advanceFilterValues = decodeURIComponent(data[6].split('=')[1]);
+                        this.advanceFilter = JSON.parse(decodeURIComponent(data[6].split('=')[1]));
                     }
 
-                    this.formdata.advance_filter_id = parseInt(data[7].split('=')[1]);
+                    if(data[7].split('=')[1] != ''){
+                        this.formdata.filterSelected = decodeURIComponent(data[7].split('=')[1]);
+                        this.filterSelected = JSON.parse(decodeURIComponent(data[7].split('=')[1]));
+                    }
 
+                    this.formdata.advance_filter_id = parseInt(data[8].split('=')[1]);
 
                     if(this.formdata.filter != ''){
                         this.filterOptions = this[data[1].split('=')[1]];
@@ -466,7 +472,7 @@
                 this.filterSelected = [];
                 this.filterOptions = [];
                 this.advanceFilter = [];
-                this.formdata.sortValue = '';
+                this.sortValue = '';
                 this.formdata.search = '';
                 this.formdata.filter = '';
                 this.formdata.filterValue = '';
@@ -493,6 +499,12 @@
                 }
             },
 
+            showVal(){
+                // this.sortValue = this.formdata.sortCategory;
+                this.HideSortWrapper();
+                this.searchFilters()
+            },
+
             RemoveAdvanceFilter(event){
 
                 var duplicateId = this.filterSelected.find(item => item.id === this.advanceFilter[event].id);
@@ -513,6 +525,7 @@
             HideSortWrapper(){
                 $(".sort-by-wrapper").hide();
             },
+
 
             getAxios: _.debounce(
                 function () {

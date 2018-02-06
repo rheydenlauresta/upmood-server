@@ -27,7 +27,7 @@ class UsersController extends Controller
     public function show($module)
     {
         $checker = $this->methodCheckCms($module, [
-           'userFilter', 'userProfile'
+           'userFilter', 'userProfile', 'upmoodCalendar'
         ]);
 
         if($checker['status'] == 204) return $checker;
@@ -37,9 +37,8 @@ class UsersController extends Controller
 
     public function update(Request $request, $module)
     {
-
         $checker = $this->methodCheckCms($module, [
-           'userFilter', 'userProfile'
+           'userFilter', 'userProfile', 'upmoodCalendar'
         ]);
 
         if($checker['status'] == 204) return $checker;
@@ -66,7 +65,7 @@ class UsersController extends Controller
         $profile = User::getProfile($id);
         $records = User::getRecords($id);
         $featured = User::getFeatured($id);
-        // dd($featured->toArray());
+
         return view('userprofile',[
             'profile'=>$profile,
             'records'=>$records->toArray(),
@@ -79,7 +78,7 @@ class UsersController extends Controller
         $data = Input::all();
 
         $upmood_calendar = User::getCalendar($data);
-        // print_r($upmood_calendar->toArray());
-        return $upmood_calendar->toArray();
+
+        return $upmood_calendar;
     }
 }

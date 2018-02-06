@@ -246,7 +246,6 @@
             },
 
             viewMessage(message){
-
                 let vue = this;
 
                 this.messageContent.name = message.name;
@@ -287,6 +286,14 @@
                 vue.sendButton.text = 'Sending';
 
                 axios.post(base_url+url, data).then(function (response) {
+
+                    // if(response['data'] == ""){
+                    //     vue.Notify("Oops!","Please Complete All Fields");
+
+                    // }else{
+                    //     vue.Notify("Well Done!","You're message has been successfully sent");
+                    // }
+                    
                     vue.sendButton.disable = false;
                     vue.sendButton.text = 'Send';
 
@@ -303,6 +310,7 @@
                     }
                     
                 }).catch(function (error) {
+                    alert(error)
                 });
             },
 
@@ -322,7 +330,7 @@
             ),
 
             selectEmail(val){
-                alert()
+                // alert()
                 $('#email-to').tagsinput('add', val);
                 $('#email-to').tagsinput('refresh');
                 $(".contact-wrapper").hide();
@@ -361,6 +369,12 @@
             HideContacts(){
                 $(".contact-wrapper").hide();
             },
+
+            // Notify(title,message){
+            //     $('.notification-title').html(title);
+            //     $('.notification-description').html(message);
+            //     $('#notification-modal').modal('toggle');
+            // },
 
             getAxios: _.debounce(
                 function () {

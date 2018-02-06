@@ -112,10 +112,7 @@ class User extends Authenticatable
             }
         }
 
-        if(isset($data['sortValue']) && $data['sortValue'] != '' && $data['sortValue'] != null){
-            
-            $query = $query->orderBy($data['sortValue'],'ASC');
-        }
+        $query = $query->orderBy($data['sortCategory'],$data['sortOrder']);
 
         return $query;
     }
@@ -199,15 +196,10 @@ class User extends Authenticatable
 
     public static function getCalendar($data)
     {
-        $date = explode('/',$data['date']);
-        if(strlen($date[0]) == 1){
-            $date[0] = '0'.$date[0];
-        }
-        $date_format = $date[1].'-'.$date[0];
-
-        $records =  Records::select(DB::raw('CONCAT("calendar-ic emoji-gummybear-",records.emotion_value) as customClass'),DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as date'))
+        $records =  Records::select(DB::raw('CONCAT("calendar-ic emoji-",records.emotion_set,"-",records.emotion_value) as customClass'),DB::raw('DATE_FORMAT(created_at, "%Y/%m/%d") as date'))
                     ->where('records.user_id', $data['id'])
-                    ->where('records.created_at', 'like','%'.$date_format.'%')
+                    ->where('records.created_at', 'like','%'.$data['date'].'%')
+                    ->groupBy(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'))
                     ->get();
         // $records =  Records::select(DB::raw('CONCAT("calendar-ic emoji-",records.emotion_set,"-",records.emotion_value) as customClass'),DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as date'))
 

@@ -241,7 +241,7 @@
   color: #DB2828;
 }
 
-.content-center, .users-wrapper .users-table-wrapper .pagination, .messages-wrapper .messages-nav .compose, .messages-wrapper .messages-nav .menu-list, .messages-wrapper .messages-nav .menu-list li.seperator, .messages-wrapper .messages-list .messages-search-wrapper .messages-search, .messages-wrapper .messages-content#compose .compose-wrapper, .user-profile-wrapper .current-emotion .image-wrapper, .user-profile-wrapper .mood-steam .mood-steam-table table tbody tr td .image-wrapper, .user-profile-wrapper .featured-friends .featured-friends-table table tbody tr td .image-wrapper {
+.content-center, .users-wrapper .users-table-wrapper .pagination, .users-wrapper .users-table-wrapper .filter-wrapper .sort-by-wrapper .order-sort:before, .messages-wrapper .messages-nav .compose, .messages-wrapper .messages-nav .menu-list, .messages-wrapper .messages-nav .menu-list li.seperator, .messages-wrapper .messages-list .messages-search-wrapper .messages-search, .messages-wrapper .messages-content#compose .compose-wrapper, .user-profile-wrapper .current-emotion .image-wrapper, .user-profile-wrapper .mood-steam .mood-steam-table table tbody tr td .image-wrapper, .user-profile-wrapper .featured-friends .featured-friends-table table tbody tr td .image-wrapper {
   display: block;
   margin: 0 auto;
 }
@@ -8865,6 +8865,81 @@ body {
 
 .users-wrapper .users-table-wrapper .downloadfile {
   margin-bottom: 15px;
+}
+
+.users-wrapper .users-table-wrapper .filter-wrapper .sort-by-wrapper {
+  display: none;
+  background-color: #fff;
+  position: absolute;
+  width: 100%;
+  z-index: 999;
+  -webkit-box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+          box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+}
+
+.users-wrapper .users-table-wrapper .filter-wrapper .sort-by-wrapper .order-sort:before {
+  content: '';
+  height: 1px;
+  width: 90%;
+  border-top: 1px solid #BCBDBD;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.users-wrapper .users-table-wrapper .filter-wrapper .sort-by-wrapper .form-group {
+  -webkit-transition: 0.3s ease-out all;
+  transition: 0.3s ease-out all;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+.users-wrapper .users-table-wrapper .filter-wrapper .sort-by-wrapper .form-group:hover {
+  background-color: #BCCB87;
+}
+
+.users-wrapper .users-table-wrapper .filter-wrapper .sort-by-wrapper .form-group:hover .radio-label {
+  color: #fff !important;
+  display: inline-block;
+}
+
+.users-wrapper .users-table-wrapper .filter-wrapper .sort-by-wrapper .form-group input[type="radio"] {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  height: 20px;
+  width: 20px;
+  background-color: transparent;
+  margin-right: 10px;
+  position: relative;
+  border: none;
+}
+
+.users-wrapper .users-table-wrapper .filter-wrapper .sort-by-wrapper .form-group input[type="radio"]:before {
+  content: '';
+  -webkit-transition: 0.3s ease-out all;
+  transition: 0.3s ease-out all;
+  background-image: none;
+}
+
+.users-wrapper .users-table-wrapper .filter-wrapper .sort-by-wrapper .form-group input[type="radio"]:checked:before {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  background-image: url(../img/ic_check_contacts.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.users-wrapper .users-table-wrapper .filter-wrapper .sort-by-wrapper .form-group .radio-label {
+  position: relative;
+  top: -5px;
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 400;
 }
 
 .users-wrapper .users-table-wrapper .filter-wrapper form label {
