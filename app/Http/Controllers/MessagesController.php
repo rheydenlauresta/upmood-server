@@ -112,10 +112,8 @@ class MessagesController extends Controller
 
     	$emails = User::selectraw("name, image, email")
     				->where(function($query) use($data){
-    					$query->where('email','like','%'.$data['email'].'%');
+    					$query->orWhere('email','like','%'.$data['email'].'%');
     					$query->orWhere('name','like','%'.$data['email'].'%');
-    					// $query->where('email','like','%'.$data['conemail'].'%');
-    					// $query->orWhere('name','like','%'.$data['conemail'].'%');
     				})
     				->take(10)
     				->get();

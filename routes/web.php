@@ -26,11 +26,14 @@ Route::get('/', 'HomeController@index')->name('home');
 Route::get('/dashboard', 'DashboardController@index');
 
 // user
-Route::get('/userslist', 'UsersController@usersList');
-Route::get('/usersfilter', 'UsersController@userFilter');
-Route::get('/userprofile', function () {
-    return view('userprofile');
-});
+
+Route::get('users/userProfile/{id?}', 'UsersController@userProfile');
+Route::resources([
+    'users' => 'UsersController'
+]);
+
+// Route::get('/userslist', 'UsersController@usersList');
+// Route::get('/usersfilter', 'UsersController@userFilter');
 
 // messages
 Route::resources([

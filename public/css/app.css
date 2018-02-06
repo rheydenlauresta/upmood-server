@@ -48,6 +48,18 @@
   position: absolute;
 }
 
+.calendar-ic:before {
+  content: '';
+  position: absolute;
+  display: inline-block;
+  height: 28px;
+  width: 28px;
+  background-size: cover;
+  background-position: center center;
+  top: 19px;
+  left: 9px;
+}
+
 .ic-notification {
   background: url("../img/ic_notification.png") no-repeat;
   top: 17px;
@@ -150,6 +162,24 @@
   position: absolute;
 }
 
+/* PANCAKE */
+.emoji-pancake-sad:before {
+  background-image: url(../img/resources/pancake/emoji/sad.png);
+}
+
+/* END OF PANCAKE */
+/* GUMMY BEAR */
+.emoji-gummybear-pleasant:before {
+  background-image: url(../img/resources/gummybear/emoji/pleasant.png);
+}
+
+/* END OF GUMMY BEAR */
+/*  REGULAR */
+.emoji-regular-happy:before {
+  background-image: url(../img/resources/regular/emoji/happy.png);
+}
+
+/* END OF REGULAR */
 .btn-success {
   background-color: #BCCB87 !important;
   border-color: #95A757 !important;
@@ -9809,4 +9839,122 @@ body {
 
 .user-profile-wrapper .emotion-calendar {
   margin-top: 15px;
+}
+
+.user-profile-wrapper .emotion-calendar .calendar-wrapper .__vev_calendar-wrapper .cal-wrapper {
+  padding: 10px;
+  width: 100%;
+}
+
+.user-profile-wrapper .emotion-calendar .calendar-wrapper .__vev_calendar-wrapper .cal-wrapper .cal-header {
+  background-color: #FFF2F2;
+  color: #4B4747;
+  border: 1px solid #95989A;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+}
+
+.user-profile-wrapper .emotion-calendar .calendar-wrapper .__vev_calendar-wrapper .cal-wrapper .cal-body .weeks .item {
+  border-left: 1px solid #a5a5a5;
+  border-bottom: 1px solid #a5a5a5;
+  text-transform: uppercase;
+  font-weight: 600;
+  line-height: 28px;
+  font-size: 11px;
+  color: #333333;
+}
+
+.user-profile-wrapper .emotion-calendar .calendar-wrapper .__vev_calendar-wrapper .cal-wrapper .cal-body .weeks .item:nth-child(7n) {
+  border-right: 1px solid #a5a5a5;
+}
+
+.user-profile-wrapper .emotion-calendar .calendar-wrapper .__vev_calendar-wrapper .cal-wrapper .cal-body .dates .item {
+  border-left: 1px solid #a5a5a5;
+  border-bottom: 1px solid #a5a5a5;
+}
+
+.user-profile-wrapper .emotion-calendar .calendar-wrapper .__vev_calendar-wrapper .cal-wrapper .cal-body .dates .item:nth-child(7n) {
+  border-right: 1px solid #a5a5a5;
+}
+
+.user-profile-wrapper .emotion-calendar .calendar-wrapper .__vev_calendar-wrapper .cal-wrapper .cal-body .dates .item .date-num {
+  line-height: 50px;
+  font-weight: 300;
+  font-size: 12px;
+  top: -13px;
+  left: -13px;
+  color: #333333 !important;
+}
+
+.user-profile-wrapper .emotion-calendar .calendar-wrapper .__vev_calendar-wrapper .cal-wrapper .cal-body .dates .item .is-event {
+  display: none;
+}
+
+.user-profile-wrapper .emotion-calendar .calendar-wrapper .__vev_calendar-wrapper .cal-wrapper .cal-body .dates .item.today .date-num {
+  color: #27AE60 !important;
+  font-weight: 700;
+}
+
+.user-profile-wrapper .emotion-calendar .calendar-wrapper .__vev_calendar-wrapper .cal-wrapper .cal-body .dates .item.today .is-today {
+  display: none;
+}
+
+.user-profile-wrapper .emotion-calendar .calendar-wrapper .__vev_calendar-wrapper .cal-wrapper .cal-body .dates .item.today .is-event {
+  display: none;
+}
+
+.user-profile-wrapper .emotion-calendar .calendar-wrapper .__vev_calendar-wrapper .events-wrapper {
+  display: none;
+}
+
+#notification-modal {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+#notification-modal .modal-dialog {
+  padding: 25px;
+  color: #fff;
+  top: 40%;
+  width: 407px;
+}
+
+#notification-modal .modal-dialog .modal-body {
+  background-color: #BCCB87;
+}
+
+#notification-modal .modal-dialog .modal-body .notification-content {
+  padding: 10px 20px 10px 20px;
+}
+
+#notification-modal .modal-dialog .modal-body .notification-content .image-wrapper {
+  float: left;
+  margin-right: 20px;
+  top: 7px;
+  position: relative;
+}
+
+#notification-modal .modal-dialog .modal-body .notification-content .text-content {
+  padding-left: 54px;
+}
+
+#notification-modal .modal-dialog .modal-body .notification-content .text-content .notification-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 0px;
+}
+
+#notification-modal .modal-dialog .modal-body .notification-content .text-content .notification-description {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+#notification-modal .modal-dialog .modal-body .close {
+  color: #fff;
+  opacity: 1.0;
+  -webkit-transition: 0.2s ease-out all;
+  transition: 0.2s ease-out all;
+}
+
+#notification-modal .modal-dialog .modal-body .close:hover {
+  color: #FF0000;
 }
