@@ -24,7 +24,7 @@
                 <div class="upmood-logo"></div>
                 <ul>
                     <li><i class="nav-ic ic-dashboard"></i><a href="{{ url('/') }}"> Dashboard</a></li>
-                    <li><i class="nav-ic ic-user"></i><a href="{{ url('/userslist') }}"> Users</a></li>
+                    <li><i class="nav-ic ic-user"></i><a href="{{ url('/users') }}"> Users</a></li>
                     <li><i class="nav-ic ic-message"></i><a href="{{ url('/messages') }}"> Messages</a></li>
                 </ul>
             </div>

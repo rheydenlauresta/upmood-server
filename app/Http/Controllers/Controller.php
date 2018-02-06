@@ -63,4 +63,23 @@ class Controller extends BaseController
         if($res){ echo 'deleted'; }
 
     }
+
+    public function methodCheckCms($defined, $required)
+    {
+        
+        if(!in_array($defined, $required)) return [
+            'status'  => (int) env('EMPTY_RESPONSE_CODE'),
+            'message' => 'invalid value',
+            'errors'  => (Object) [],
+            'data'    => (Object) []
+        ];
+
+        return [
+            'status'  => (int) env('SUCCESS_RESPONSE_CODE'),
+            'message' => 'success',
+            'errors'  => (Object) [],
+            'data'    => (Object) []
+        ];
+
+    }
 }

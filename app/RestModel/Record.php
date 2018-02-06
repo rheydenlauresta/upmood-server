@@ -88,6 +88,7 @@ class Record extends Model
         $record->longitude       = request('longitude');
         $record->latitude        = request('latitude');
         $record->ppi             = request('ppi');
+        $record->total_ppi       = request('total_ppi');
 
         $user->record_count    = $user->record_count + 1;
         $user->basic_emoji_set = request('emotion_set');
@@ -121,6 +122,7 @@ class Record extends Model
                 'longitude'  => request('longitude'),
                 'latitude'  => request('latitude'),
                 'ppi'  => request('ppi'),
+                'total_ppi'  => request('total_ppi'),
                 "request_from"=> [
                     "id"=>request()->user()->id,
                     "name"=>request()->user()->name,

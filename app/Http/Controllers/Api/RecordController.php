@@ -66,6 +66,7 @@ class RecordController extends BaseController
             'longitude'       => 'required',
             'latitude'        => 'required',
             'ppi'             => 'required',
+            'total_ppi'       => 'required',
             'type'            => 'required|in:automated,manual',
         ], 'store-record');
 

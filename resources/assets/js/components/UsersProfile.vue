@@ -9,20 +9,21 @@
                 </div>
                 <div class="col-md-10">
                     <div class="profile-info">
-                        <div class="name">Samuel Newman <span class="badge-online"></span></div>
+                        <div class="name">{{ profile.name }} <span class="badge-online"></span></div>
                         <div class="row">
                             <div class="col-md-1 text-semibold">Age:</div>
-                            <div class="age col-md-5">26 Years Old</div>
+                            <div class="age col-md-5">{{ profile.age }} Years Old</div>
                             <div class="col-md-1"><i class="ic-location"></i></div>
-                            <div class="col-md-5 location">Metro Manila, Philippines</div>
+                            <div class="col-md-5 location">{{ profile.country }}</div>
                         </div>
                         <div class="row">
                             <div class="col-md-1 text-semibold">Gender:</div>
-                            <div class="col-md-11 gender">Male</div>
+                            <div class="col-md-11 gender">{{ profile.gender }}</div>
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="description">"Infuse your life with action. Don't wait for it to happen. Make it happen. Make your own future. Make your own hope. Make your own love. And whatever your beliefs, honor your creator, not by passively waiting for grace to come down from upon high, but by doing what you can to make grace happen... yourself, right now, right down here on Earth."</div>
+                                <div class="description" v-if="profile.profile_post != null">"{{ profile.profile_post }}"</div>
+                                <div class="description" v-else>"No Post"</div>
                             </div>
                         </div>
                     </div>
@@ -34,16 +35,16 @@
                 <div class="current-emotion">
                     <div class="title">Current Emotion</div>
                     <div class="image-wrapper">
-                        <img :src="base_url + 'img/resources/gummybear/emoji/confused.png'" alt="">
+                        <img :src="base_url + 'img/resources/' + profile.emotion_set + '/emoji/' + profile.emotion_value + '.png'" alt="">
                     </div>
                     <div class="emotion-info">
                         <div class="row">
                             <div class="col-md-4">BPM:</div>
-                            <div class="col-md-8 BPM">43.7405</div>
+                            <div class="col-md-8 BPM">{{ profile.heartbeat_count }}</div>
                         </div>
                         <div class="row">
                             <div class="col-md-4">Stress Level:</div>
-                            <div class="col-md-8 stress-level">Moderate</div>
+                            <div class="col-md-8 stress-level">{{ profile.stress_level }}</div>
                         </div>
                         <div class="row">
                             <div class="col-md-12">Mood Meter:</div>
@@ -83,78 +84,15 @@
                                 <th>Emotion</th>
                                 <th>Reaction</th>
                             </thead>
-                            <tbody>
+                            <tbody v-for="(record,key) in records">
                                 <tr>
-                                    <td>01-20-18 12:21:43 AM</td>
-                                    <td>43.705</td>
-                                    <td>202</td>
-                                    <td>180160</td>
-                                    <td>Moderate</td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/regular/emoji/confused.png'" alt=""></div></td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/chick/emoji/happy.png'" alt=""></div></td>
-                                </tr>
-                                <tr>
-                                    <td>01-20-18 12:21:43 AM</td>
-                                    <td>43.705</td>
-                                    <td>202</td>
-                                    <td>180160</td>
-                                    <td>Moderate</td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/regular/emoji/confused.png'" alt=""></div></td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/chick/emoji/happy.png'" alt=""></div></td>
-                                </tr>
-                                <tr>
-                                    <td>01-20-18 12:21:43 AM</td>
-                                    <td>43.705</td>
-                                    <td>202</td>
-                                    <td>180160</td>
-                                    <td>Moderate</td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/regular/emoji/confused.png'" alt=""></div></td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/chick/emoji/happy.png'" alt=""></div></td>
-                                </tr>
-                                <tr>
-                                    <td>01-20-18 12:21:43 AM</td>
-                                    <td>43.705</td>
-                                    <td>202</td>
-                                    <td>180160</td>
-                                    <td>Moderate</td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/regular/emoji/confused.png'" alt=""></div></td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/chick/emoji/happy.png'" alt=""></div></td>
-                                </tr>
-                                <tr>
-                                    <td>01-20-18 12:21:43 AM</td>
-                                    <td>43.705</td>
-                                    <td>202</td>
-                                    <td>180160</td>
-                                    <td>Moderate</td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/regular/emoji/confused.png'" alt=""></div></td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/chick/emoji/happy.png'" alt=""></div></td>
-                                </tr>
-                                <tr>
-                                    <td>01-20-18 12:21:43 AM</td>
-                                    <td>43.705</td>
-                                    <td>202</td>
-                                    <td>180160</td>
-                                    <td>Moderate</td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/regular/emoji/confused.png'" alt=""></div></td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/chick/emoji/happy.png'" alt=""></div></td>
-                                </tr>
-                                <tr>
-                                    <td>01-20-18 12:21:43 AM</td>
-                                    <td>43.705</td>
-                                    <td>202</td>
-                                    <td>180160</td>
-                                    <td>Moderate</td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/regular/emoji/confused.png'" alt=""></div></td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/chick/emoji/happy.png'" alt=""></div></td>
-                                </tr>
-                                <tr>
-                                    <td>01-20-18 12:21:43 AM</td>
-                                    <td>43.705</td>
-                                    <td>202</td>
-                                    <td>180160</td>
-                                    <td>Moderate</td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/regular/emoji/confused.png'" alt=""></div></td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/chick/emoji/happy.png'" alt=""></div></td>
+                                    <td>{{ record.created_at }}</td>
+                                    <td>{{ record.heartbeat_count }}</td>
+                                    <td>{{ record.ppi }}</td>
+                                    <td>{{ record.total_ppi }}</td>
+                                    <td>{{ record.stress_level }}</td>
+                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/' + record.emotion_set + '/emoji/' + record.emotion_value + '.png'" alt=""></div></td>
+                                    <td><div class="image-wrapper" v-if="record.set_name != null"><img :src="base_url + 'img/resources/' + record.set_name + '/' + record.type + '/' + record.filename" alt=""></div></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -173,46 +111,11 @@
                                 <th>Emotion</th>
                                 <th>Reaction</th>
                             </thead>
-                            <tbody>
+                            <tbody v-for="feature in featured">
                                 <tr>
-                                    <td>Fname Lname</td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/regular/emoji/confused.png'" alt=""></div></td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/chick/emoji/happy.png'" alt=""></div></td>
-                                </tr>
-                                <tr>
-                                    <td>Fname Lname</td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/regular/emoji/confused.png'" alt=""></div></td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/chick/emoji/happy.png'" alt=""></div></td>
-                                </tr>
-                                <tr>
-                                    <td>Fname Lname</td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/regular/emoji/confused.png'" alt=""></div></td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/chick/emoji/happy.png'" alt=""></div></td>
-                                </tr>
-                                <tr>
-                                    <td>Fname Lname</td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/regular/emoji/confused.png'" alt=""></div></td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/chick/emoji/happy.png'" alt=""></div></td>
-                                </tr>
-                                <tr>
-                                    <td>Fname Lname</td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/regular/emoji/confused.png'" alt=""></div></td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/chick/emoji/happy.png'" alt=""></div></td>
-                                </tr>
-                                <tr>
-                                    <td>Fname Lname</td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/regular/emoji/confused.png'" alt=""></div></td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/chick/emoji/happy.png'" alt=""></div></td>
-                                </tr>
-                                <tr>
-                                    <td>Fname Lname</td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/regular/emoji/confused.png'" alt=""></div></td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/chick/emoji/happy.png'" alt=""></div></td>
-                                </tr>
-                                <tr>
-                                    <td>Fname Lname</td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/regular/emoji/confused.png'" alt=""></div></td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/chick/emoji/happy.png'" alt=""></div></td>
+                                    <td>{{ feature.name }}</td>
+                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/' + feature.emotion_set + '/emoji/' + feature.emotion_value + '.png'" alt=""></div></td>
+                                    <td><div class="image-wrapper" v-if="feature.set_name != null"><img :src="base_url + 'img/resources/' + feature.set_name + '/' + feature.type + '/' + feature.filename" alt=""></div></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -223,7 +126,7 @@
                 <div class="emotion-calendar">
                     <div class="title">Upmood Emotion Calendar</div>
                     <div class="calendar-wrapper">
-                        <vue-event-calendar :events="demoEvents"></vue-event-calendar>
+                        <vue-event-calendar :events="demoEvents"  @month-changed="handleMonthChanged"></vue-event-calendar>
                     </div>
                 </div>
             </div>
@@ -233,46 +136,26 @@
 
 <script>
     export default {
-        props: [],
+        props: ['profile','records','featured'],
         data() {
             return {
                 csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                 base_url: window.base_url,
-                demoEvents: [{
-                    date: '2016/11/12', // Required
-                    title: 'Foo' // Required
-                  }, {
-                    date: '2018/02/5',
-                    title: 'Bar',
-                    desc: 'description',
-                    customClass: 'calendar-ic emoji-gummybear-pleasant' // Custom classes to an calendar cell
-                  },{
-                    date: '2018/02/1',
-                    title: 'asd',
-                    desc: 'description',
-                    customClass: 'calendar-ic emoji-pancake-sad' // Custom classes to an calendar cell
-                  },{
-                    date: '2018/02/2',
-                    title: 'asd',
-                    desc: 'description',
-                    customClass: 'calendar-ic emoji-pancake-sad' // Custom classes to an calendar cell
-                  },{
-                    date: '2018/02/3',
-                    title: 'asd',
-                    desc: 'description',
-                    customClass: 'calendar-ic emoji-regular-happy' // Custom classes to an calendar cell
-                  },{
-                    date: '2018/02/4',
-                    title: 'asd',
-                    desc: 'description',
-                    customClass: 'calendar-ic emoji-regular-happy' // Custom classes to an calendar cell
-                  }]
+                demoEvents: [
+                    // {
+                    //     date: '2018/02/5',
+                    //     // title: 'Bar',
+                    //     // desc: 'description',
+                    //     customClass: 'calendar-ic emoji-gummybear-pleasant' // Custom classes to an calendar cell
+                    // }
+                ],
             }
         },
         mounted() {
             $(".main-header > .title").html('<i class="header-ic ic-user-green"></i>Users');
-            this.Notify("Well Done!","You're message has been successfully sent");
-            this.UpdateMoodMeter('sad');
+            // this.Notify("Well Done!","You're message has been successfully sent");
+            this.UpdateMoodMeter(this.profile.upmood_meter);
+            this.handleMonthChanged(new Date().getUTCMonth() + 1+'/'+new Date().getUTCFullYear());
         },
         methods: {
             UpdateMoodMeter(mood){
@@ -292,11 +175,23 @@
                     $(".meter-control").css('left','263px');
                 }
             },
-            Notify(title,message){
-                $('.notification-title').html(title);
-                $('.notification-description').html(message);
-                $('#notification-modal').modal('toggle');
+
+            handleMonthChanged(val){
+                let vue = this;
+
+                axios.get(base_url+'users/upmoodCalendar?id='+this.profile.id+'&date='+val).then(function (response) {
+                    // vue.demoEvents = response['data'];
+                    // vue.demoEvents.title = 'Bar';
+                    // vue.demoEvents.desc = 'description';
+                    // console.log(response['data'])
+                }).catch(function (error) {
+                });
             }
+            // Notify(title,message){
+            //     $('.notification-title').html(title);
+            //     $('.notification-description').html(message);
+            //     $('#notification-modal').modal('toggle');
+            // }
         }
     }
 </script>

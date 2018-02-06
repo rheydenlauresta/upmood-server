@@ -114,28 +114,6 @@
 
                         </div>
 
-                        <!-- <span class="add-contact ic-add-contact-messages" @click="showContacts"></span> -->
-
-    <!--                     <div class="contact-wrapper">
-                            <div class="contact-search">
-                                <form action="" method="post">
-                                    <div class="form-group input-ic ic-search">
-                                        <input v-model="contactEmail" type="text" class="form-control contact-search-input" placeholder="Search Email Address" @keyup="emailSearch()">
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="contact-row" v-for="availableEmail in availableEmails" @click="selectEmail(availableEmail.email)">
-                                <div class="image-wrapper">
-                                    <img :src="base_url + 'img/'+availableEmail.image" alt="">
-                                </div>
-                                <div class="contact-content">
-                                    <div class="contact-name">{{availableEmail.name}}</div>
-                                    <div class="contact-email">{{availableEmail.email}}</div>
-                                    <i class="contact-ic ic-check-contact"></i>
-                                </div>
-                            </div>
-                        </div> -->
-
                     </div>
                     <div class="form-group">
                         <label for="email-subject">Subject:</label>
@@ -334,7 +312,7 @@
             ),
 
             selectEmail(val){
-                // alert()
+                alert()
                 $('#email-to').tagsinput('add', val);
                 $('#email-to').tagsinput('refresh');
                 $(".contact-wrapper").hide();

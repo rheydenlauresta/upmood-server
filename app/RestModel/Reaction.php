@@ -56,7 +56,7 @@ class Reaction extends Model
         $user = User::find(request('id'));
 
         $reaction = Resources::find(request('reaction_resource_id'));
-        $record = Resources::find(request('record_id'));
+        $record = Record::find(request('record_id'));
         $post = Post::find(request('post_id'));
                             
         $data = [

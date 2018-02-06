@@ -150,7 +150,7 @@
                     <tbody>
                         <tr v-for="user in recordData.data">
                             <td><div class="table-profile-image"><img :src="base_url+'img/'+user.image" alt=""></div></td>
-                            <td><a :href="base_url + 'userprofile'">{{ user.name }}</a></td>
+                            <td><a :href="base_url + 'users/userProfile/'+user.id">{{ user.name }}</a></td>
                             <td>{{ user.gender }}</td>
                             <td>{{ user.age }}</td>
                             <td>{{ user.emotion_value }}</td>
@@ -184,7 +184,6 @@
             return {
                 csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                 base_url: window.base_url,
-                searchUrl: window.base_url+'userslist?',
 
 
                 disableFilterValue: true,
@@ -429,8 +428,7 @@
                 }
 
                 vue.$router.push(data);
-
-                axios.get(base_url+'usersfilter?'+window.location.href.split('?')[1]).then(function (response) {
+                axios.get(base_url+'users/userFilter?'+window.location.href.split('?')[1]).then(function (response) {
                     vue.recordData = response['data']['content'];
                     vue.recordData.current_page = vue.formdata.page;
                     vue.maleRatio = response['data']['counts'].maleRatio;
