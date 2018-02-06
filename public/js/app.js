@@ -48603,6 +48603,32 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['results', 'countries', 'emotions'],
@@ -48617,7 +48643,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 search: '',
                 filter: '',
                 filterValue: '',
-                sortValue: '',
+                sortCategory: 'Name',
+                sortOrder: 'Ascending',
                 page: 1,
                 advanceFilterValues: '',
                 filterSelected: '',
@@ -48643,7 +48670,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             age: [{ value: ['16', '20'], text: '16 - 20' }, { value: ['21', '25'], text: '21 - 25' }, { value: ['26', '30'], text: '26 - 30' }, { value: ['31', '35'], text: '31 - 35' }, { value: ['36', '40'], text: '36 - 40' }, { value: ['41', '45'], text: '41 - 45' }],
 
-            pageNumber: []
+            pageNumber: [],
+            sortValue: ''
         };
     },
 
@@ -48780,23 +48808,30 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             if (filters[1]) {
                 var data = filters[1].split('&');
 
-                this.formdata.search = data[0].split('=')[1];
+                this.formdata.search = decodeURIComponent(data[0].split('=')[1]);
                 this.formdata.filter = data[1].split('=')[1];
                 this.formdata.filterValue = data[2].split('=')[1];
-                this.formdata.sortValue = data[3].split('=')[1];
-                this.formdata.page = parseInt(data[4].split('=')[1]);
 
-                if (data[5].split('=')[1] != '') {
-                    this.formdata.advanceFilterValues = decodeURIComponent(data[5].split('=')[1]);
-                    this.advanceFilter = JSON.parse(decodeURIComponent(data[5].split('=')[1]));
+                if (data[3].split('=')[1] != '') {
+                    this.formdata.sortCategory = decodeURIComponent(data[3].split('=')[1]);
                 }
+
+                if (data[4].split('=')[1] != '') {
+                    this.formdata.sortOrder = decodeURIComponent(data[4].split('=')[1]);
+                }
+                this.formdata.page = parseInt(decodeURIComponent(data[5].split('=')[1]));
 
                 if (data[6].split('=')[1] != '') {
-                    this.formdata.filterSelected = decodeURIComponent(data[6].split('=')[1]);
-                    this.filterSelected = JSON.parse(decodeURIComponent(data[6].split('=')[1]));
+                    this.formdata.advanceFilterValues = decodeURIComponent(data[6].split('=')[1]);
+                    this.advanceFilter = JSON.parse(decodeURIComponent(data[6].split('=')[1]));
                 }
 
-                this.formdata.advance_filter_id = parseInt(data[7].split('=')[1]);
+                if (data[7].split('=')[1] != '') {
+                    this.formdata.filterSelected = decodeURIComponent(data[7].split('=')[1]);
+                    this.filterSelected = JSON.parse(decodeURIComponent(data[7].split('=')[1]));
+                }
+
+                this.formdata.advance_filter_id = parseInt(data[8].split('=')[1]);
 
                 if (this.formdata.filter != '') {
                     this.filterOptions = this[data[1].split('=')[1]];
@@ -48861,7 +48896,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.filterSelected = [];
             this.filterOptions = [];
             this.advanceFilter = [];
-            this.formdata.sortValue = '';
+            this.sortValue = '';
             this.formdata.search = '';
             this.formdata.filter = '';
             this.formdata.filterValue = '';
@@ -48889,6 +48924,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
         },
 
+        showVal: function showVal() {
+            // this.sortValue = this.formdata.sortCategory;
+            this.HideSortWrapper();
+            this.searchFilters();
+        },
         RemoveAdvanceFilter: function RemoveAdvanceFilter(event) {
             var _this = this;
 
@@ -48903,6 +48943,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             this.advanceFilter.splice(event, 1);
             this.searchFilters();
+        },
+        ToggleSortWrapper: function ToggleSortWrapper() {
+            $(".sort-by-wrapper").toggle();
+        },
+        HideSortWrapper: function HideSortWrapper() {
+            $(".sort-by-wrapper").hide();
         },
 
 
@@ -48923,7 +48969,17 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "users-wrapper" }, [
     _c("div", { staticClass: "users-table-wrapper" }, [
-      _vm._m(0),
+      _c("div", { staticClass: "row" }, [
+        _c(
+          "a",
+          {
+            staticClass: "btn btn-success pull-right downloadfile",
+            attrs: { href: "javascript:;" },
+            on: { click: _vm.HideSortWrapper }
+          },
+          [_vm._v("Download File")]
+        )
+      ]),
       _vm._v(" "),
       _c("div", { staticClass: "row" }, [
         _c("div", { staticClass: "filter-wrapper" }, [
@@ -48962,6 +49018,7 @@ var render = function() {
                         keyup: function($event) {
                           _vm.getAxios()
                         },
+                        click: _vm.HideSortWrapper,
                         input: function($event) {
                           if ($event.target.composing) {
                             return
@@ -49014,7 +49071,8 @@ var render = function() {
                             function($event) {
                               _vm.selectAdvanceFilter(null, _vm.formdata.filter)
                             }
-                          ]
+                          ],
+                          click: _vm.HideSortWrapper
                         }
                       },
                       [
@@ -49080,7 +49138,8 @@ var render = function() {
                           function($event) {
                             _vm.getAxios()
                           }
-                        ]
+                        ],
+                        click: _vm.HideSortWrapper
                       }
                     },
                     _vm._l(_vm.filterOptions, function(item) {
@@ -49106,61 +49165,337 @@ var render = function() {
                           {
                             name: "model",
                             rawName: "v-model",
-                            value: _vm.formdata.sortValue,
-                            expression: "formdata.sortValue"
+                            value: _vm.sortValue,
+                            expression: "sortValue"
                           }
                         ],
                         staticClass: "form-control",
                         attrs: { id: "sort", name: "sort" },
                         on: {
-                          change: [
-                            function($event) {
-                              var $$selectedVal = Array.prototype.filter
-                                .call($event.target.options, function(o) {
-                                  return o.selected
-                                })
-                                .map(function(o) {
-                                  var val = "_value" in o ? o._value : o.value
-                                  return val
-                                })
-                              _vm.$set(
-                                _vm.formdata,
-                                "sortValue",
-                                $event.target.multiple
-                                  ? $$selectedVal
-                                  : $$selectedVal[0]
-                              )
-                            },
-                            function($event) {
-                              _vm.getAxios()
-                            }
-                          ]
+                          click: _vm.ToggleSortWrapper,
+                          blur: function($event) {
+                            _vm.showVal()
+                          },
+                          change: function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.sortValue = $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          }
                         }
                       },
                       [
                         _c(
                           "option",
                           { attrs: { value: "", selected: "", hidden: "" } },
-                          [_vm._v("Select Filter")]
+                          [_vm._v(_vm._s(this.formdata.sortCategory))]
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "sort-by-wrapper" }, [
+                      _c("div", { staticClass: "category-sort" }, [
+                        _c(
+                          "label",
+                          {
+                            staticClass: "form-group category-group",
+                            attrs: { for: "category-name" }
+                          },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.formdata.sortCategory,
+                                  expression: "formdata.sortCategory"
+                                }
+                              ],
+                              attrs: {
+                                type: "radio",
+                                id: "category-name",
+                                name: "category",
+                                value: "Name"
+                              },
+                              domProps: {
+                                checked: _vm._q(
+                                  _vm.formdata.sortCategory,
+                                  "Name"
+                                )
+                              },
+                              on: {
+                                change: [
+                                  function($event) {
+                                    _vm.$set(
+                                      _vm.formdata,
+                                      "sortCategory",
+                                      "Name"
+                                    )
+                                  },
+                                  function($event) {
+                                    _vm.showVal()
+                                  }
+                                ]
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c(
+                              "span",
+                              {
+                                staticClass: "radio-label",
+                                attrs: { for: "category-name" }
+                              },
+                              [_vm._v("Name")]
+                            )
+                          ]
                         ),
                         _vm._v(" "),
-                        _c("option", { attrs: { value: "name" } }, [
-                          _vm._v("Name")
-                        ]),
+                        _c(
+                          "label",
+                          {
+                            staticClass: "form-group category-group",
+                            attrs: { for: "category-emotion" }
+                          },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.formdata.sortCategory,
+                                  expression: "formdata.sortCategory"
+                                }
+                              ],
+                              attrs: {
+                                type: "radio",
+                                id: "category-emotion",
+                                name: "category",
+                                value: "Current Emotion"
+                              },
+                              domProps: {
+                                checked: _vm._q(
+                                  _vm.formdata.sortCategory,
+                                  "Current Emotion"
+                                )
+                              },
+                              on: {
+                                change: [
+                                  function($event) {
+                                    _vm.$set(
+                                      _vm.formdata,
+                                      "sortCategory",
+                                      "Current Emotion"
+                                    )
+                                  },
+                                  function($event) {
+                                    _vm.showVal()
+                                  }
+                                ]
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("span", { staticClass: "radio-label" }, [
+                              _vm._v("Current Emotion")
+                            ])
+                          ]
+                        ),
                         _vm._v(" "),
-                        _c("option", { attrs: { value: "emotion_value" } }, [
-                          _vm._v("Current Emotion")
-                        ]),
+                        _c(
+                          "label",
+                          {
+                            staticClass: "form-group category-group",
+                            attrs: { for: "category-status" }
+                          },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.formdata.sortCategory,
+                                  expression: "formdata.sortCategory"
+                                }
+                              ],
+                              attrs: {
+                                type: "radio",
+                                id: "category-status",
+                                name: "category",
+                                value: "Status"
+                              },
+                              domProps: {
+                                checked: _vm._q(
+                                  _vm.formdata.sortCategory,
+                                  "Status"
+                                )
+                              },
+                              on: {
+                                change: [
+                                  function($event) {
+                                    _vm.$set(
+                                      _vm.formdata,
+                                      "sortCategory",
+                                      "Status"
+                                    )
+                                  },
+                                  function($event) {
+                                    _vm.showVal()
+                                  }
+                                ]
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("span", { staticClass: "radio-label" }, [
+                              _vm._v("Status")
+                            ])
+                          ]
+                        ),
                         _vm._v(" "),
-                        _c("option", { attrs: { value: "profile_post" } }, [
-                          _vm._v("Status")
-                        ]),
+                        _c(
+                          "label",
+                          {
+                            staticClass: "form-group category-group",
+                            attrs: { for: "category-location" }
+                          },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.formdata.sortCategory,
+                                  expression: "formdata.sortCategory"
+                                }
+                              ],
+                              attrs: {
+                                type: "radio",
+                                id: "category-location",
+                                name: "category",
+                                value: "Location"
+                              },
+                              domProps: {
+                                checked: _vm._q(
+                                  _vm.formdata.sortCategory,
+                                  "Location"
+                                )
+                              },
+                              on: {
+                                change: [
+                                  function($event) {
+                                    _vm.$set(
+                                      _vm.formdata,
+                                      "sortCategory",
+                                      "Location"
+                                    )
+                                  },
+                                  function($event) {
+                                    _vm.showVal()
+                                  }
+                                ]
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("span", { staticClass: "radio-label" }, [
+                              _vm._v("Location")
+                            ])
+                          ]
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "order-sort" }, [
+                        _c(
+                          "label",
+                          {
+                            staticClass: "form-group order-group",
+                            attrs: { for: "order-ascending" }
+                          },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.formdata.sortOrder,
+                                  expression: "formdata.sortOrder"
+                                }
+                              ],
+                              attrs: {
+                                type: "radio",
+                                id: "order-ascending",
+                                name: "order",
+                                value: "ASC"
+                              },
+                              domProps: {
+                                checked: _vm._q(_vm.formdata.sortOrder, "ASC")
+                              },
+                              on: {
+                                change: [
+                                  function($event) {
+                                    _vm.$set(_vm.formdata, "sortOrder", "ASC")
+                                  },
+                                  function($event) {
+                                    _vm.showVal()
+                                  }
+                                ]
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("span", { staticClass: "radio-label" }, [
+                              _vm._v("Ascending")
+                            ])
+                          ]
+                        ),
                         _vm._v(" "),
-                        _c("option", { attrs: { value: "country" } }, [
-                          _vm._v("Location")
-                        ])
-                      ]
-                    )
+                        _c(
+                          "label",
+                          {
+                            staticClass: "form-group order-group",
+                            attrs: { for: "order-descending" }
+                          },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.formdata.sortOrder,
+                                  expression: "formdata.sortOrder"
+                                }
+                              ],
+                              attrs: {
+                                type: "radio",
+                                id: "order-descending",
+                                name: "order",
+                                value: "DESC"
+                              },
+                              domProps: {
+                                checked: _vm._q(_vm.formdata.sortOrder, "DESC")
+                              },
+                              on: {
+                                change: [
+                                  function($event) {
+                                    _vm.$set(_vm.formdata, "sortOrder", "DESC")
+                                  },
+                                  function($event) {
+                                    _vm.showVal()
+                                  }
+                                ]
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("span", { staticClass: "radio-label" }, [
+                              _vm._v("Descending")
+                            ])
+                          ]
+                        )
+                      ])
+                    ])
                   ])
                 ])
               ]),
@@ -49406,7 +49741,10 @@ var render = function() {
               _c("div", { staticClass: "scoreboard" }, [
                 _c(
                   "div",
-                  { staticClass: "advance-card advance-user col-md-3" },
+                  {
+                    staticClass: "advance-card advance-user col-md-3",
+                    on: { click: _vm.HideSortWrapper }
+                  },
                   [
                     _c("div", { staticClass: "user-value" }, [
                       _vm._v(_vm._s(_vm.recordData.total))
@@ -49420,7 +49758,10 @@ var render = function() {
                 _vm._v(" "),
                 _c(
                   "div",
-                  { staticClass: "advance-card advance-gender col-md-3" },
+                  {
+                    staticClass: "advance-card advance-gender col-md-3",
+                    on: { click: _vm.HideSortWrapper }
+                  },
                   [
                     _c("div", { staticClass: "gender-value" }, [
                       _vm.formdata.filterValue != "female"
@@ -49453,7 +49794,10 @@ var render = function() {
                 _vm.formdata.filter == "location"
                   ? _c(
                       "div",
-                      { staticClass: "advance-card advance-country col-md-3" },
+                      {
+                        staticClass: "advance-card advance-country col-md-3",
+                        on: { click: _vm.HideSortWrapper }
+                      },
                       [
                         _c("div", { staticClass: "country-value" }, [
                           _vm._v(_vm._s(_vm.formdata.filterValue))
@@ -49469,7 +49813,10 @@ var render = function() {
                 _vm.formdata.filter != "location"
                   ? _c(
                       "div",
-                      { staticClass: "advance-card advance-country col-md-3" },
+                      {
+                        staticClass: "advance-card advance-country col-md-3",
+                        on: { click: _vm.HideSortWrapper }
+                      },
                       [
                         _c("div", { staticClass: "country-value" }, [
                           _vm._v(_vm._s(_vm.countryCount))
@@ -49484,7 +49831,10 @@ var render = function() {
                 _vm._v(" "),
                 _c(
                   "div",
-                  { staticClass: "advance-card advance-meter col-md-3" },
+                  {
+                    staticClass: "advance-card advance-meter col-md-3",
+                    on: { click: _vm.HideSortWrapper }
+                  },
                   [
                     _c("div", { staticClass: "meter-value" }, [
                       _vm._v(_vm._s(_vm.up_meter(_vm.avgUpmoodmeter)))
@@ -49500,71 +49850,78 @@ var render = function() {
           )
         ]),
         _vm._v(" "),
-        _c("table", { staticClass: "table table-stripe users-table" }, [
-          _vm._m(1),
-          _vm._v(" "),
-          _c(
-            "tbody",
-            _vm._l(_vm.recordData.data, function(user) {
-              return _c("tr", [
-                _c("td", [
-                  _c("div", { staticClass: "table-profile-image" }, [
-                    _c("img", {
-                      attrs: {
-                        src: _vm.base_url + "img/" + user.image,
-                        alt: ""
-                      }
-                    })
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("td", [
-                  _c(
-                    "a",
-                    {
-                      attrs: {
-                        href: _vm.base_url + "users/userProfile/" + user.id
-                      }
-                    },
-                    [_vm._v(_vm._s(user.name))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(user.gender))]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(user.age))]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(user.emotion_value))]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(user.stress_level))]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(user.heartbeat_count))]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(user.profile_post))]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(_vm.up_meter(user.upmood_meter)))]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(user.country))]),
-                _vm._v(" "),
-                user.active_level == "online"
-                  ? _c("td", [
-                      _c("span", { staticClass: "status-online" }, [
-                        _vm._v(_vm._s(user.active_level))
-                      ])
+        _c(
+          "table",
+          {
+            staticClass: "table table-stripe users-table",
+            on: { click: _vm.HideSortWrapper }
+          },
+          [
+            _vm._m(0),
+            _vm._v(" "),
+            _c(
+              "tbody",
+              _vm._l(_vm.recordData.data, function(user) {
+                return _c("tr", [
+                  _c("td", [
+                    _c("div", { staticClass: "table-profile-image" }, [
+                      _c("img", {
+                        attrs: {
+                          src: _vm.base_url + "img/" + user.image,
+                          alt: ""
+                        }
+                      })
                     ])
-                  : _c("td", [
-                      _c("span", { staticClass: "status-offline" }, [
-                        _vm._v(_vm._s(user.active_level))
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c(
+                      "a",
+                      {
+                        attrs: {
+                          href: _vm.base_url + "users/userProfile/" + user.id
+                        }
+                      },
+                      [_vm._v(_vm._s(user.name))]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(user.gender))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(user.age))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(user.emotion_value))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(user.stress_level))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(user.heartbeat_count))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(user.profile_post))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(_vm.up_meter(user.upmood_meter)))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(user.country))]),
+                  _vm._v(" "),
+                  user.active_level == "online"
+                    ? _c("td", [
+                        _c("span", { staticClass: "status-online" }, [
+                          _vm._v(_vm._s(user.active_level))
+                        ])
                       ])
-                    ])
-              ])
-            })
-          )
-        ]),
+                    : _c("td", [
+                        _c("span", { staticClass: "status-offline" }, [
+                          _vm._v(_vm._s(user.active_level))
+                        ])
+                      ])
+                ])
+              })
+            )
+          ]
+        ),
         _vm._v(" "),
         _c(
           "div",
-          { staticClass: "pagination" },
+          { staticClass: "pagination", on: { click: _vm.HideSortWrapper } },
           [
             _c(
               "a",
@@ -49619,21 +49976,6 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row" }, [
-      _c(
-        "a",
-        {
-          staticClass: "btn btn-success pull-right downloadfile",
-          attrs: { href: "javascript:;" }
-        },
-        [_vm._v("Download File")]
-      )
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -49868,19 +50210,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
             base_url: window.base_url,
-            demoEvents: [
-                // {
-                //     date: '2018/02/5',
-                //     // title: 'Bar',
-                //     // desc: 'description',
-                //     customClass: 'calendar-ic emoji-gummybear-pleasant' // Custom classes to an calendar cell
-                // }
-            ]
+            demoEvents: []
         };
     },
     mounted: function mounted() {
         $(".main-header > .title").html('<i class="header-ic ic-user-green"></i>Users');
-        // this.Notify("Well Done!","You're message has been successfully sent");
         this.UpdateMoodMeter(this.profile.upmood_meter);
         this.handleMonthChanged(new Date().getUTCMonth() + 1 + '/' + new Date().getUTCFullYear());
     },
@@ -49902,19 +50236,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         handleMonthChanged: function handleMonthChanged(val) {
             var vue = this;
 
-            axios.get(base_url + 'users/upmoodCalendar?id=' + this.profile.id + '&date=' + val).then(function (response) {
+            var date = val.split('/');
+
+            if (date[0].length == 1) {
+                date[0] = '0' + date[0];
+            }
+
+            var dateFormat = date[1] + '-' + date[0];
+
+            axios.get(base_url + 'users/upmoodCalendar?id=' + this.profile.id + '&date=' + dateFormat).then(function (response) {
                 vue.demoEvents = response['data'];
-                // vue.demoEvents.title = 'Bar';
-                // vue.demoEvents.desc = 'description';
-                // console.log(response['data'])
             }).catch(function (error) {});
         }
-        // Notify(title,message){
-        //     $('.notification-title').html(title);
-        //     $('.notification-description').html(message);
-        //     $('#notification-modal').modal('toggle');
-        // }
-
     }
 });
 
@@ -50564,7 +50897,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }).catch(function (error) {});
         },
         viewMessage: function viewMessage(message) {
-
             var vue = this;
 
             this.messageContent.name = message.name;
@@ -50578,7 +50910,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.getReply(message.id);
 
             $(".messages-row").removeClass('active');
-            $("#messages-row" + message.id).addClass('active');
+            $("#message" + message.id).addClass('active');
             $("#compose").hide();
             $("#messagedisplay").hide();
             $("#messagedisplay").fadeIn(500);
@@ -50602,6 +50934,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             vue.sendButton.text = 'Sending';
 
             axios.post(base_url + url, data).then(function (response) {
+
+                // if(response['data'] == ""){
+                //     vue.Notify("Oops!","Please Complete All Fields");
+
+                // }else{
+                //     vue.Notify("Well Done!","You're message has been successfully sent");
+                // }
+
                 vue.sendButton.disable = false;
                 vue.sendButton.text = 'Send';
 
@@ -50616,7 +50956,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     $('#email-to').val('');
                     $('#email-to').tagsinput('removeAll');
                 }
-            }).catch(function (error) {});
+            }).catch(function (error) {
+                alert(error);
+            });
         },
 
 
@@ -50632,7 +50974,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }, 100),
 
         selectEmail: function selectEmail(val) {
-            alert();
+            // alert()
             $('#email-to').tagsinput('add', val);
             $('#email-to').tagsinput('refresh');
             $(".contact-wrapper").hide();
@@ -50667,6 +51009,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             $(".contact-wrapper").hide();
         },
 
+
+        // Notify(title,message){
+        //     $('.notification-title').html(title);
+        //     $('.notification-description').html(message);
+        //     $('#notification-modal').modal('toggle');
+        // },
 
         getAxios: _.debounce(function () {
             this.getContent();
@@ -50840,6 +51188,7 @@ var render = function() {
               "li",
               {
                 staticClass: "messages-row",
+                attrs: { id: "message" + message.id },
                 on: {
                   click: function($event) {
                     _vm.viewMessage(message)

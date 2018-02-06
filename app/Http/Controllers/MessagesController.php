@@ -118,11 +118,21 @@ class MessagesController extends Controller
     				->take(10)
     				->get();
 
+
     	return $emails->toArray();
     }
 
     public function sendReply(){ // Send Messages Replies
         $data = Input::all();
+
+        $validator = $this->validatorCms(Input::all(), [
+            'message'           => 'required',
+        ]);
+
+
+        if($validator['status'] == 422){
+        	return false;
+        } 
 
         $res = $this->get_store($data,new Reply());
         ////////////////// email //////////////////// 

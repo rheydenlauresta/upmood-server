@@ -147,19 +147,11 @@
             return {
                 csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                 base_url: window.base_url,
-                demoEvents: [
-                    // {
-                    //     date: '2018/02/5',
-                    //     // title: 'Bar',
-                    //     // desc: 'description',
-                    //     customClass: 'calendar-ic emoji-gummybear-pleasant' // Custom classes to an calendar cell
-                    // }
-                ],
+                demoEvents: [],
             }
         },
         mounted() {
             $(".main-header > .title").html('<i class="header-ic ic-user-green"></i>Users');
-            // this.Notify("Well Done!","You're message has been successfully sent");
             this.UpdateMoodMeter(this.profile.upmood_meter);
             this.handleMonthChanged(new Date().getUTCMonth() + 1+'/'+new Date().getUTCFullYear());
         },
@@ -185,19 +177,19 @@
             handleMonthChanged(val){
                 let vue = this;
 
-                axios.get(base_url+'users/upmoodCalendar?id='+this.profile.id+'&date='+val).then(function (response) {
-                    // vue.demoEvents = response['data'];
-                    // vue.demoEvents.title = 'Bar';
-                    // vue.demoEvents.desc = 'description';
-                    // console.log(response['data'])
+                var date = val.split('/');
+
+                if(date[0].length == 1){
+                    date[0] = '0'+date[0];
+                }
+
+                var dateFormat = date[1]+'-'+date[0];
+                
+                axios.get(base_url+'users/upmoodCalendar?id='+this.profile.id+'&date='+dateFormat).then(function (response) {
+                    vue.demoEvents = response['data'];
                 }).catch(function (error) {
                 });
             }
-            // Notify(title,message){
-            //     $('.notification-title').html(title);
-            //     $('.notification-description').html(message);
-            //     $('#notification-modal').modal('toggle');
-            // }
         }
     }
 </script>

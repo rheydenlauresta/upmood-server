@@ -82,4 +82,29 @@ class Controller extends BaseController
         ];
 
     }
+
+    public function validatorCms($request, $rules)
+    {
+    	
+    	$validate = Validator::make($request, $rules);
+
+    	if(!$validate->fails()){
+
+    		return [
+                'status'   => (int) env('SUCCESS_RESPONSE_CODE'),
+                'message' => 'success',
+                'errors'   => (Object) [],
+                'data'     => (Object) [],
+    		];
+
+    	}
+
+    	return [
+            'status'   => (int) env('VALIDATION_ERROR_RESPONSE_CODE'),
+            'message' => 'validation_error',
+            'errors'   => $validate->errors()->toArray(),
+            'data'     => (Object) [],
+		];
+
+    }
 }
