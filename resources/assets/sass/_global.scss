@@ -13,6 +13,19 @@
 
 // END FOR BUTTONS
 
+// ANIMATIONS
+
+@-webkit-keyframes rotation {
+    from {
+        -webkit-transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(359deg);
+    }
+}
+
+// END OF ANIMATIONS
+
 // TABLES
 
 .table{
@@ -122,5 +135,18 @@
 
 input::placeholder{
 	color: #95989A !important;
+}
+
+.loading{
+    @extend .content-center;
+    animation: rotation 2s infinite linear;
+    width: 50px;
+    height: 50px;
+
+    img{
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
 }
 // END OF GLOBAL CSS
