@@ -96,6 +96,9 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <div class="table-loading">
+                            <div class="loading"><img :src="base_url + 'img/spinner.svg'" alt=""></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -119,6 +122,9 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <div class="table-loading">
+                            <div class="loading"><img :src="base_url + 'img/spinner.svg'" alt=""></div>
+                        </div>
                     </div>
                 </div>
             </div>

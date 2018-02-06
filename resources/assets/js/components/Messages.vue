@@ -20,29 +20,39 @@
                 </div>
             </form>
             <div class="messages-row-wrapper scrollbar-outer">
-                <ul class="message-row-menu" v-for="message in messages">
-                    <li class="messages-row" @click="viewMessage(message)" :id="'message' + message.id">
-                        <div class="message-header row">
-                            <div class="col-md-2">
-                                <div class="image-wrapper ">
-                                    <img :src="base_url+'img/'+message.image" alt="">
+                <ul class="message-row-menu">
+                    <div v-for="message in messages">
+                        <li class="messages-row" @click="viewMessage(message)" :id="'message' + message.id">
+                            <div class="message-header row">
+                                <div class="col-md-2">
+                                    <div class="image-wrapper ">
+                                        <img :src="base_url+'img/'+message.image" alt="">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="name">{{ message.name }}</div>
+                                    <div class="subject">{{ messageType(message.type) }}</div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="time pull-right">{{ message.time_created }}</div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="name">{{ message.name }}</div>
-                                <div class="subject">{{ messageType(message.type) }}</div>
+                            <div class="row">
+                                <div class="message-glance col-md-11">
+                                    {{ message.content | truncate('200')}}
+                                </div>
                             </div>
-                            <div class="col-md-3">
-                                <div class="time pull-right">{{ message.time_created }}</div>
+                        </li>
+                    </div>
+                    <div>
+                        <li class="messages-row">
+                            <div class="image-wrapper loading">
+                                <img :src="base_url + 'img/spinner.svg'" alt="">
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="message-glance col-md-11">
-                                {{ message.content | truncate('200')}}
-                            </div>
-                        </div>
-                    </li>
+                        </li>
+                    </div>
                 </ul>
+                asd
             </div>
         </div>
 
