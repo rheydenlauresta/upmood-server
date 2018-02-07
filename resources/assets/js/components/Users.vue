@@ -31,35 +31,35 @@
                             <div class="form-group col-md-2">
                                 <label for="sort">Sort By:</label>
                                 <div class="select-ic ic-sort">
-                                    <select v-model="sortValue" id="sort" name="sort" class="form-control"  @click="ToggleSortWrapper" @blur="showVal()">
+                                    <select v-model="sortValue" id="sort" name="sort" class="form-control"  @click="ToggleSortWrapper" >
                                         <option value="" selected hidden>{{ this.formdata.sortCategory }}</option>
                                     </select>
                                     <div class="sort-by-wrapper">
                                         <div class="category-sort">
                                             <label class="form-group category-group" for="category-name">
-                                                <input type="radio" id="category-name" name="category" value="Name" @change="showVal()" v-model="formdata.sortCategory">
+                                                <input type="radio" id="category-name" name="category" value="Name" @change="selectSort()" v-model="formdata.sortCategory">
                                                 <span class="radio-label" for="category-name">Name</span>
                                             </label>
                                             <label class="form-group category-group" for="category-emotion">
-                                                <input type="radio"  id="category-emotion" name="category" value="Current Emotion" @change="showVal()" v-model="formdata.sortCategory">
+                                                <input type="radio"  id="category-emotion" name="category" value="Current Emotion" @change="selectSort()" v-model="formdata.sortCategory">
                                                 <span class="radio-label">Current Emotion</span>
                                             </label>
                                             <label class="form-group category-group" for="category-status">
-                                                <input type="radio"  id="category-status" name="category" value="Status" @change="showVal()" v-model="formdata.sortCategory">
+                                                <input type="radio"  id="category-status" name="category" value="Status" @change="selectSort()" v-model="formdata.sortCategory">
                                                 <span class="radio-label">Status</span>
                                             </label>
                                             <label class="form-group category-group" for="category-location">
-                                                <input type="radio" id="category-location" name="category" value="Location" @change="showVal()" v-model="formdata.sortCategory">
+                                                <input type="radio" id="category-location" name="category" value="Location" @change="selectSort()" v-model="formdata.sortCategory">
                                                 <span class="radio-label">Location</span>
                                             </label>
                                         </div>
                                         <div class="order-sort">
                                             <label class="form-group order-group" for="order-ascending">
-                                                <input type="radio" id="order-ascending" name="order" value="ASC" @change="showVal()" v-model="formdata.sortOrder">
+                                                <input type="radio" id="order-ascending" name="order" value="ASC" @change="selectSort()" v-model="formdata.sortOrder">
                                                 <span class="radio-label">Ascending</span>
                                             </label>
                                             <label class="form-group order-group" for="order-descending">
-                                                <input type="radio" id="order-descending" name="order" value="DESC" @change="showVal()" v-model="formdata.sortOrder">
+                                                <input type="radio" id="order-descending" name="order" value="DESC" @change="selectSort()" v-model="formdata.sortOrder">
                                                 <span class="radio-label">Descending</span>
                                             </label>
                                         </div>
@@ -193,7 +193,7 @@
                     filter: '',
                     filterValue: '',
                     sortCategory:'Name',
-                    sortOrder:'Ascending',
+                    sortOrder:'ASC',
                     page: 1,
                     advanceFilterValues: '',
                     filterSelected: '',
@@ -499,7 +499,7 @@
                 }
             },
 
-            showVal(){
+            selectSort(){
                 // this.sortValue = this.formdata.sortCategory;
                 this.HideSortWrapper();
                 this.searchFilters()

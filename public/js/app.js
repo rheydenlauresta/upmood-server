@@ -11977,7 +11977,7 @@ $(document).on('click keyup change', ".bootstrap-tagsinput > input", function ()
             } else if (email.indexOf(input) >= 0) {
                 $(this).show();
             } else {
-                $(this).hide();
+                // $(this).hide();
             }
         });
 
@@ -11987,28 +11987,31 @@ $(document).on('click keyup change', ".bootstrap-tagsinput > input", function ()
     }
 });
 
-$(document).on('keyup change', ".contact-search-input", function () {
-    if (true) {
-        var input = $(this).val();
+// $(document).on('keyup change',".contact-search-input",function(){
+//     if(true){
+//         var input = $(this).val();
 
-        $(".contact-row").each(function (index) {
-            var name = $(this).children('.contact-content').children('.contact-name').html();
-            var email = $(this).children('.contact-content').children('.contact-email').html();
+//         $(".contact-row").each(function(index){
+//             var name = $(this).children('.contact-content').children('.contact-name').html();
+//             var email = $(this).children('.contact-content').children('.contact-email').html(); 
 
-            if (name.indexOf(input) >= 0) {
-                $(this).show();
-            } else if (email.indexOf(input) >= 0) {
-                $(this).show();
-            } else {
-                $(this).hide();
-            }
-        });
+//             if (name.indexOf(input) >= 0){
+//               $(this).show();
+//             }
+//             else if (email.indexOf(input) >= 0){
+//               $(this).show();
+//             }
+//             else{
+//               $(this).hide();
+//             }
+//         });
 
-        $(".contact-wrapper").show();
-    } else {
-        $(".contact-wrapper").hide();
-    }
-});
+//         $(".contact-wrapper").show();
+//     }
+//     else{
+//         $(".contact-wrapper").hide();
+//     }
+// });
 
 $(document).on('blur', ".bootstrap-tagsinput > input", function () {
     $(this).val('');
@@ -48644,7 +48647,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 filter: '',
                 filterValue: '',
                 sortCategory: 'Name',
-                sortOrder: 'Ascending',
+                sortOrder: 'ASC',
                 page: 1,
                 advanceFilterValues: '',
                 filterSelected: '',
@@ -48924,7 +48927,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
         },
 
-        showVal: function showVal() {
+        selectSort: function selectSort() {
             // this.sortValue = this.formdata.sortCategory;
             this.HideSortWrapper();
             this.searchFilters();
@@ -49173,9 +49176,6 @@ var render = function() {
                         attrs: { id: "sort", name: "sort" },
                         on: {
                           click: _vm.ToggleSortWrapper,
-                          blur: function($event) {
-                            _vm.showVal()
-                          },
                           change: function($event) {
                             var $$selectedVal = Array.prototype.filter
                               .call($event.target.options, function(o) {
@@ -49240,7 +49240,7 @@ var render = function() {
                                     )
                                   },
                                   function($event) {
-                                    _vm.showVal()
+                                    _vm.selectSort()
                                   }
                                 ]
                               }
@@ -49295,7 +49295,7 @@ var render = function() {
                                     )
                                   },
                                   function($event) {
-                                    _vm.showVal()
+                                    _vm.selectSort()
                                   }
                                 ]
                               }
@@ -49345,7 +49345,7 @@ var render = function() {
                                     )
                                   },
                                   function($event) {
-                                    _vm.showVal()
+                                    _vm.selectSort()
                                   }
                                 ]
                               }
@@ -49395,7 +49395,7 @@ var render = function() {
                                     )
                                   },
                                   function($event) {
-                                    _vm.showVal()
+                                    _vm.selectSort()
                                   }
                                 ]
                               }
@@ -49440,7 +49440,7 @@ var render = function() {
                                     _vm.$set(_vm.formdata, "sortOrder", "ASC")
                                   },
                                   function($event) {
-                                    _vm.showVal()
+                                    _vm.selectSort()
                                   }
                                 ]
                               }
@@ -49483,7 +49483,7 @@ var render = function() {
                                     _vm.$set(_vm.formdata, "sortOrder", "DESC")
                                   },
                                   function($event) {
-                                    _vm.showVal()
+                                    _vm.selectSort()
                                   }
                                 ]
                               }
@@ -50203,6 +50203,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['profile', 'records', 'featured'],
@@ -50445,7 +50451,15 @@ var render = function() {
                 })
               ],
               2
-            )
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "table-loading" }, [
+              _c("div", { staticClass: "loading" }, [
+                _c("img", {
+                  attrs: { src: _vm.base_url + "img/spinner.svg", alt: "" }
+                })
+              ])
+            ])
           ])
         ])
       ])
@@ -50509,7 +50523,15 @@ var render = function() {
                 })
               ],
               2
-            )
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "table-loading" }, [
+              _c("div", { staticClass: "loading" }, [
+                _c("img", {
+                  attrs: { src: _vm.base_url + "img/spinner.svg", alt: "" }
+                })
+              ])
+            ])
           ])
         ])
       ]),
@@ -50664,6 +50686,16 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -51008,13 +51040,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         HideContacts: function HideContacts() {
             $(".contact-wrapper").hide();
         },
+        Notify: function Notify(title, message) {
+            $('.notification-title').html(title);
+            $('.notification-description').html(message);
+            $('#notification-modal').modal('toggle');
+        },
 
-
-        // Notify(title,message){
-        //     $('.notification-title').html(title);
-        //     $('.notification-description').html(message);
-        //     $('#notification-modal').modal('toggle');
-        // },
 
         getAxios: _.debounce(function () {
             this.getContent();
@@ -51179,66 +51210,82 @@ var render = function() {
         )
       ]),
       _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "messages-row-wrapper scrollbar-outer" },
-        _vm._l(_vm.messages, function(message) {
-          return _c("ul", { staticClass: "message-row-menu" }, [
-            _c(
-              "li",
-              {
-                staticClass: "messages-row",
-                attrs: { id: "message" + message.id },
-                on: {
-                  click: function($event) {
-                    _vm.viewMessage(message)
-                  }
-                }
-              },
-              [
-                _c("div", { staticClass: "message-header row" }, [
-                  _c("div", { staticClass: "col-md-2" }, [
-                    _c("div", { staticClass: "image-wrapper " }, [
-                      _c("img", {
-                        attrs: {
-                          src: _vm.base_url + "img/" + message.image,
-                          alt: ""
-                        }
-                      })
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "col-md-6" }, [
-                    _c("div", { staticClass: "name" }, [
-                      _vm._v(_vm._s(message.name))
+      _c("div", { staticClass: "messages-row-wrapper scrollbar-outer" }, [
+        _c(
+          "ul",
+          { staticClass: "message-row-menu" },
+          [
+            _vm._l(_vm.messages, function(message) {
+              return _c("div", [
+                _c(
+                  "li",
+                  {
+                    staticClass: "messages-row",
+                    attrs: { id: "message" + message.id },
+                    on: {
+                      click: function($event) {
+                        _vm.viewMessage(message)
+                      }
+                    }
+                  },
+                  [
+                    _c("div", { staticClass: "message-header row" }, [
+                      _c("div", { staticClass: "col-md-2" }, [
+                        _c("div", { staticClass: "image-wrapper " }, [
+                          _c("img", {
+                            attrs: {
+                              src: _vm.base_url + "img/" + message.image,
+                              alt: ""
+                            }
+                          })
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-6" }, [
+                        _c("div", { staticClass: "name" }, [
+                          _vm._v(_vm._s(message.name))
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "subject" }, [
+                          _vm._v(_vm._s(_vm.messageType(message.type)))
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-3" }, [
+                        _c("div", { staticClass: "time pull-right" }, [
+                          _vm._v(_vm._s(message.time_created))
+                        ])
+                      ])
                     ]),
                     _vm._v(" "),
-                    _c("div", { staticClass: "subject" }, [
-                      _vm._v(_vm._s(_vm.messageType(message.type)))
+                    _c("div", { staticClass: "row" }, [
+                      _c("div", { staticClass: "message-glance col-md-11" }, [
+                        _vm._v(
+                          "\n                                " +
+                            _vm._s(_vm._f("truncate")(message.content, "200")) +
+                            "\n                            "
+                        )
+                      ])
                     ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "col-md-3" }, [
-                    _c("div", { staticClass: "time pull-right" }, [
-                      _vm._v(_vm._s(message.time_created))
-                    ])
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "row" }, [
-                  _c("div", { staticClass: "message-glance col-md-11" }, [
-                    _vm._v(
-                      "\n                            " +
-                        _vm._s(_vm._f("truncate")(message.content, "200")) +
-                        "\n                        "
-                    )
-                  ])
+                  ]
+                )
+              ])
+            }),
+            _vm._v(" "),
+            _c("div", [
+              _c("li", { staticClass: "messages-row" }, [
+                _c("div", { staticClass: "image-wrapper loading" }, [
+                  _c("img", {
+                    attrs: { src: _vm.base_url + "img/spinner.svg", alt: "" }
+                  })
                 ])
-              ]
-            )
-          ])
-        })
-      )
+              ])
+            ])
+          ],
+          2
+        ),
+        _vm._v("\n            asd\n        ")
+      ])
     ]),
     _vm._v(" "),
     _c(
@@ -51302,7 +51349,7 @@ var render = function() {
               _vm._v(" "),
               _c("div", { staticClass: "content-body" }, [
                 _c("div", { staticClass: "content-row" }, [
-                  _c("p", [_vm._v(_vm._s(_vm.replyContent.message))])
+                  _c("pre", [_vm._v(_vm._s(_vm.replyContent.message))])
                 ])
               ])
             ])
