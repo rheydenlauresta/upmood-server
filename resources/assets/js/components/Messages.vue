@@ -86,7 +86,7 @@
                 </div>
                 <div class="content-body">
                     <div class="content-row">
-                        <p>{{ replyContent.message }}</p>
+                        <pre>{{ replyContent.message }}</pre>
                     </div>
                 </div>
             </div>
@@ -370,11 +370,11 @@
                 $(".contact-wrapper").hide();
             },
 
-            // Notify(title,message){
-            //     $('.notification-title').html(title);
-            //     $('.notification-description').html(message);
-            //     $('#notification-modal').modal('toggle');
-            // },
+            Notify(title,message){
+                $('.notification-title').html(title);
+                $('.notification-description').html(message);
+                $('#notification-modal').modal('toggle');
+            },
 
             getAxios: _.debounce(
                 function () {

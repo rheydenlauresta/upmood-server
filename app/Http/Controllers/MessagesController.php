@@ -8,6 +8,8 @@ use App\User;
 use App\Message;
 use App\Reply;
 use App\SentMessage;
+use App\Jobs\MessageResponse;
+use App\Jobs\MessageCreate;
 
 class MessagesController extends Controller
 {
@@ -124,18 +126,20 @@ class MessagesController extends Controller
 
     public function sendReply(){ // Send Messages Replies
         $data = Input::all();
+        $record = Message::find($data['contact_message_id']);
 
         $validator = $this->validatorCms(Input::all(), [
             'message'           => 'required',
         ]);
-
 
         if($validator['status'] == 422){
         	return false;
         } 
 
         $res = $this->get_store($data,new Reply());
-        ////////////////// email //////////////////// 
+        $data['email'] = $record->email;
+
+       	dispatch(new MessageResponse($data));
 
         return $res;
     }
@@ -149,9 +153,11 @@ class MessagesController extends Controller
         foreach($data['emailArray'] as $key => $value){
         	$data['email'] = $value;
         	$res = $this->get_store($data,new SentMessage());
+
+       		dispatch(new MessageCreate($data));
+
         }
 
-        ////////////////// email //////////////////// 
 
         return $res;
     }

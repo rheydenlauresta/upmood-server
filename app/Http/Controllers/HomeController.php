@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\User;
 
 class HomeController extends Controller
 {
@@ -30,4 +31,12 @@ class HomeController extends Controller
     {
         return view('users');
     }
+
+    // public function sample(){
+
+    //     $user = User::simplePaginate(4);
+
+    //     dd($user->toArray());
+
+    // }
 }

@@ -496,11 +496,13 @@ class User extends Authenticatable
             'name'=>$user->name,
             'email'=>$user->email,
             'image'=>$user->image,
+            'profile_post'=>$user->profile_post,
         ];
 
         // if(isset($user_group->my_mood) && $user_group->my_mood != 0){
         //     if(isset($user_group->emotion) && $user_group->emotion == 1){
                 $data['emotion_value'] = $record->emotion_value;
+                $data['filepath'] = $record->emotion_set.'/emoji/'.$record->emotion_value.'.png';
             // }
             // if(isset($user_group->heartbeat) && $user_group->heartbeat == 1 && $record->type == 'automated'){
                 $data['heartbeat_count'] = $record->heartbeat_count;

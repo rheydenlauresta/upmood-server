@@ -112,8 +112,9 @@ class User extends Authenticatable
             }
         }
 
-        $query = $query->orderBy($data['sortCategory'],$data['sortOrder']);
-
+        if(isset($data['sortCategory']) && $data['sortCategory'] != '' && $data['sortCategory'] != null){
+            $query = $query->orderBy($data['sortCategory'],$data['sortOrder']);
+        }
         return $query;
     }
 

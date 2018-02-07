@@ -48,7 +48,7 @@ class Record extends Model
                     ->first();
 
     	$query = $query->select('records.id','records.type','records.heartbeat_count','records.stress_level','records.ppi',
-                               'records.emotion_value','records.emotion_level','records.longitude','records.latitude',
+                               'records.emotion_value','records.emotion_level','records.longitude','records.latitude',DB::raw('CONCAT(records.emotion_set,"/emoji/",records.emotion_value,".png") as filepath'),
                                DB::raw('DATE_FORMAT(records.created_at, "%Y-%m-%d") as date_created'),DB::raw('DATE_FORMAT(records.created_at, "%H:%i:%s") as time_created'),'records.updated_at')
                     ->where('records.user_id', $userID)->where('records.type', 'automated')
                     ->whereRaw('DATE(records.created_at) BETWEEN "'.$from.'" AND "'.$to.'"')

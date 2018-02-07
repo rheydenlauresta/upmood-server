@@ -11,6 +11,8 @@
 |
 */
 
+// Route::get('sample', 'HomeController@sample')->name('hosampme');
+
 // Route::get('/', function () {
 //     return view('auth/login');
 // });
