@@ -83,7 +83,7 @@ class MessagesController extends Controller
 	    	}
 
 	    $messages = $messages->orderBy('contact_message.id', 'DESC')
-	    	->get();
+	    	->paginate(10);
 
     	return $messages->toArray();
     }
@@ -134,14 +134,15 @@ class MessagesController extends Controller
 
         if($validator['status'] == 422){
         	return false;
+        }else{
+            $res = $this->get_store($data,new Reply());
+            $data['email'] = $record->email;
+
+           	dispatch(new MessageResponse($data));
+
+            return $res;
         } 
 
-        $res = $this->get_store($data,new Reply());
-        $data['email'] = $record->email;
-
-       	dispatch(new MessageResponse($data));
-
-        return $res;
     }
 
     public function sendMessage(){ // Send Compose Messages
@@ -149,14 +150,26 @@ class MessagesController extends Controller
 
         $last_batch = SentMessage::selectraw('max(batch) as batch')->first();
         $data['batch'] = $last_batch->batch + 1;
-
-        foreach($data['emailArray'] as $key => $value){
-        	$data['email'] = $value;
-        	$res = $this->get_store($data,new SentMessage());
-
-       		dispatch(new MessageCreate($data));
-
+        if(count($data['emailArray']) == 0){
+            return false;
         }
+        $validator = $this->validatorCms(Input::all(), [
+            'subject'           => 'required',
+            'message'           => 'required',
+        ]);
+
+        if($validator['status'] == 422){
+            return false;
+        }else{
+            foreach($data['emailArray'] as $key => $value){
+                $data['email'] = $value;
+
+            	$res = $this->get_store($data,new SentMessage());
+
+           		dispatch(new MessageCreate($data));
+
+            }
+        } 
 
 
         return $res;
