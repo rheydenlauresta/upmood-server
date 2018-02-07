@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "vue-event-calendar": "^1.5.2",
+    "vue-infinite-loading": "^2.2.3",
     "vue-router": "^3.0.1"
   }
 }

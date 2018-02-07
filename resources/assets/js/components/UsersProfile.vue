@@ -73,7 +73,7 @@
             <div class="col-md-8">
                 <div class="mood-steam">
                     <div class="title">Mood Steam</div>
-                    <div class="scrollbar-outer mood-steam-table">
+                    <div class="scrollbar-outer mood-steam-table infinite-wrapper" style="overflow-y:auto;">
                         <table class="table">
                             <thead>
                                 <th>Time</th>
@@ -84,7 +84,7 @@
                                 <th>Emotion</th>
                                 <th>Reaction</th>
                             </thead>
-                            <tbody v-for="(record,key) in records">
+                            <!-- <tbody v-for="(record,key) in records">
                                 <tr>
                                     <td>{{ record.created_at }}</td>
                                     <td>{{ record.heartbeat_count }}</td>
@@ -94,11 +94,20 @@
                                     <td><div class="image-wrapper"><img :src="base_url + 'img/resources/' + record.emotion_set + '/emoji/' + record.emotion_value + '.png'" alt=""></div></td>
                                     <td><div class="image-wrapper" v-if="record.set_name != null"><img :src="base_url + 'img/resources/' + record.set_name + '/' + record.type + '/' + record.filename" alt=""></div></td>
                                 </tr>
+                            </tbody> -->
+                            <tbody v-for="item in sample2">
+                                <tr>
+                                    <td>10:10 AM</td>
+                                    <td>123</td>
+                                    <td>312.45</td>
+                                    <td>455.5</td>
+                                    <td>No Record Found</td>
+                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/gummybear/emoji/happy.png'" alt=""></div></td>
+                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/regular/emoji/happy.png'"></div></td>
+                                </tr>
                             </tbody>
                         </table>
-                        <div class="table-loading">
-                            <div class="loading"><img :src="base_url + 'img/spinner.svg'" alt=""></div>
-                        </div>
+                        <infinite-loading @infinite="moodSteamInfiniteHandler" spinner="bubbles"></infinite-loading>
                     </div>
                 </div>
             </div>
@@ -107,24 +116,29 @@
             <div class="col-md-4">
                 <div class="featured-friends">
                     <div class="title">Featured Friends</div>
-                    <div class="scrollbar-outer featured-friends-table">
+                    <div class="scrollbar-outer featured-friends-table infinite-wrapper" style="overflow-y:auto">
                         <table class="table">
                             <thead>
                                 <th>Name</th>
                                 <th>Emotion</th>
                                 <th>Reaction</th>
                             </thead>
-                            <tbody v-for="feature in featured">
+                            <!-- <tbody v-for="feature in featured">
                                 <tr>
                                     <td>{{ feature.name }}</td>
                                     <td><div class="image-wrapper"><img :src="base_url + 'img/resources/' + feature.emotion_set + '/emoji/' + feature.emotion_value + '.png'" alt=""></div></td>
                                     <td><div class="image-wrapper" v-if="feature.set_name != null"><img :src="base_url + 'img/resources/' + feature.set_name + '/' + feature.type + '/' + feature.filename" alt=""></div></td>
                                 </tr>
+                            </tbody> -->
+                            <tbody v-for="item in sample">
+                                <tr>
+                                    <td>Sample Name</td>
+                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/gummybear/emoji/happy.png'" alt=""></div></td>
+                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/regular/emoji/happy.png'"></div></td>
+                                </tr>
                             </tbody>
                         </table>
-                        <div class="table-loading">
-                            <div class="loading"><img :src="base_url + 'img/spinner.svg'" alt=""></div>
-                        </div>
+                        <infinite-loading @infinite="featuredInfiniteHandler" spinner="bubbles"></infinite-loading>
                     </div>
                 </div>
             </div>
@@ -141,13 +155,19 @@
 </template>
 
 <script>
+    import InfiniteLoading from 'vue-infinite-loading';
     export default {
+        components: {
+            InfiniteLoading,
+        },
         props: ['profile','records','featured'],
         data() {
             return {
                 csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                 base_url: window.base_url,
                 demoEvents: [],
+                sample: [],
+                sample2: []
             }
         },
         mounted() {
@@ -156,6 +176,26 @@
             this.handleMonthChanged(new Date().getUTCMonth() + 1+'/'+new Date().getUTCFullYear());
         },
         methods: {
+            featuredInfiniteHandler($state) {
+              setTimeout(() => {
+                const temp = [];
+                for (let i = this.sample.length + 1; i <= this.sample.length + 20; i++) {
+                  temp.push(i);
+                }
+                this.sample = this.sample.concat(temp);
+                $state.loaded();
+              }, 1000);
+            },
+            moodSteamInfiniteHandler($state) {
+              setTimeout(() => {
+                const temp = [];
+                for (let i = this.sample2.length + 1; i <= this.sample2.length + 20; i++) {
+                  temp.push(i);
+                }
+                this.sample2 = this.sample2.concat(temp);
+                $state.loaded();
+              }, 1000);
+            },
             UpdateMoodMeter(mood){
                 if (mood == 'Sad' || mood == 'sad'){
                     $(".meter-control").css('left','0px');
