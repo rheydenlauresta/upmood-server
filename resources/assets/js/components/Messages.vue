@@ -19,9 +19,9 @@
                     <input v-model="search" @keyup="getAxios()" type="text"  name="messages-search" class="form-control messages-search" placeholder="Search Messages">
                 </div>
             </form>
-            <div class="messages-row-wrapper scrollbar-outer">
+            <div class="messages-row-wrapper scrollbar-outer infinite-wrapper" style="overflow-y:auto">
                 <ul class="message-row-menu">
-                    <div v-for="message in messages">
+                    <!-- <div v-for="message in messages">
                         <li class="messages-row" @click="viewMessage(message)" :id="'message' + message.id">
                             <div class="message-header row">
                                 <div class="col-md-2">
@@ -43,16 +43,32 @@
                                 </div>
                             </div>
                         </li>
-                    </div>
-                    <div>
+                    </div> -->
+                    <div v-for="item in sample">
                         <li class="messages-row">
-                            <div class="image-wrapper loading">
-                                <img :src="base_url + 'img/spinner.svg'" alt="">
+                            <div class="message-header row">
+                                <div class="col-md-2">
+                                    <div class="image-wrapper ">
+                                        <img :src="base_url+'img/profile-avatar.png'" alt="">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="name">Sample Name</div>
+                                    <div class="subject">Sample Subject</div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="time pull-right">10:00 AM</div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="message-glance col-md-11">
+                                    {{ item }}
+                                </div>
                             </div>
                         </li>
                     </div>
                 </ul>
-                asd
+                <infinite-loading @infinite="messageInfiniteHandler" spinner="bubbles"></infinite-loading>
             </div>
         </div>
 
@@ -102,7 +118,7 @@
         <div class="messages-content" id="compose">
             <div class="compose-wrapper">
                 <h2>Compose Message</h2>
-                <button @click="sendMessage()" class="btn btn-success" :disabled="sendButton.disable">{{ sendButton.text }}</button>
+                <button @click="sendMessage()" data-toggle="modal" data-target="#notification-modal" class="btn btn-success" :disabled="sendButton.disable">{{ sendButton.text }}</button>
                 <form action="" method="post" id="ComposeForm">
                     <div class="form-group">
                         <div @keyup="emailSearch()">
@@ -139,7 +155,11 @@
 </template>
 
 <script>
+    import InfiniteLoading from 'vue-infinite-loading';
     export default {
+        components: {
+            InfiniteLoading,
+        },
         data() {
             return {
                 csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
@@ -191,14 +211,15 @@
                 formData: {
                     contact_message_id: 0,
                     message: '',
-                }
+                },
+                sample:[]
             }
         },
         mounted() {
             $(".main-header > .title").html('<i class="header-ic ic-message-green"></i>Messages');
             this.getContent('')
             this.highlightFirstMessage();
-            this.resizeMessageContent()
+            this.resizeMessageContent();
         },
 
         filters: {
@@ -209,6 +230,18 @@
         },
 
         methods: {
+
+            messageInfiniteHandler($state) {
+              setTimeout(() => {
+                const temp = [];
+                for (let i = this.sample.length + 1; i <= this.sample.length + 20; i++) {
+                  temp.push(i);
+                }
+                this.sample = this.sample.concat(temp);
+                $state.loaded();
+              }, 1000);
+            },
+
             messageType(type){
                 return this.types[type]
             },
@@ -287,12 +320,12 @@
 
                 axios.post(base_url+url, data).then(function (response) {
 
-                    // if(response['data'] == ""){
-                    //     vue.Notify("Oops!","Please Complete All Fields");
+                    if(response['data'] == ""){
+                        vue.Notify("Oops!","Please Complete All Fields");
 
-                    // }else{
-                    //     vue.Notify("Well Done!","You're message has been successfully sent");
-                    // }
+                    }else{
+                        vue.Notify("Well Done!","You're message has been successfully sent");
+                    }
                     
                     vue.sendButton.disable = false;
                     vue.sendButton.text = 'Send';
@@ -310,7 +343,7 @@
                     }
                     
                 }).catch(function (error) {
-                    alert(error)
+                    vue.Notify('Error',error);
                 });
             },
 
@@ -373,7 +406,6 @@
             Notify(title,message){
                 $('.notification-title').html(title);
                 $('.notification-description').html(message);
-                $('#notification-modal').modal('toggle');
             },
 
             getAxios: _.debounce(
