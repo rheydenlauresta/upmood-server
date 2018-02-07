@@ -84,28 +84,18 @@
                                 <th>Emotion</th>
                                 <th>Reaction</th>
                             </thead>
-                            <!-- <tbody v-for="(record,key) in records">
+                            <tbody v-for="(value,key) in upmoodMeter.data">
                                 <tr>
-                                    <td>{{ record.created_at }}</td>
-                                    <td>{{ record.heartbeat_count }}</td>
-                                    <td>{{ record.ppi }}</td>
-                                    <td>{{ record.total_ppi }}</td>
-                                    <td>{{ record.stress_level }}</td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/' + record.emotion_set + '/emoji/' + record.emotion_value + '.png'" alt=""></div></td>
-                                    <td><div class="image-wrapper" v-if="record.set_name != null"><img :src="base_url + 'img/resources/' + record.set_name + '/' + record.type + '/' + record.filename" alt=""></div></td>
-                                </tr>
-                            </tbody> -->
-                            <tbody v-for="item in sample2">
-                                <tr>
-                                    <td>10:10 AM</td>
-                                    <td>123</td>
-                                    <td>312.45</td>
-                                    <td>455.5</td>
-                                    <td>No Record Found</td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/gummybear/emoji/happy.png'" alt=""></div></td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/regular/emoji/happy.png'"></div></td>
+                                    <td>{{ value.created_at }}</td>
+                                    <td>{{ value.heartbeat_count }}</td>
+                                    <td>{{ value.ppi }}</td>
+                                    <td>{{ value.total_ppi }}</td>
+                                    <td>{{ value.stress_level }}</td>
+                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/' + value.emotion_set + '/emoji/' + value.emotion_value + '.png'" alt=""></div></td>
+                                    <td><div class="image-wrapper" v-if="value.set_name != null"><img :src="base_url + 'img/resources/' + value.set_name + '/' + value.type + '/' + value.filename" alt=""></div></td>
                                 </tr>
                             </tbody>
+                            
                         </table>
                         <infinite-loading @infinite="moodSteamInfiniteHandler" spinner="bubbles"></infinite-loading>
                     </div>
@@ -123,18 +113,11 @@
                                 <th>Emotion</th>
                                 <th>Reaction</th>
                             </thead>
-                            <!-- <tbody v-for="feature in featured">
+                            <tbody v-for="value in featuredFriend.data">
                                 <tr>
-                                    <td>{{ feature.name }}</td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/' + feature.emotion_set + '/emoji/' + feature.emotion_value + '.png'" alt=""></div></td>
-                                    <td><div class="image-wrapper" v-if="feature.set_name != null"><img :src="base_url + 'img/resources/' + feature.set_name + '/' + feature.type + '/' + feature.filename" alt=""></div></td>
-                                </tr>
-                            </tbody> -->
-                            <tbody v-for="item in sample">
-                                <tr>
-                                    <td>Sample Name</td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/gummybear/emoji/happy.png'" alt=""></div></td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/regular/emoji/happy.png'"></div></td>
+                                    <td>{{ value.name }}</td>
+                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/' + value.emotion_set + '/emoji/' + value.emotion_value + '.png'" alt=""></div></td>
+                                    <td><div class="image-wrapper" v-if="value.set_name != null"><img :src="base_url + 'img/resources/' + value.set_name + '/' + value.type + '/' + value.filename" alt=""></div></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -167,7 +150,9 @@
                 base_url: window.base_url,
                 demoEvents: [],
                 sample: [],
-                sample2: []
+                sample2: [],
+                upmoodMeter: this.records,
+                featuredFriend: this.featured
             }
         },
         mounted() {
@@ -177,25 +162,44 @@
         },
         methods: {
             featuredInfiniteHandler($state) {
-              setTimeout(() => {
-                const temp = [];
-                for (let i = this.sample.length + 1; i <= this.sample.length + 20; i++) {
-                  temp.push(i);
-                }
-                this.sample = this.sample.concat(temp);
-                $state.loaded();
-              }, 1000);
+                setTimeout(() => {
+                    let vue = this;
+                    if(vue.featuredFriend.next_page_url != null){
+                        axios.get(vue.featuredFriend.next_page_url).then(function (response) {
+                            vue.featuredFriend.next_page_url = response['data']['next_page_url'];
+
+                            $.each(response['data']['data'],function(k,v){
+                                vue.featuredFriend.data.push(v);
+                            })
+
+                        }).catch(function (error) {
+                        });
+                        $state.loaded();
+                    }else{
+                        $state.complete();
+                    }
+                }, 1000);
             },
             moodSteamInfiniteHandler($state) {
-              setTimeout(() => {
-                const temp = [];
-                for (let i = this.sample2.length + 1; i <= this.sample2.length + 20; i++) {
-                  temp.push(i);
-                }
-                this.sample2 = this.sample2.concat(temp);
-                $state.loaded();
-              }, 1000);
+                setTimeout(() => {
+                    let vue = this;
+                    if(vue.upmoodMeter.next_page_url != null){
+                        axios.get(vue.upmoodMeter.next_page_url).then(function (response) {
+                            vue.upmoodMeter.next_page_url = response['data']['next_page_url'];
+
+                            $.each(response['data']['data'],function(k,v){
+                                vue.upmoodMeter.data.push(v);
+                            })
+
+                        }).catch(function (error) {
+                        });
+                        $state.loaded();
+                    }else{
+                        $state.complete();
+                    }
+                }, 1000);
             },
+
             UpdateMoodMeter(mood){
                 if (mood == 'Sad' || mood == 'sad'){
                     $(".meter-control").css('left','0px');

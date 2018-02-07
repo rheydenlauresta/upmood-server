@@ -21,7 +21,7 @@
             </form>
             <div class="messages-row-wrapper scrollbar-outer infinite-wrapper" style="overflow-y:auto">
                 <ul class="message-row-menu">
-                    <!-- <div v-for="message in messages">
+                    <div v-for="message in messages.data">
                         <li class="messages-row" @click="viewMessage(message)" :id="'message' + message.id">
                             <div class="message-header row">
                                 <div class="col-md-2">
@@ -43,32 +43,9 @@
                                 </div>
                             </div>
                         </li>
-                    </div> -->
-                    <div v-for="item in sample">
-                        <li class="messages-row">
-                            <div class="message-header row">
-                                <div class="col-md-2">
-                                    <div class="image-wrapper ">
-                                        <img :src="base_url+'img/profile-avatar.png'" alt="">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="name">Sample Name</div>
-                                    <div class="subject">Sample Subject</div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="time pull-right">10:00 AM</div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="message-glance col-md-11">
-                                    {{ item }}
-                                </div>
-                            </div>
-                        </li>
                     </div>
                 </ul>
-                <infinite-loading @infinite="messageInfiniteHandler" spinner="bubbles"></infinite-loading>
+                <infinite-loading @infinite="messageInfiniteHandler" ref="infiniteLoading" spinner="bubbles"></infinite-loading>
             </div>
         </div>
 
@@ -110,7 +87,7 @@
             <div class="message-reply-input" v-if="replyContent.message == ''">
                 <form action="" method="post">
                     <textarea v-model="formData.message" name="" id=""></textarea>
-                    <button @click="sendReply()" class="btn btn-success pull-right" type="button" :disabled="sendButton.disable">{{ sendButton.text }}</button>
+                    <button @click="sendReply()"  data-toggle="modal" data-target="#notification-modal" class="btn btn-success pull-right" type="button" :disabled="sendButton.disable">{{ sendButton.text }}</button>
                 </form>
             </div>
         </div>
@@ -232,14 +209,25 @@
         methods: {
 
             messageInfiniteHandler($state) {
-              setTimeout(() => {
-                const temp = [];
-                for (let i = this.sample.length + 1; i <= this.sample.length + 20; i++) {
-                  temp.push(i);
-                }
-                this.sample = this.sample.concat(temp);
-                $state.loaded();
-              }, 1000);
+
+                setTimeout(() => {
+                    
+                    let vue = this;
+                    if(vue.messages.next_page_url != null){
+                        axios.get(vue.messages.next_page_url+'&type='+vue.type+'&search='+vue.search).then(function (response) {
+                            vue.messages.next_page_url = response['data']['next_page_url'];
+
+                            $.each(response['data']['data'],function(k,v){
+                                vue.messages.data.push(v);
+                            })
+
+                        }).catch(function (error) {
+                        });
+                        $state.loaded();
+                    }else{
+                        $state.complete();
+                    }
+                }, 1000);
             },
 
             messageType(type){
@@ -248,14 +236,16 @@
 
             getContent(type){
                 let vue = this;
+                vue.messages = [];
+                this.$refs.infiniteLoading.$emit('$InfiniteLoading:reset');
 
                 if(typeof type != 'undefined'){
                     vue.type = type;
                 }
-
                 axios.get(base_url+'messages/getMessages?type='+vue.type+'&search='+vue.search).then(function (response) {
                     vue.messages = response['data'];
-                    vue.viewMessage(vue.messages[0]);
+                    vue.viewMessage(vue.messages['data'][0]);
+
                 }).catch(function (error) {
                 });
             },
@@ -318,6 +308,10 @@
                 vue.sendButton.disable = true;
                 vue.sendButton.text = 'Sending';
 
+                if(vue.composeMessage.emailArray[0] == ''){
+                    vue.composeMessage.emailArray = []
+                }
+
                 axios.post(base_url+url, data).then(function (response) {
 
                     if(response['data'] == ""){
@@ -325,22 +319,21 @@
 
                     }else{
                         vue.Notify("Well Done!","You're message has been successfully sent");
+                        if(successAction == 'clearFormData'){
+                            vue.formData.contact_message_id = 0;
+                            vue.formData.message = '';
+                            vue.getReply(vue.messageContent.id);
+                        }else if(successAction == 'clearComposeMessage'){
+                            vue.composeMessage.emailArray = [];
+                            vue.composeMessage.subject = '';
+                            vue.composeMessage.message = '';
+                            $('#email-to').val('');
+                            $('#email-to').tagsinput('removeAll');
+                        }
                     }
-                    
+
                     vue.sendButton.disable = false;
                     vue.sendButton.text = 'Send';
-
-                    if(successAction == 'clearFormData'){
-                        vue.formData.contact_message_id = 0;
-                        vue.formData.message = '';
-                        vue.getReply(vue.messageContent.id);
-                    }else if(successAction == 'clearComposeMessage'){
-                        vue.composeMessage.emailArray = [];
-                        vue.composeMessage.subject = '';
-                        vue.composeMessage.message = '';
-                        $('#email-to').val('');
-                        $('#email-to').tagsinput('removeAll');
-                    }
                     
                 }).catch(function (error) {
                     vue.Notify('Error',error);

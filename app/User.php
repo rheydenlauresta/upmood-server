@@ -168,7 +168,7 @@ class User extends Authenticatable
             })
             ->select('records.created_at','records.heartbeat_count','records.ppi','records.total_ppi','records.stress_level','records.emotion_set','records.emotion_value','resources.set_name','resources.filename','resources.type')
             ->orderBy('records.id','DESC')
-            ->get();
+            ->paginate(10);
 
         return $res;
     }
@@ -190,7 +190,7 @@ class User extends Authenticatable
             })
             ->select('users.name','records.emotion_set','records.emotion_value','resources.set_name','resources.filename','resources.type')
             ->orderBy('features.order','DESC')
-            ->get();
+            ->paginate(10);
 
         return $res;
     }
