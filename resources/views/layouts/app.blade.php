@@ -29,21 +29,7 @@
                 </ul>
             </div>
             <div class="main-container">
-                <div class="main-header">
-                    <div class="title"></div>
-                    <div class="header-right">
-                        <div class="notification">
-                            <i class="nav-ic ic-notification"></i>
-                            <div class="notification-count">10</div>
-                        </div>
-                        <div class="profile"><a class="logout-link" href="javascript:;" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><img src="{{ asset('img/profile-avatar.png') }}" alt=""></a></div>
-
-
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                            {{ csrf_field() }}
-                        </form>
-                    </div>
-                </div>
+                <layout-header></layout-header>
                 @yield('content')
             </div>
         </div>

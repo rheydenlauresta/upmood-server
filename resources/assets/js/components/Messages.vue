@@ -4,7 +4,8 @@
             <button class="btn btn-success compose" v-on:click="ComposeMessage">Compose</button>
             <ul class="menu-list">
                 <li><a href="javascript:;" @click="getContent('')">Inbox</a></li>
-                <li><a href="javascript:;" @click="getContent('sentMessage')">Send</a></li>
+                <!-- <li><a href="javascript:;" @click="getContent('sentMessage')">Send</a></li> -->
+                <li><a href="javascript:;" @click="showSent">Send</a></li>
                 <li class="seperator"></li>
                 <li><a href="javascript:;" @click="getContent('general')">General</a></li>
                 <li><a href="javascript:;" @click="getContent('inquiries')">Inquires</a></li>
@@ -126,6 +127,33 @@
                         <textarea v-model="composeMessage.message" class="form-control autoExpand" name="" id="" @click="HideContacts"></textarea>
                     </div>
                 </form>
+            </div>
+        </div>
+
+        <div class="messages-content" id="messagesent">
+            <div class="message-sent-wrapper">
+                <h2>Subject....</h2>
+                <div class="content-body">
+                    <div class="row">
+                        <div class="sent-to">
+                            <span class="sent-label col-md-1">To:</span>
+                            <ul class="sent-tags col-md-11">
+                                <li>waylon.dalton@gmail.com</li>
+                                <li>emilia.maria@yahoo.com</li>
+                                <li>emilia.maria@yahoo.com</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="sent-from">
+                            <span class="sent-label col-md-1">From:</span>
+                            <ul class="sent-tags col-md-11">
+                                <li>waylon.dalton@gmail.com</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="message-sent-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</div>
+                </div>
             </div>
         </div>
     </div>
@@ -399,6 +427,10 @@
             Notify(title,message){
                 $('.notification-title').html(title);
                 $('.notification-description').html(message);
+            },
+
+            showSent(){
+                $("#messagesent").fadeIn();
             },
 
             getAxios: _.debounce(
