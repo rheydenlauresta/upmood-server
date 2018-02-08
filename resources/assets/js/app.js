@@ -19,7 +19,7 @@ Vue.use(vueEventCalendar, {locale: 'en'}) //locale can be 'zh' , 'en' , 'es', 'p
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-
+Vue.component('layout-header', require('./components/LayoutHeader.vue'));
 Vue.component('main-header', require('./components/Header.vue'));
 Vue.component('login', require('./components/Login.vue'));
 Vue.component('passwordreset', require('./components/PasswordReset.vue'));

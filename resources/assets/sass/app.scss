@@ -259,7 +259,7 @@ body{
 
           .notification-count{
               text-align: center;
-              display: inline-block;
+              display: none;
               position: absolute;
               top: 2px;
               left: 0px;
@@ -271,6 +271,120 @@ body{
               color: #000000;
               border-radius:150px;
               line-height: 22px;
+
+              &.notification-count-active{
+                display: inline-block;
+              }
+          }
+
+          .notification-list{
+              display: none;
+              box-shadow: 0px 3px 6px rgba(0,0,0,0.16);
+              position: absolute;
+              top: 73px;
+              left: -223px;
+              background: #fff;
+              width: 321px;
+              min-height: 135px;
+              z-index: 2;
+
+              &.active{
+                display: inline-block;
+              }
+
+              .scrollbar-outer{
+                  max-height: 500px;
+              }
+
+              .notification-empty{
+                padding: 10px;
+
+                .image-wrapper{
+                  @extend .content-center;
+                  height: 70px;
+                  width: 70px;
+                  overflow: hidden;
+                  margin-bottom: 10px;
+
+                  img{
+                    height: 100%;
+                    width: 100%;
+                    object-fit: cover;
+                  }
+                }
+
+                span{
+                  @extend .text-center;
+                  color: #000;
+                  font-weight: 600;
+                  font-size: 16px;
+                  font-style: italic;
+                }
+              }
+
+              .notification-list-container{
+
+                  .title{
+                      color: #9F0000;
+                      font-size: 10px;
+                      font-weight: 600;
+                      border-bottom: 1px solid #D2D2D2;
+                      padding: 5px 15px 5px 15px;
+                      margin: 0px;
+                      display: block;
+                  }
+
+                  ul{
+                    padding: 0px;
+                    margin-bottom: 0px;
+                      li{
+                          a{
+                            display: inline-block;
+                            width: 100%;
+                            padding: 10px;
+                            border-bottom:1px solid #D2D2D2;
+                            color: #9F0000;
+                            text-decoration: none;
+                            background-color: #f7f9f1;
+
+                            &:hover{
+                              color: #9F0000;
+                            }
+
+                            &:last-child{
+                              border-bottom: 0px;
+                            }
+
+                            .list-wrapper{
+                                display: flex;
+
+                                .image-flex{
+                                    flex: 1;
+
+                                    .image-wrapper{
+                                      @extend .content-center;
+                                      position: relative;
+                                      height: 30px;
+                                      width: 30px;
+                                      overflow: hidden;
+                                      border-radius: 150px;
+
+                                      img{
+                                        height: 100%;
+                                        width: 100%;
+                                        object-fit: cover;
+                                      }
+                                  }
+                                }
+
+                                .content-flex{
+                                  flex: 4;
+                                }
+                            }
+                          }
+                      }
+                  }
+              }
           }
        }
 
@@ -1524,6 +1638,92 @@ body{
                  }
               }
            }
+      }
+
+      &#messagesent{
+
+          .message-sent-wrapper{
+            @extend .content-center;
+            position:relative;
+            width: 600px;
+
+            h2{
+              font-size: 24px;
+              font-weight: 600;
+              margin-bottom: 25px;
+            }
+
+            .content-body{
+
+              .sent-to{
+
+                  .sent-label{
+                      font-size: 14px;
+                      font-weight: 400;
+                  }
+
+                  .sent-tags{
+                    list-style: none;
+                    display: inline-block;
+
+                    li{
+                      display: inline-block;
+                      float: left;
+                      margin-right: 5px;
+                      margin-bottom: 5px;
+                      border-radius: 150px;
+                      color: #1E1E1E;
+                      background-color: #F0F0F0;
+                      padding-top: 0.2em;
+                      padding-right: 0.6em;
+                      padding-bottom: 0.3em;
+                      padding-left: 0.6em;
+
+                      &:last-child{
+                        margin-right: 0px;
+                      }
+                    }
+                  }
+              }
+
+              .sent-from{
+
+                  .sent-label{
+                      font-size: 14px;
+                      font-weight: 400;
+                  }
+
+                  .sent-tags{
+                    list-style: none;
+                    display: inline-block;
+
+                    li{
+                      display: inline-block;
+                      float: left;
+                      margin-right: 5px;
+                      margin-bottom: 5px;
+                      border-radius: 150px;
+                      color: #fff;
+                      background-color: #D97AA7;
+                      padding-top: 0.2em;
+                      padding-right: 0.6em;
+                      padding-bottom: 0.3em;
+                      padding-left: 0.6em;
+
+                      &:last-child{
+                        margin-right: 0px;
+                      }
+                    }
+                  }
+              }
+
+              .message-sent-content{
+                  font-size: 12px;
+                  font-weight: 400;
+                  margin-top: 15px;
+              }
+            }  
+          }
       }
     }
 }
