@@ -20,7 +20,7 @@
                     <input v-model="search" @keyup="getAxios()" type="text"  name="messages-search" class="form-control messages-search" placeholder="Search Messages">
                 </div>
             </form>
-            <div class="messages-row-wrapper scrollbar-outer infinite-wrapper" style="overflow-y:auto">
+            <div class="messages-row-wrapper scrollbar-outer infinite-wrapper messages-menu" style="overflow-y:auto">
                 <ul class="message-row-menu">
                     <div v-for="message in messages.data">
                         <li class="messages-row" @click="viewMessage(message)" :id="'message' + message.id">
@@ -47,6 +47,34 @@
                     </div>
                 </ul>
                 <infinite-loading @infinite="messageInfiniteHandler" ref="infiniteLoading" spinner="bubbles"></infinite-loading>
+            </div>
+            <div class="messages-row-wrapper scrollbar-outer infinite-wrapper sent-menu" style="overflow-y:auto;">
+                <ul class="message-row-menu">
+                    <div v-for="item in sent">
+                        <li class="messages-row">
+                            <div class="message-header row">
+                                <div class="col-md-2">
+                                    <div class="image-wrapper ">
+                                        <img :src="base_url+'img/profile-avatar.png'" alt="">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="name">Lau</div>
+                                    <div class="subject">Sent</div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="time pull-right">10:10 AM</div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="message-glance col-md-11">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                </div>
+                            </div>
+                        </li>
+                    </div>
+                </ul>
+                <infinite-loading @infinite="sentInfiniteHandler" ref="infiniteLoading" spinner="bubbles"></infinite-loading>
             </div>
         </div>
 
@@ -217,7 +245,7 @@
                     contact_message_id: 0,
                     message: '',
                 },
-                sample:[]
+                sent: []
             }
         },
         mounted() {
@@ -258,6 +286,17 @@
                 }, 1000);
             },
 
+            sentInfiniteHandler($state) {
+                setTimeout(() => {
+                    const temp = [];
+                    for (let i = this.sent.length + 1; i <= this.sent.length + 10; i++) {
+                      temp.push(i);
+                    }
+                    this.sent = this.sent.concat(temp);
+                    $state.loaded();
+                }, 1000);
+            },
+
             messageType(type){
                 return this.types[type]
             },
@@ -266,6 +305,8 @@
                 let vue = this;
                 vue.messages = [];
                 this.$refs.infiniteLoading.$emit('$InfiniteLoading:reset');
+                $(".sent-menu").hide();
+                $(".messages-menu").show();
 
                 if(typeof type != 'undefined'){
                     vue.type = type;
@@ -431,6 +472,9 @@
 
             showSent(){
                 $("#messagesent").fadeIn();
+                $(".sent-menu").show();
+                $(".messages-menu").hide();
+                this.sentInfiniteHandler();
             },
 
             getAxios: _.debounce(
