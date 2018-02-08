@@ -286,7 +286,7 @@ body{
               background: #fff;
               width: 321px;
               min-height: 135px;
-              z-index: 2;
+              z-index: 1049;
 
               &.active{
                 display: inline-block;
@@ -1320,6 +1320,10 @@ body{
                     cursor: pointer;
                   }
               }
+          }
+
+          &.sent-menu{
+              display: none;
           }
       }
     }
