@@ -86,32 +86,36 @@ $(document).on('click keyup change',".bootstrap-tagsinput > input",function(){
     }
 });
 
-// $(document).on('keyup change',".contact-search-input",function(){
-//     if(true){
-//         var input = $(this).val();
-
-//         $(".contact-row").each(function(index){
-//             var name = $(this).children('.contact-content').children('.contact-name').html();
-//             var email = $(this).children('.contact-content').children('.contact-email').html(); 
-
-//             if (name.indexOf(input) >= 0){
-//               $(this).show();
-//             }
-//             else if (email.indexOf(input) >= 0){
-//               $(this).show();
-//             }
-//             else{
-//               $(this).hide();
-//             }
-//         });
-
-//         $(".contact-wrapper").show();
-//     }
-//     else{
-//         $(".contact-wrapper").hide();
-//     }
-// });
-
 $(document).on('blur',".bootstrap-tagsinput > input",function(){
     $(this).val('');
+});
+
+var monthNames = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"];
+var dateIndex = 0;
+var dateYear = 0;
+
+if ($('.cal-header > .title').length > 0) {
+    var d = $('.cal-header > .title').html().split('/');
+    dateIndex = parseInt(d[0]) - 1;
+    dateYear = parseInt(d[1]);
+    $('.cal-header > .title').html(monthNames[dateIndex] + ' ' + dateYear);
+}
+
+$(document).on('click','.cal-header > .l',function(){
+    dateIndex -= 1;
+    if (dateIndex < 0){
+        dateYear -= 1;
+        dateIndex = 11;
+    }
+    $('.cal-header > .title').html(monthNames[dateIndex] + ' ' + dateYear);
+});
+
+$(document).on('click','.cal-header > .r',function(){
+    dateIndex += 1;
+    if (dateIndex > 11){
+        dateYear += 1;
+        dateIndex = 0;
+    }
+    $('.cal-header > .title').html(monthNames[dateIndex] + ' ' + dateYear);
 });
