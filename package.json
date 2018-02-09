@@ -19,6 +19,8 @@
     "vue": "^2.1.10"
   },
   "dependencies": {
+    "ioredis": "^3.2.2",
+    "socket.io": "^2.0.4",
     "vue-event-calendar": "^1.5.2",
     "vue-infinite-loading": "^2.2.3",
     "vue-router": "^3.0.1"
