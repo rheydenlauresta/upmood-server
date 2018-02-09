@@ -1,5 +1,7 @@
 <?php
 
+// use App\Events\MessageRecieved;
+// use App\RestModel\Message;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,24 +24,35 @@ Route::get('/reset', function () {
 
 Auth::routes();
 
-Route::get('/', 'HomeController@index')->name('home');
+// Route::get('/test', function () {
+//     $notifications = Message::where('seen',0)
+//     	->leftJoin('users',function($query){
+//     		$query->on('users.id','=','contact_message.user_id');
+//     	})
+//     	->paginate(10);
+// // dd($notifications);
+//     event( new MessageRecieved( 'notification', $notifications ) );
 
-// dashboard
-Route::get('/dashboard', 'DashboardController@index');
+//     return view('welcome');
+// });
 
-// user
 
-Route::get('users/userProfile/{id?}', 'UsersController@userProfile');
-Route::resources([
-    'users' => 'UsersController'
-]);
+Route::group(['middleware' => 'auth'], function (){
 
-// Route::get('/userslist', 'UsersController@usersList');
-// Route::get('/usersfilter', 'UsersController@userFilter');
+	// dashboard
+	Route::get('/dashboard', 'DashboardController@index');
 
-// messages
-Route::resources([
-    'messages' => 'MessagesController'
-]);
+	// user
 
-Route::get('/', 'DashboardController@index');
+	Route::get('users/userProfile/{id?}', 'UsersController@userProfile');
+	Route::resources([
+	    'users' => 'UsersController'
+	]);
+
+	// messages
+	Route::resources([
+	    'messages' => 'MessagesController'
+	]);
+
+	Route::get('/', 'DashboardController@index');
+});

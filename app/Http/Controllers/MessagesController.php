@@ -10,6 +10,7 @@ use App\Reply;
 use App\SentMessage;
 use App\Jobs\MessageResponse;
 use App\Jobs\MessageCreate;
+use App\Events\MessageRecieved;
 
 class MessagesController extends Controller
 {
@@ -101,10 +102,19 @@ class MessagesController extends Controller
     public function getSentmessage(){ // Get Send Messages
         $data = Input::all();
 
-    	$sentMessages = SentMessage::selectraw("subject, message,GROUP_CONCAT(email) as emails, DATE_FORMAT(created_at, '%Y-%m-%d') as date_created, DATE_FORMAT(created_at, '%r') as time_created")
-    				->orderBy('id', 'DESC')
+    	$sentMessages = SentMessage::selectraw("subject, message,GROUP_CONCAT(email) as emails, DATE_FORMAT(created_at, '%Y-%m-%d') as date_created, DATE_FORMAT(created_at, '%r') as time_created");
+			
+            if($data['search'] != '' && $data['search'] != null){
+                $sentMessages = $sentMessages->where(function($query) use($data){
+                    $query->where('subject','like','%'.$data['search'].'%');
+                    $query->orWhere('email','like','%'.$data['search'].'%');
+                    $query->orWhere('message','like','%'.$data['search'].'%');
+                });
+            }
+
+        $sentMessages = $sentMessages->orderBy('id', 'DESC')
     				->groupBy('batch')
-    				->get();
+    				->paginate(10);
 
     	return $sentMessages->toArray();
     }
@@ -173,5 +183,17 @@ class MessagesController extends Controller
 
 
         return $res;
+    }
+
+    public function getUnseen(){
+        $notifications = Message::where('seen',0)
+            ->leftJoin('users',function($query){
+                $query->on('users.id','=','contact_message.user_id');
+            })
+            ->selectraw("contact_message.id, users.image, users.name, contact_message.type, content, DATE_FORMAT(contact_message.created_at, '%Y-%m-%d') as date_created, DATE_FORMAT(contact_message.created_at, '%r') as time_created")
+            ->paginate(10);
+
+        return $notifications->toArray();
+        // event( new MessageRecieved( 'notification', $notifications ) );
     }
 }

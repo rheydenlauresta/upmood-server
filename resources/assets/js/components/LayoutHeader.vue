@@ -4,7 +4,7 @@
         <div class="header-right">
             <div class="notification">
                 <i class="nav-ic ic-notification" @click="toggleNotification"></i>
-                <div class="notification-count notification-count-active">0</div>
+                <div class="notification-count notification-count-active">{{ notificationCount }}</div>
                 <div class="notification-list">
                     <!-- <div class="notification-empty">
                         <div class="image-wrapper">
@@ -15,17 +15,17 @@
                     <div class="notification-list-container">
                         <div class="title">Notifications</div>
                         <div class="scrollbar-outer infinite-wrapper" style="overflow-y:auto" >
-                            <ul v-for="noti in notification">
+                            <ul v-for="noti in notification.data">
                                 <li><a href="javascript:;">
                                     <div class="list-wrapper">
                                         <div class="image-flex">
                                             <div class="image-wrapper">
-                                                <img :src="base_url + 'img/profile-avatar.png'" alt="">
+                                                <img :src="base_url +'img/'+noti.image" alt="">
                                             </div>
                                         </div>
                                         <div class="content-wrapper content-flex">
-                                            <div class="content">Fname Lname, send an inquire <b>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod"</b></div>
-                                            <div class="time">A few minutes ago</div>
+                                            <div class="content">{{ noti.name }}, send an inquire <b>"{{noti.content | truncate('50')}}"</b></div>
+                                            <div class="time">{{ noti.time_created }}</div>
                                         </div>
                                     </div>
                                 </a></li>
@@ -44,7 +44,6 @@
         </div>
     </div>
 </template>
-
 <script>
     import InfiniteLoading from 'vue-infinite-loading';
     export default {
@@ -55,23 +54,66 @@
             return {
                 csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                 base_url: window.base_url,
-                notification: []
+                notification: [],
+                notificationCount: 0,
             }
         },
         mounted() {
+            var socket = io('http://localhost:6379');
 
+            socket.on('notification', function(response) {
+                this.notification = response.data
+                this.notificationCount = response.data.total
+
+            }.bind(this))
+
+            this.getNoti();
+
+        },
+
+        filters: {
+      
+            truncate: function(string, value) {
+                if(string.length > value){
+                    return string.substring(0, value) + '...';
+                }else{
+
+                    return string;
+                }
+            },
         },
 
         methods:{
             notificationInfiniteHandler($state) {
                 setTimeout(() => {
-                    const temp = [];
-                    for (let i = this.notification.length + 1; i <= this.notification.length + 10; i++) {
-                      temp.push(i);
+                    let vue = this;
+                    if(vue.notification.next_page_url != null){
+                        axios.get(base_url+'messages/getUnseen?page='+(vue.notification.current_page + 1)).then(function (response) {
+                            vue.notification.next_page_url = response.data.next_page_url;
+                            vue.notification.current_page = (vue.notification.current_page + 1);
+
+                            $.each(response['data']['data'],function(k,v){
+                                vue.notification.data.push(v);
+                            })
+
+                        }).catch(function (error) {
+                        });
+                        $state.loaded();
+                    }else{
+                        $state.complete();
                     }
-                    this.notification = this.notification.concat(temp);
-                    $state.loaded();
                 }, 1000);
+            },
+
+            getNoti(){
+                let vue = this;
+
+                axios.get(base_url+'/messages/getUnseen').then(function (response) {
+                    vue.notification = response.data;
+                    vue.notificationCount = response.data.total;
+
+                }).catch(function (error) {
+                });
             },
 
             toggleNotification(){

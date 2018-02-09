@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ApiController as BaseController;
 use App\RestModel\Message;
+use App\Events\MessageRecieved;
 
 class MessagesController extends BaseController
 {
@@ -47,6 +48,17 @@ class MessagesController extends BaseController
         if($validator['status'] == 422) return json_encode($validator);
 
         $group = Message::store();
+
+        // socket
+        $notifications = Message::where('seen',0)
+            ->leftJoin('users',function($query){
+                $query->on('users.id','=','contact_message.user_id');
+            })
+            ->selectraw("contact_message.id, users.image, users.name, contact_message.type, content, DATE_FORMAT(contact_message.created_at, '%Y-%m-%d') as date_created, DATE_FORMAT(contact_message.created_at, '%r') as time_created")
+            ->paginate(10);
+
+        event( new MessageRecieved( 'notification', $notifications ) );
+        // /socket
 
         return response()->json(array_merge($validator, $group));
     }

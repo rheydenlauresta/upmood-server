@@ -16,6 +16,7 @@
     <script>
         var base_url = "{{url('/')}}/";
     </script>
+    <script src="{{ asset('socket.io-client/socket.io.slim.js') }}"></script>
 </head>
 <body>
     @if(Auth::check())
