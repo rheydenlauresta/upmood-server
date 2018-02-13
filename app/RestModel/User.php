@@ -257,6 +257,7 @@ class User extends Authenticatable
 
         $status->delete();
         UserGroup::remove();
+        Feature::remove();
 
         return [ 'status' => true, 'data' => [] ];
 

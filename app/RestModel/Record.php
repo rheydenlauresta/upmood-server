@@ -105,38 +105,53 @@ class Record extends Model
         // fcm notification
         $groups = Group::where('user_id',request()->user()->id)->get();
 
-        foreach ($groups as $key => $value) {
+        $data = [
+            "module"=>"Push Notification",
+            "type"=>"Update Heartbeat and Emoticon",
+            "type_id"=>"3",
+            'heartbeat'    => request('heartbeat_count'),
+            'emotion_set'    => request('emotion_set'),
+            'emotion_value'  => request('emotion_value'),
+            'emotion_level'  => request('emotion_level'),
+            'longitude'  => request('longitude'),
+            'latitude'  => request('latitude'),
+            'ppi'  => request('ppi'),
+            'total_ppi'  => request('total_ppi'),
+            "request_from"=> [
+                "id"=>request()->user()->id,
+                "name"=>request()->user()->name,
+                "image"=>request()->user()->image,
+            ],
+        ]; 
 
-            $emotions = explode(',',$value->emotions);
-            $user_group = UserGroup::where('group_id',$value->id)
-                                    ->where('user_id',request()->user()->id)
-                                    ->pluck('friend_id')->toArray();
-            $data = [
-                "module"=>"Push Notification",
-                "type"=>"Update Heartbeat and Emoticon",
-                "type_id"=>"3",
-                'heartbeat'    => request('heartbeat_count'),
-                'emotion_set'    => request('emotion_set'),
-                'emotion_value'  => request('emotion_value'),
-                'emotion_level'  => request('emotion_level'),
-                'longitude'  => request('longitude'),
-                'latitude'  => request('latitude'),
-                'ppi'  => request('ppi'),
-                'total_ppi'  => request('total_ppi'),
-                "request_from"=> [
-                    "id"=>request()->user()->id,
-                    "name"=>request()->user()->name,
-                    "image"=>request()->user()->image,
-                ],
-            ]; 
-                
+        if(count($groups) > 0){
 
-            if($value->notification_type == "live"){
+            foreach ($groups as $key => $value) {
 
-                DeviceToken::fcmSend($data, $user_group);
+                $emotions = explode(',',$value->emotions);
+
+                $user_group = UserGroup::where('group_id',$value->id)
+                                        ->where('user_id',request()->user()->id)
+                                        ->pluck('friend_id')->toArray();
+
+                if($value->notification_type == "live"){
+
+                    DeviceToken::fcmSend($data, $user_group);
+
+                }
+
             }
 
         }
+
+        $featured = Feature::where('user_id', request()->user()->id)->pluck('friend_id')->toArray();
+
+        if(count($featured) > 0){
+
+            DeviceToken::fcmSend($data, $featured);
+
+        }
+
         // /fcm notification
 
     	return [

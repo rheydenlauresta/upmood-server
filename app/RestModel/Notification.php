@@ -38,7 +38,7 @@ class Notification extends Model
         $notification->friend_id = request()->user()->id;
         $notification->type_id = $type;
         $notification->content = json_encode($content);
-        $notification->seen = 0;
+        $notification->seen = $type == 3 ? 1 : 0;
 
         if(!$notification->save()){
 

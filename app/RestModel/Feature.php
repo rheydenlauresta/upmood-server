@@ -105,8 +105,14 @@ class Feature extends Model
     public function scopeRemove($query)
     {
 
+        if(request('friend_id')){
+            $id = request('friend_id');
+        }else{
+            $id = request('id');
+        }
+
         $featured = $this->where('user_id',request()->user()->id)
-                  ->where('friend_id',request('friend_id'))
+                  ->where('friend_id',$id)
                   ->delete();
 
         if($featured == 0){
