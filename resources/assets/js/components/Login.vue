@@ -4,13 +4,13 @@
         <div class="login">
           <img :src="base_url+'img/ic_upmood.png'" class="logo" alt="Upmood Logo"/>
           <div class="form">
-              <form method="post" class="form-horizontal" :action="base_url+'login'">
+              <form method="post" class="form-horizontal" @submit.prevent="submitForm">
                   <input type="hidden" name="_token" :value="csrf">
 
                   <!-- Warning Alerts -->
-                  <div class="form-group alert" :class="error.email && error.password ? 'has-error' : ''">
+                  <div class="form-group alert" v-bind:class="{'has-error': error}">
                     <i class="ic ic-warn"></i>
-                    <p>Whoops!!<br><span class="msg">Username Already Used!!</span></p>
+                    <p><span class="msg">Username/Password is invalid!</span></p>
                   </div>
                   <div class="form-group alert notif" :class="warning.email ? 'has-notif' : ''">
                     <p>A password reset link has been sent. </p>
@@ -67,8 +67,8 @@
             return {
                 csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                 base_url: window.base_url,
-                error: {},
-                warning: {},
+                error: false,
+                warning: [],
                 email: '',
                 password: '',
                 status: 'show'
@@ -88,6 +88,21 @@
                 this.status = 'show';
             }
           },
+
+          submitForm(){
+
+              let vue = this;
+
+              axios.post(base_url + 'login',{
+                email: this.email,
+                password: this.password
+              }).then(function(response){
+                location.href = '/dashboard';
+              }).catch(function(e){
+                  vue.error = true;
+                  vue.password = '';
+              })
+          }
 
         }
     }
