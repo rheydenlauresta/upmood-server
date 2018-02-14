@@ -55,6 +55,7 @@ class MessagesController extends BaseController
                 $query->on('users.id','=','contact_message.user_id');
             })
             ->selectraw("contact_message.id, users.image, users.name, contact_message.type, content, DATE_FORMAT(contact_message.created_at, '%Y-%m-%d') as date_created, DATE_FORMAT(contact_message.created_at, '%r') as time_created")
+            ->orderBy('contact_message.id','DESC')
             ->paginate(10);
 
         event( new MessageRecieved( 'notification', $notifications ) );

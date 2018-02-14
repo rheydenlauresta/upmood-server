@@ -208,6 +208,7 @@
 
                 search: "",
                 type: "",
+                url_search: 0,
                 emailString: "",
                 contactEmail: "",
 
@@ -262,6 +263,12 @@
         },
         mounted() {
             $(".main-header > .title").html('<i class="header-ic ic-message-green"></i>Messages');
+            
+            if(typeof window.location.href.split('?')[1] != 'undefined'){
+                this.url_search = window.location.href.split('?')[1].split('=')[1]
+                history.pushState({urlPath:'/messages'},"",base_url+'messages')
+            }
+
             this.getContent('')
             this.highlightFirstMessage();
             this.resizeMessageContent();
@@ -339,7 +346,9 @@
                 if(typeof type != 'undefined'){
                     vue.type = type;
                 }
-                axios.get(base_url+'messages/getMessages?type='+vue.type+'&search='+vue.search).then(function (response) {
+
+                axios.get(base_url+'messages/getMessages?type='+vue.type+'&search='+vue.search+'&urlsearch='+vue.url_search).then(function (response) {
+                    vue.url_search = 0
                     vue.messages = response['data'];
                     vue.viewMessage(vue.messages['data'][0]);
 

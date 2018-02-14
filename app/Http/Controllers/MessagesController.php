@@ -76,13 +76,17 @@ class MessagesController extends Controller
 				$messages = $messages->where('type',$data['type']);
 	    	}
 
-	    	if($data['search'] != '' && $data['search'] != null){
-				$messages = $messages->where(function($query) use($data){
-					$query->where('users.name','like','%'.$data['search'].'%');
-					$query->orWhere('contact_message.type','like','%'.$data['search'].'%');
-					$query->orWhere('content','like','%'.$data['search'].'%');
-				});
-	    	}
+            if($data['search'] != '' && $data['search'] != null){
+                $messages = $messages->where(function($query) use($data){
+                    $query->where('users.name','like','%'.$data['search'].'%');
+                    $query->orWhere('contact_message.type','like','%'.$data['search'].'%');
+                    $query->orWhere('content','like','%'.$data['search'].'%');
+                });
+            }
+
+            if(isset($data['urlsearch']) && $data['urlsearch'] != 0){
+                $messages = $messages->orderByRaw('IF(contact_message.id = '.$data['urlsearch'].', 0,1)');
+            }
 
 	    $messages = $messages->orderBy('contact_message.id', 'DESC')
 	    	->paginate(10);
@@ -195,6 +199,7 @@ class MessagesController extends Controller
                 $query->on('users.id','=','contact_message.user_id');
             })
             ->selectraw("contact_message.id, users.image, users.name, contact_message.type, content, DATE_FORMAT(contact_message.created_at, '%Y-%m-%d') as date_created, DATE_FORMAT(contact_message.created_at, '%r') as time_created")
+            ->orderBy('contact_message.id','DESC')
             ->paginate(10);
 
         return $notifications->toArray();

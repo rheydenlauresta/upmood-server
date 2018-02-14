@@ -16,7 +16,7 @@
                         <div class="title">Notifications</div>
                         <div class="scrollbar-outer infinite-wrapper" style="overflow-y:auto" >
                             <ul v-for="noti in notification.data">
-                                <li><a href="javascript:;">
+                                <li><a :href="base_url+'messages?message='+noti.id">
                                     <div class="list-wrapper">
                                         <div class="image-flex">
                                             <div class="image-wrapper">

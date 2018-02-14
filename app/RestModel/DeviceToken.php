@@ -61,8 +61,11 @@ class DeviceToken extends Model
 
     public function scopeFcmSend($query, $data, $user_id)
     {
-        foreach($user_id as $key=>$value){
-            Notification::store($value, $data['type_id'], $data);
+        if($data['type_id'] != 3){
+            
+            foreach($user_id as $key=>$value){
+                Notification::store($value, $data['type_id'], $data);
+            }
         }
 
         $optionBuiler = new OptionsBuilder();
