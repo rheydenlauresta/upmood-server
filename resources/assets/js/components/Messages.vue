@@ -192,6 +192,7 @@
 
 <script>
     import InfiniteLoading from 'vue-infinite-loading';
+    import { EventBus } from '../app.js';
     export default {
         components: {
             InfiniteLoading,
@@ -374,7 +375,11 @@
 
                 axios.get(base_url+'messages/getReplies?id='+id).then(function (response) {
 
-                    if(response['data'].length > 0){
+                    if(response.data.seen == 0){
+                        EventBus.$emit('updateNoti');
+                    }
+
+                    if(response['data'][0]){
                         vue.replyContent.message = response['data'][0].message
                         vue.replyContent.date = response['data'][0].date_created
                         vue.replyContent.time = response['data'][0].time_created
@@ -417,7 +422,6 @@
                 this.composeContent.time = sentMessage.time_created
                 this.composeContent.date = sentMessage.date_created
 
-
                 $("#compose").hide();
 
                 $("#messagesent").hide();
@@ -428,7 +432,12 @@
             sendReply(){
                 this.formData.contact_message_id = this.messageContent.id;
                 this.formData._method = 'PUT';
-                this.submit('messages/sendReply', this.formData, 'clearFormData')
+
+                if(this.formData.message == ''){
+                    this.Notify("Oops!","Please Complete All Fields");
+                }else{
+                    this.submit('messages/sendReply', this.formData, 'clearFormData')
+                }
             },
 
             sendMessage(){
@@ -436,7 +445,11 @@
                 this.composeMessage.emailArray = this.emailString.split(",");
                 this.composeMessage._method = 'PUT';
 
-                this.submit('messages/sendMessage', this.composeMessage, 'clearComposeMessage')
+                if(this.composeMessage.message == '' || this.composeMessage.subject == '' || $('#email-to').val() == ''){
+                    this.Notify("Oops!","Please Complete All Fields");
+                }else{
+                    this.submit('messages/sendMessage', this.composeMessage, 'clearComposeMessage')
+                }
             },
 
             submit(url, data, successAction){
@@ -451,24 +464,19 @@
 
                 axios.post(base_url+url, data).then(function (response) {
 
-                    if(response['data'] == ""){
-                        vue.Notify("Oops!","Please Complete All Fields");
-
-                    }else{
-                        vue.Notify("Well Done!","You're message has been successfully sent");
-                        if(successAction == 'clearFormData'){
-                            vue.formData.contact_message_id = 0;
-                            vue.formData.message = '';
-                            vue.getReply(vue.messageContent.id);
-                        }else if(successAction == 'clearComposeMessage'){
-                            vue.composeMessage.emailArray = [];
-                            vue.composeMessage.subject = '';
-                            vue.composeMessage.message = '';
-                            $('#email-to').val('');
-                            $('#email-to').tagsinput('removeAll');
-                        }
+                    vue.Notify("Well Done!","You're message has been successfully sent");
+                    if(successAction == 'clearFormData'){
+                        vue.formData.contact_message_id = 0;
+                        vue.formData.message = '';
+                        vue.getReply(vue.messageContent.id);
+                    }else if(successAction == 'clearComposeMessage'){
+                        vue.composeMessage.emailArray = [];
+                        vue.composeMessage.subject = '';
+                        vue.composeMessage.message = '';
+                        $('#email-to').val('');
+                        $('#email-to').tagsinput('removeAll');
                     }
-
+                    
                     vue.sendButton.disable = false;
                     vue.sendButton.text = 'Send';
                     

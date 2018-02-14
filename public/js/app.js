@@ -11904,6 +11904,7 @@ module.exports = __webpack_require__(73);
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EventBus", function() { return EventBus; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__router__ = __webpack_require__(38);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_event_calendar_dist_style_css__ = __webpack_require__(43);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_event_calendar_dist_style_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vue_event_calendar_dist_style_css__);
@@ -11938,6 +11939,8 @@ Vue.component('dashboard', __webpack_require__(61));
 Vue.component('users-component', __webpack_require__(64));
 Vue.component('usersprofile-component', __webpack_require__(67));
 Vue.component('messages-component', __webpack_require__(70));
+
+var EventBus = new Vue();
 
 var app = new Vue({
     el: '#app',
@@ -11993,34 +11996,37 @@ $(document).on('click keyup change', ".bootstrap-tagsinput > input", function ()
     }
 });
 
-// $(document).on('keyup change',".contact-search-input",function(){
-//     if(true){
-//         var input = $(this).val();
-
-//         $(".contact-row").each(function(index){
-//             var name = $(this).children('.contact-content').children('.contact-name').html();
-//             var email = $(this).children('.contact-content').children('.contact-email').html(); 
-
-//             if (name.indexOf(input) >= 0){
-//               $(this).show();
-//             }
-//             else if (email.indexOf(input) >= 0){
-//               $(this).show();
-//             }
-//             else{
-//               $(this).hide();
-//             }
-//         });
-
-//         $(".contact-wrapper").show();
-//     }
-//     else{
-//         $(".contact-wrapper").hide();
-//     }
-// });
-
 $(document).on('blur', ".bootstrap-tagsinput > input", function () {
     $(this).val('');
+});
+
+var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+var dateIndex = 0;
+var dateYear = 0;
+
+if ($('.cal-header > .title').length > 0) {
+    var d = $('.cal-header > .title').html().split('/');
+    dateIndex = parseInt(d[0]) - 1;
+    dateYear = parseInt(d[1]);
+    $('.cal-header > .title').html(monthNames[dateIndex] + ' ' + dateYear);
+}
+
+$(document).on('click', '.cal-header > .l', function () {
+    dateIndex -= 1;
+    if (dateIndex < 0) {
+        dateYear -= 1;
+        dateIndex = 11;
+    }
+    $('.cal-header > .title').html(monthNames[dateIndex] + ' ' + dateYear);
+});
+
+$(document).on('click', '.cal-header > .r', function () {
+    dateIndex += 1;
+    if (dateIndex > 11) {
+        dateYear += 1;
+        dateIndex = 0;
+    }
+    $('.cal-header > .title').html(monthNames[dateIndex] + ' ' + dateYear);
 });
 
 /***/ }),
@@ -47366,6 +47372,7 @@ module.exports = Component.exports
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_infinite_loading__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_infinite_loading___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue_infinite_loading__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_js__ = __webpack_require__(13);
 //
 //
 //
@@ -47412,6 +47419,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -47436,6 +47444,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         this.getNoti();
     },
+    created: function created() {
+        this.events();
+    },
 
 
     filters: {
@@ -47451,6 +47462,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     methods: {
+        events: function events() {
+            var vue = this;
+            __WEBPACK_IMPORTED_MODULE_1__app_js__["EventBus"].$on('updateNoti', function (data) {
+                vue.getNoti();
+            });
+        },
         notificationInfiniteHandler: function notificationInfiniteHandler($state) {
             var _this = this;
 
@@ -47481,7 +47498,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         toggleNotification: function toggleNotification() {
             $(".notification-list").toggle();
-            this.notificationInfiniteHandler();
+            // this.notificationInfiniteHandler();
         }
     }
 });
@@ -51067,6 +51084,7 @@ module.exports = Component.exports
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_infinite_loading__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_infinite_loading___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue_infinite_loading__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_js__ = __webpack_require__(13);
 //
 //
 //
@@ -51259,6 +51277,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -51433,7 +51452,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             axios.get(base_url + 'messages/getReplies?id=' + id).then(function (response) {
 
-                if (response['data'].length > 0) {
+                if (response.data.seen == 0) {
+                    __WEBPACK_IMPORTED_MODULE_1__app_js__["EventBus"].$emit('updateNoti');
+                }
+
+                if (response['data'][0]) {
                     vue.replyContent.message = response['data'][0].message;
                     vue.replyContent.date = response['data'][0].date_created;
                     vue.replyContent.time = response['data'][0].time_created;
@@ -51481,14 +51504,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         sendReply: function sendReply() {
             this.formData.contact_message_id = this.messageContent.id;
             this.formData._method = 'PUT';
-            this.submit('messages/sendReply', this.formData, 'clearFormData');
+
+            if (this.formData.message == '') {
+                this.Notify("Oops!", "Please Complete All Fields");
+            } else {
+                this.submit('messages/sendReply', this.formData, 'clearFormData');
+            }
         },
         sendMessage: function sendMessage() {
             this.emailString = $('#email-to').val();
             this.composeMessage.emailArray = this.emailString.split(",");
             this.composeMessage._method = 'PUT';
 
-            this.submit('messages/sendMessage', this.composeMessage, 'clearComposeMessage');
+            if (this.composeMessage.message == '' || this.composeMessage.subject == '' || $('#email-to').val() == '') {
+                this.Notify("Oops!", "Please Complete All Fields");
+            } else {
+                this.submit('messages/sendMessage', this.composeMessage, 'clearComposeMessage');
+            }
         },
         submit: function submit(url, data, successAction) {
             var vue = this;
@@ -51502,21 +51534,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             axios.post(base_url + url, data).then(function (response) {
 
-                if (response['data'] == "") {
-                    vue.Notify("Oops!", "Please Complete All Fields");
-                } else {
-                    vue.Notify("Well Done!", "You're message has been successfully sent");
-                    if (successAction == 'clearFormData') {
-                        vue.formData.contact_message_id = 0;
-                        vue.formData.message = '';
-                        vue.getReply(vue.messageContent.id);
-                    } else if (successAction == 'clearComposeMessage') {
-                        vue.composeMessage.emailArray = [];
-                        vue.composeMessage.subject = '';
-                        vue.composeMessage.message = '';
-                        $('#email-to').val('');
-                        $('#email-to').tagsinput('removeAll');
-                    }
+                vue.Notify("Well Done!", "You're message has been successfully sent");
+                if (successAction == 'clearFormData') {
+                    vue.formData.contact_message_id = 0;
+                    vue.formData.message = '';
+                    vue.getReply(vue.messageContent.id);
+                } else if (successAction == 'clearComposeMessage') {
+                    vue.composeMessage.emailArray = [];
+                    vue.composeMessage.subject = '';
+                    vue.composeMessage.message = '';
+                    $('#email-to').val('');
+                    $('#email-to').tagsinput('removeAll');
                 }
 
                 vue.sendButton.disable = false;
