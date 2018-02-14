@@ -97,7 +97,7 @@
                 email: this.email,
                 password: this.password
               }).then(function(response){
-                location.href = '/dashboard';
+                location.href = base_url+'dashboard';
               }).catch(function(e){
                   vue.error = true;
                   vue.password = '';

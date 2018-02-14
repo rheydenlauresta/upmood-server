@@ -2,7 +2,7 @@
     <div class="users-wrapper">
         <div class="users-table-wrapper">
             <div class="row">
-                <a href="javascript:;" class="btn btn-success pull-right downloadfile" @click="HideSortWrapper">Download File</a>
+                <!-- <a href="javascript:;" class="btn btn-success pull-right downloadfile" @click="HideSortWrapper">Download File</a> -->
             </div>
             <div class="row">
                 <div class="filter-wrapper">
