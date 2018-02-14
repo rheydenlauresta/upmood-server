@@ -46,6 +46,7 @@
 </template>
 <script>
     import InfiniteLoading from 'vue-infinite-loading';
+    import { EventBus } from '../app.js';
     export default {
         components: {
             InfiniteLoading,
@@ -71,6 +72,10 @@
 
         },
 
+        created(){
+            this.events()
+        },
+
         filters: {
       
             truncate: function(string, value) {
@@ -84,6 +89,13 @@
         },
 
         methods:{
+            events(){
+                let vue = this;
+                EventBus.$on('updateNoti', function(data){
+                    vue.getNoti()
+                });
+            },
+
             notificationInfiniteHandler($state) {
                 setTimeout(() => {
                     let vue = this;
@@ -118,7 +130,7 @@
 
             toggleNotification(){
                 $(".notification-list").toggle();
-                this.notificationInfiniteHandler();
+                // this.notificationInfiniteHandler();
             }
         }
     }

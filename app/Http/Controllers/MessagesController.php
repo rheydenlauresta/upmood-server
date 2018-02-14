@@ -11,6 +11,7 @@ use App\SentMessage;
 use App\Jobs\MessageResponse;
 use App\Jobs\MessageCreate;
 use App\Events\MessageRecieved;
+use Crypt;
 
 class MessagesController extends Controller
 {
@@ -92,11 +93,27 @@ class MessagesController extends Controller
     public function getReplies(){ // Get Messages Replies
         $data = Input::all();
 
+
     	$replies = Reply::selectraw("message, DATE_FORMAT(created_at, '%Y-%m-%d') as date_created, DATE_FORMAT(created_at, '%r') as time_created")
     				->where('contact_message_id',$data['id'])
-    				->get();
+    				->get()->toArray();
 
-    	return $replies->toArray();
+        $seencheck = Message::find($data['id']);
+
+        if($seencheck->seen == 0){
+            $updata = [];
+
+            $updata['id'] = Crypt::encrypt($data['id']);
+            $updata['seen'] = 1;
+
+            $this->get_update($updata,new Message());
+
+            $replies['seen'] = 0;
+        }else{
+            $replies['seen'] = 1;
+        }
+
+    	return $replies;
     }
 
     public function getSentmessage(){ // Get Send Messages
@@ -142,16 +159,12 @@ class MessagesController extends Controller
             'message'           => 'required',
         ]);
 
-        if($validator['status'] == 422){
-        	return false;
-        }else{
-            $res = $this->get_store($data,new Reply());
-            $data['email'] = $record->email;
+        $res = $this->get_store($data,new Reply());
+        $data['email'] = $record->email;
 
-           	dispatch(new MessageResponse($data));
+       	dispatch(new MessageResponse($data));
 
-            return $res;
-        } 
+        return $res;
 
     }
 
@@ -163,24 +176,15 @@ class MessagesController extends Controller
         if(count($data['emailArray']) == 0){
             return false;
         }
-        $validator = $this->validatorCms(Input::all(), [
-            'subject'           => 'required',
-            'message'           => 'required',
-        ]);
 
-        if($validator['status'] == 422){
-            return false;
-        }else{
-            foreach($data['emailArray'] as $key => $value){
-                $data['email'] = $value;
+        foreach($data['emailArray'] as $key => $value){
+            $data['email'] = $value;
 
-            	$res = $this->get_store($data,new SentMessage());
+        	$res = $this->get_store($data,new SentMessage());
 
-           		dispatch(new MessageCreate($data));
+       		dispatch(new MessageCreate($data));
 
-            }
-        } 
-
+        }
 
         return $res;
     }

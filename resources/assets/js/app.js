@@ -28,6 +28,9 @@ Vue.component('users-component', require('./components/Users.vue'));
 Vue.component('usersprofile-component', require('./components/UsersProfile.vue'));
 Vue.component('messages-component', require('./components/Messages.vue'));
 
+
+export const EventBus = new Vue();
+
 const app = new Vue({
     el: '#app',
     router: router,
