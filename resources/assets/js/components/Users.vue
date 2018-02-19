@@ -31,7 +31,7 @@
                             <div class="form-group col-md-2">
                                 <label for="sort">Sort By:</label>
                                 <div class="select-ic ic-sort">
-                                    <select v-model="sortValue" id="sort" name="sort" class="form-control"  @click="ToggleSortWrapper" >
+                                    <select v-model="sortValue" id="sort" name="sort" class="form-control"  @click="ToggleSortWrapper" :disabled="disableSort">
                                         <option value="" selected hidden>{{ this.formdata.sortCategory }}</option>
                                     </select>
                                     <div class="sort-by-wrapper">
@@ -41,7 +41,7 @@
                                                 <span class="radio-label" for="category-name">Name</span>
                                             </label>
                                             <label class="form-group category-group" for="category-emotion">
-                                                <input type="radio"  id="category-emotion" name="category" value="emotion_value" @change="selectSort()" v-model="formdata.sortCategory">
+                                                <input type="radio"  id="category-emotion" name="category" value="Emotion" @change="selectSort()" v-model="formdata.sortCategory">
                                                 <span class="radio-label">Current Emotion</span>
                                             </label>
                                             <label class="form-group category-group" for="category-status">
@@ -120,6 +120,7 @@
                             </div>
                             <div class="advance-card advance-country col-md-3" v-if="formdata.filter == 'location'" @click="HideSortWrapper">
                                 <div class="country-value">{{ formdata.filterValue }}</div>
+                                <div class="country-value" v-if="formdata.filterValue == ''"> - </div>
                                 <div class="advance-card-label">Country</div>
                             </div>
                             <div class="advance-card advance-country col-md-3" v-if="formdata.filter != 'location'" @click="HideSortWrapper">
@@ -188,6 +189,9 @@
 
 
                 disableFilterValue: true,
+                disableSort: false,
+
+                filterCount: 1,
 
                 formdata: {
                     search: '',
@@ -278,6 +282,15 @@
         },
         methods: {
             selectAdvanceFilter(data,filter = null){
+
+                if(this.formdata.filter != '' || this.filterSelected != null){
+                    this.disableSort = true;
+                }else{
+                    this.disableSort = false;
+                }
+
+                this.formdata.sortCategory = '';
+                this.formdata.sortOrder = '';
                 if(data != null){
                     data.advanceFilterValues = this[data.selectedFilter];
 
@@ -311,13 +324,19 @@
             },
 
             addFilter(){
-                this.advanceFilter.push({
-                    id: this.formdata.advance_filter_id,
-                    selectedFilter: '', 
-                    advanceFilterValues: '', 
-                });
 
-                this.formdata.advance_filter_id = this.formdata.advance_filter_id + 1;
+                if(this.filterCount < this.filters.length){
+
+                    this.filterCount = this.filterCount + 1;
+
+                    this.advanceFilter.push({
+                        id: this.formdata.advance_filter_id,
+                        selectedFilter: '', 
+                        advanceFilterValues: '', 
+                    });
+
+                    this.formdata.advance_filter_id = this.formdata.advance_filter_id + 1;
+                }
             },
 
 
@@ -483,6 +502,10 @@
                 this.formdata.filterValue = '';
                 this.formdata.page = 1
                 this.disableFilterValue = true;
+                this.filterCount = 1;
+                this.disableSort = false;
+                this.formdata.sortCategory = '';
+                this.formdata.sortOrder = '';
 
                 this.searchFilters()
             },
@@ -505,18 +528,25 @@
             },
 
             selectSort(){
-                // this.sortValue = this.formdata.sortCategory;
-                this.HideSortWrapper();
                 this.searchFilters()
             },
 
             RemoveAdvanceFilter(event){
+
+                this.filterCount = this.filterCount - 1;
+
 
                 var duplicateId = this.filterSelected.find(item => item.id === this.advanceFilter[event].id);
                 var removeSelected = this.filterSelected.indexOf(duplicateId);
 
                 if(removeSelected != -1){
                     this.filterSelected.splice(removeSelected,1);
+                }
+
+                if(this.filterSelected.length != 0){
+                    this.disableSort = true;
+                }else{
+                    this.disableSort = false;
                 }
 
                 this.advanceFilter.splice(event,1);

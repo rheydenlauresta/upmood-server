@@ -22,19 +22,6 @@ Route::get('/reset', function () {
 
 Auth::routes();
 
-// Route::get('/test', function () {
-//     $notifications = Message::where('seen',0)
-//     	->leftJoin('users',function($query){
-//     		$query->on('users.id','=','contact_message.user_id');
-//     	})
-//     	->paginate(10);
-// // dd($notifications);
-//     event( new MessageRecieved( 'notification', $notifications ) );
-
-//     return view('welcome');
-// });
-
-
 Route::group(['middleware' => 'auth'], function (){
 
 	// dashboard

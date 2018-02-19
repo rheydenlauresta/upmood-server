@@ -335,6 +335,9 @@
             },
 
             getContent(type){
+                $("#messagesent").hide();
+                $("#messagedisplay").hide();
+
                 let vue = this;
                 vue.messages = [];
                 this.$refs.infiniteLoading.$emit('$InfiniteLoading:reset');
@@ -342,6 +345,7 @@
                 $(".sent-menu").hide();
                 $(".messages-menu").show();
                 $(".compose-suggestion").hide();
+                $(".messages-content").hide();
 
                 if(typeof type != 'undefined'){
                     vue.type = type;
@@ -357,15 +361,18 @@
             },
 
             getSent(type){
+                $("#messagesent").hide();
+                $("#messagedisplay").hide();
+
                 let vue = this;
                 vue.sentMessages = [];
                 this.$refs.sentInfiniteLoading.$emit('$sentInfiniteLoading:reset');
 
-                $("#messagesent").fadeIn();
                 $(".sent-menu").show();
                 $(".messages-menu").hide();
                 $(".compose-suggestion").hide();
-                // vue.search = ''
+                $(".messages-content").hide();
+                vue.search = ''
 
                 if(typeof type != 'undefined'){
                     vue.type = type;
@@ -419,8 +426,6 @@
                 $("#message" + message.id).addClass('active');
                 $("#compose").hide();
 
-                $("#messagesent").hide();
-                $("#messagedisplay").hide();
                 $("#messagedisplay").fadeIn(500);
             },
 
@@ -490,7 +495,13 @@
                     vue.sendButton.text = 'Send';
                     
                 }).catch(function (error) {
-                    vue.Notify('Error',error);
+                    if(successAction == 'clearFormData'){
+                        vue.Notify('Error',error);
+                    }else if(successAction == 'clearComposeMessage'){
+                        vue.Notify('Error','Please make sure that all addresses are properly formed.');
+                    }
+                    vue.sendButton.disable = false;
+                    vue.sendButton.text = 'Send';
                 });
             },
 
@@ -507,10 +518,9 @@
                     }).catch(function (error) {
                     });
                 },100
-            ),
+            ),  
 
             selectEmail(val){
-                // alert()
                 $('#email-to').tagsinput('add', val);
                 $('#email-to').tagsinput('refresh');
                 $(".contact-wrapper").hide();

@@ -186,8 +186,10 @@ class User extends Authenticatable
                   END as connection_status
               ')
               ->where('users.id', '!=', request()->user()->id)
-              ->where('users.name', 'like', '%'.request('keyword').'%')
-              ->orWhere('users.email', 'like', '%'.request('keyword').'%')
+              ->where(function($qry){
+                $qry->where('users.name', 'like', '%'.request('keyword').'%');
+                $qry->orWhere('users.email', 'like', '%'.request('keyword').'%');
+              })
               ->paginate(20);
 
     }
@@ -247,7 +249,7 @@ class User extends Authenticatable
         DeviceToken::fcmSend($data, [$user->id]);
         // /fcm notification
 
-        return ['status' => true, 'data' => [] ];
+        return ['status' => true, 'data' => (Object)[] ];
 
     }
 
@@ -259,7 +261,7 @@ class User extends Authenticatable
         UserGroup::remove();
         Feature::remove();
 
-        return [ 'status' => true, 'data' => [] ];
+        return [ 'status' => true, 'data' => (Object)[] ];
 
     }
 
@@ -296,7 +298,7 @@ class User extends Authenticatable
 
         // /fcm notification
 
-        return [ 'status' => true, 'data' => [] ];
+        return [ 'status' => true, 'data' => (Object)[] ];
     }
 
     public function connections()
