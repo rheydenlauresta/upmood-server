@@ -182,11 +182,13 @@ class MessagesController extends Controller
         }
 
         foreach($data['emailArray'] as $key => $value){
-            $data['email'] = $value;
+            if(isset(explode('@',$value)[1])){
+                $data['email'] = $value;
 
-        	$res = $this->get_store($data,new SentMessage());
+            	$res = $this->get_store($data,new SentMessage());
 
-       		dispatch(new MessageCreate($data));
+           		dispatch(new MessageCreate($data));
+            }
 
         }
 

@@ -60,7 +60,7 @@
             }
         },
         mounted() {
-            var socket = io('http://localhost:6379');
+            var socket = io('http://localhost:8011');
 
             socket.on('notification', function(response) {
                 this.notification = response.data
@@ -130,7 +130,6 @@
 
             toggleNotification(){
                 $(".notification-list").toggle();
-                // this.notificationInfiniteHandler();
             }
         }
     }

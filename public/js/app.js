@@ -47435,7 +47435,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         };
     },
     mounted: function mounted() {
-        var socket = io('http://localhost:6379');
+        var socket = io('http://localhost:8011');
 
         socket.on('notification', function (response) {
             this.notification = response.data;
@@ -47498,7 +47498,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         toggleNotification: function toggleNotification() {
             $(".notification-list").toggle();
-            // this.notificationInfiniteHandler();
         }
     }
 });
@@ -49000,6 +48999,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['results', 'countries', 'emotions'],
@@ -49009,6 +49009,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             base_url: window.base_url,
 
             disableFilterValue: true,
+            disableSort: false,
+
+            filterCount: 1,
 
             formdata: {
                 search: '',
@@ -49080,6 +49083,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         selectAdvanceFilter: function selectAdvanceFilter(data) {
             var filter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
+
+            if (this.formdata.filter != '' || this.filterSelected != null) {
+                this.disableSort = true;
+            } else {
+                this.disableSort = false;
+            }
+
+            this.formdata.sortCategory = '';
+            this.formdata.sortOrder = '';
             if (data != null) {
                 data.advanceFilterValues = this[data.selectedFilter];
 
@@ -49116,13 +49128,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
         },
         addFilter: function addFilter() {
-            this.advanceFilter.push({
-                id: this.formdata.advance_filter_id,
-                selectedFilter: '',
-                advanceFilterValues: ''
-            });
 
-            this.formdata.advance_filter_id = this.formdata.advance_filter_id + 1;
+            if (this.filterCount < this.filters.length) {
+
+                this.filterCount = this.filterCount + 1;
+
+                this.advanceFilter.push({
+                    id: this.formdata.advance_filter_id,
+                    selectedFilter: '',
+                    advanceFilterValues: ''
+                });
+
+                this.formdata.advance_filter_id = this.formdata.advance_filter_id + 1;
+            }
         },
         checkFilterSelected: function checkFilterSelected(data, elem) {
             length = this.filterSelected.length;
@@ -49276,6 +49294,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.formdata.filterValue = '';
             this.formdata.page = 1;
             this.disableFilterValue = true;
+            this.filterCount = 1;
+            this.disableSort = false;
+            this.formdata.sortCategory = '';
+            this.formdata.sortOrder = '';
 
             this.searchFilters();
         },
@@ -49299,12 +49321,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
 
         selectSort: function selectSort() {
-            // this.sortValue = this.formdata.sortCategory;
-            this.HideSortWrapper();
             this.searchFilters();
         },
         RemoveAdvanceFilter: function RemoveAdvanceFilter(event) {
             var _this = this;
+
+            this.filterCount = this.filterCount - 1;
 
             var duplicateId = this.filterSelected.find(function (item) {
                 return item.id === _this.advanceFilter[event].id;
@@ -49313,6 +49335,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             if (removeSelected != -1) {
                 this.filterSelected.splice(removeSelected, 1);
+            }
+
+            if (this.filterSelected.length != 0) {
+                this.disableSort = true;
+            } else {
+                this.disableSort = false;
             }
 
             this.advanceFilter.splice(event, 1);
@@ -49548,7 +49576,11 @@ var render = function() {
                           }
                         ],
                         staticClass: "form-control",
-                        attrs: { id: "sort", name: "sort" },
+                        attrs: {
+                          id: "sort",
+                          name: "sort",
+                          disabled: _vm.disableSort
+                        },
                         on: {
                           click: _vm.ToggleSortWrapper,
                           change: function($event) {
@@ -49652,12 +49684,12 @@ var render = function() {
                                 type: "radio",
                                 id: "category-emotion",
                                 name: "category",
-                                value: "emotion_value"
+                                value: "Emotion"
                               },
                               domProps: {
                                 checked: _vm._q(
                                   _vm.formdata.sortCategory,
-                                  "emotion_value"
+                                  "Emotion"
                                 )
                               },
                               on: {
@@ -49666,7 +49698,7 @@ var render = function() {
                                     _vm.$set(
                                       _vm.formdata,
                                       "sortCategory",
-                                      "emotion_value"
+                                      "Emotion"
                                     )
                                   },
                                   function($event) {
@@ -50177,6 +50209,12 @@ var render = function() {
                         _c("div", { staticClass: "country-value" }, [
                           _vm._v(_vm._s(_vm.formdata.filterValue))
                         ]),
+                        _vm._v(" "),
+                        _vm.formdata.filterValue == ""
+                          ? _c("div", { staticClass: "country-value" }, [
+                              _vm._v(" - ")
+                            ])
+                          : _vm._e(),
                         _vm._v(" "),
                         _c("div", { staticClass: "advance-card-label" }, [
                           _vm._v("Country")
@@ -51459,6 +51497,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             return this.types[type];
         },
         getContent: function getContent(type) {
+            $("#messagesent").hide();
+            $("#messagedisplay").hide();
+
             var vue = this;
             vue.messages = [];
             this.$refs.infiniteLoading.$emit('$InfiniteLoading:reset');
@@ -51466,6 +51507,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             $(".sent-menu").hide();
             $(".messages-menu").show();
             $(".compose-suggestion").hide();
+            $(".messages-content").hide();
 
             if (typeof type != 'undefined') {
                 vue.type = type;
@@ -51478,15 +51520,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }).catch(function (error) {});
         },
         getSent: function getSent(type) {
+            $("#messagesent").hide();
+            $("#messagedisplay").hide();
+
             var vue = this;
             vue.sentMessages = [];
             this.$refs.sentInfiniteLoading.$emit('$sentInfiniteLoading:reset');
 
-            $("#messagesent").fadeIn();
             $(".sent-menu").show();
             $(".messages-menu").hide();
             $(".compose-suggestion").hide();
-            // vue.search = ''
+            $(".messages-content").hide();
+            vue.search = '';
 
             if (typeof type != 'undefined') {
                 vue.type = type;
@@ -51534,8 +51579,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             $("#message" + message.id).addClass('active');
             $("#compose").hide();
 
-            $("#messagesent").hide();
-            $("#messagedisplay").hide();
             $("#messagedisplay").fadeIn(500);
         },
         viewSentmail: function viewSentmail(sentMessage) {
@@ -51600,7 +51643,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 vue.sendButton.disable = false;
                 vue.sendButton.text = 'Send';
             }).catch(function (error) {
-                vue.Notify('Error', error);
+                if (successAction == 'clearFormData') {
+                    vue.Notify('Error', error);
+                } else if (successAction == 'clearComposeMessage') {
+                    vue.Notify('Error', 'Please make sure that all addresses are properly formed.');
+                }
+                vue.sendButton.disable = false;
+                vue.sendButton.text = 'Send';
             });
         },
 
@@ -51617,7 +51666,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }, 100),
 
         selectEmail: function selectEmail(val) {
-            // alert()
             $('#email-to').tagsinput('add', val);
             $('#email-to').tagsinput('refresh');
             $(".contact-wrapper").hide();

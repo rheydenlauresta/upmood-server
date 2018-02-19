@@ -112,6 +112,15 @@ class User extends Authenticatable
         }
 
         if(isset($data['sortCategory']) && $data['sortCategory'] != '' && $data['sortCategory'] != null){
+
+            if($data['sortCategory'] == 'Emotion'){
+                $data['sortCategory'] = 'emotion_value';
+            }elseif($data['sortCategory'] == 'Status'){
+                $data['sortCategory'] = 'profile_post';
+            }elseif($data['sortCategory'] == 'Location'){
+                $data['sortCategory'] = 'country';
+            }
+
             $query = $query->orderBy($data['sortCategory'],$data['sortOrder']);
         }
         return $query;
@@ -201,7 +210,6 @@ class User extends Authenticatable
                     ->where('records.created_at', 'like','%'.$data['date'].'%')
                     ->groupBy(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'))
                     ->get();
-        // $records =  Records::select(DB::raw('CONCAT("calendar-ic emoji-",records.emotion_set,"-",records.emotion_value) as customClass'),DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as date'))
 
         return $records;
     }

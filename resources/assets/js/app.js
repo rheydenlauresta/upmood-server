@@ -93,6 +93,7 @@ $(document).on('blur',".bootstrap-tagsinput > input",function(){
     $(this).val('');
 });
 
+
 var monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"];
 var dateIndex = 0;
