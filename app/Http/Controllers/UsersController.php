@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Crypt;
 use App\User;
+use Excel;
 
 class UsersController extends Controller
 {
@@ -27,7 +28,7 @@ class UsersController extends Controller
     public function show($module)
     {
         $checker = $this->methodCheckCms($module, [
-           'userFilter', 'userProfile', 'upmoodCalendar'
+           'userFilter', 'userProfile', 'upmoodCalendar', 'downloadFile'
         ]);
 
         if($checker['status'] == 204) return $checker;
@@ -52,8 +53,8 @@ class UsersController extends Controller
         
         $res = [];
 
-        $res['content'] = User::searchFilter($data);
-        $res['counts'] = User::advCardCounts($data);
+        $res['content'] = User::searchFilter($data)->paginate(10);
+        $res['counts'] = User::advCardCounts($data)->first();
 
         return $res;
     }
@@ -80,5 +81,45 @@ class UsersController extends Controller
         $upmood_calendar = User::getCalendar($data);
 
         return $upmood_calendar;
+    }
+
+    public function downloadFile(){
+        $data = Input::all();
+
+        $content = User::searchFilter($data)->get()->toArray();
+
+        Excel::create('Upmood Users', function($excel) use($content){
+
+            $excel->sheet('Users', function($sheet) use($content){
+
+                $header = ['Name', 'Gender', 'Age', 'Current Emotion', 'Stress Level', 'BPM', 'Status', 'Upmood Meter','Location', 'Active Level'];
+
+                $sheet->row(1, $header);
+
+                foreach ($content as $key => $value) {
+
+                    if($value->upmood_meter == null){
+                        $upmood_meter = "No Record Found";
+                    }elseif($value->upmood_meter <= -61){
+                        $upmood_meter = 'Sad';
+                    }elseif($value->upmood_meter <= -21){
+                        $upmood_meter = 'Unpleasant';
+                    }elseif($value->upmood_meter <= 20){
+                        $upmood_meter = 'Calm';
+                    }elseif($value->upmood_meter <= 60){
+                        $upmood_meter = 'Pleasant';
+                    }elseif($value->upmood_meter <= 100){
+                        $upmood_meter = 'Happy';
+                    }
+
+                    $dataContent = [$value->name, $value->gender, $value->age, $value->emotion_value, $value->stress_level, $value->heartbeat_count, $value->profile_post, $upmood_meter,$value->country, $value->active_level ];
+
+                    $sheet->row($key+3, $dataContent);
+
+                }
+
+            });
+
+        })->export('xls');
     }
 }

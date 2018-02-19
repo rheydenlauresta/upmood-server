@@ -48999,6 +48999,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['results', 'countries', 'emotions'],
@@ -49244,6 +49245,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 vue.generatePaginationNumbers();
             }).catch(function (error) {});
         },
+        downloadFile: function downloadFile() {
+            window.open(base_url + 'users/downloadFile?' + window.location.href.split('?')[1], '_self');
+        },
         preventNext: function preventNext(event) {
             if (this.formdata.page != this.recordData.last_page) {
                 this.formdata.page = this.formdata.page + 1;
@@ -49339,7 +49343,21 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "users-wrapper" }, [
     _c("div", { staticClass: "users-table-wrapper" }, [
-      _c("div", { staticClass: "row" }),
+      _c("div", { staticClass: "row" }, [
+        _c(
+          "a",
+          {
+            staticClass: "btn btn-success pull-right downloadfile",
+            attrs: { href: "javascript:;" },
+            on: {
+              click: function($event) {
+                _vm.downloadFile()
+              }
+            }
+          },
+          [_vm._v("Download File")]
+        )
+      ]),
       _vm._v(" "),
       _c("div", { staticClass: "row" }, [
         _c("div", { staticClass: "filter-wrapper" }, [
@@ -49634,12 +49652,12 @@ var render = function() {
                                 type: "radio",
                                 id: "category-emotion",
                                 name: "category",
-                                value: "Current Emotion"
+                                value: "emotion_value"
                               },
                               domProps: {
                                 checked: _vm._q(
                                   _vm.formdata.sortCategory,
-                                  "Current Emotion"
+                                  "emotion_value"
                                 )
                               },
                               on: {
@@ -49648,7 +49666,7 @@ var render = function() {
                                     _vm.$set(
                                       _vm.formdata,
                                       "sortCategory",
-                                      "Current Emotion"
+                                      "emotion_value"
                                     )
                                   },
                                   function($event) {
@@ -50220,16 +50238,22 @@ var render = function() {
               "tbody",
               _vm._l(_vm.recordData.data, function(user) {
                 return _c("tr", [
-                  _c("td", [
-                    _c("div", { staticClass: "table-profile-image" }, [
-                      _c("img", {
-                        attrs: {
-                          src: _vm.base_url + "img/" + user.image,
-                          alt: ""
-                        }
-                      })
-                    ])
-                  ]),
+                  user.facebook_id != ""
+                    ? _c("td", [
+                        _c("div", { staticClass: "table-profile-image" }, [
+                          _c("img", { attrs: { src: user.image, alt: "" } })
+                        ])
+                      ])
+                    : _c("td", [
+                        _c("div", { staticClass: "table-profile-image" }, [
+                          _c("img", {
+                            attrs: {
+                              src: _vm.base_url + "img/" + user.image,
+                              alt: ""
+                            }
+                          })
+                        ])
+                      ]),
                   _vm._v(" "),
                   _c("td", [
                     _c(

@@ -39,9 +39,8 @@ class User extends Authenticatable
                     $qry->on('up_meter.user_id', '=', 'u.id');
                 });
 
-        $res = User::filters($query, $data)->groupBy('name')
-                ->paginate(10);
-
+        $res = User::filters($query, $data)->groupBy('name');
+                
         return $res;
     }
 
@@ -61,7 +60,7 @@ class User extends Authenticatable
                     $qry->on('r.user_id', '=', 'u.id')->where('r.id','=',DB::raw('(select max(records.id) from records where records.user_id = u.id)'));
                 });
 
-        $res = User::filters($query, $data)->first();
+        $res = User::filters($query, $data);
 
         return $res;
 

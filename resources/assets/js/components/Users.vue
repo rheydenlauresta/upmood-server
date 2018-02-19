@@ -2,7 +2,7 @@
     <div class="users-wrapper">
         <div class="users-table-wrapper">
             <div class="row">
-                <!-- <a href="javascript:;" class="btn btn-success pull-right downloadfile" @click="HideSortWrapper">Download File</a> -->
+                <a href="javascript:;" class="btn btn-success pull-right downloadfile" @click="downloadFile()">Download File</a>
             </div>
             <div class="row">
                 <div class="filter-wrapper">
@@ -41,7 +41,7 @@
                                                 <span class="radio-label" for="category-name">Name</span>
                                             </label>
                                             <label class="form-group category-group" for="category-emotion">
-                                                <input type="radio"  id="category-emotion" name="category" value="Current Emotion" @change="selectSort()" v-model="formdata.sortCategory">
+                                                <input type="radio"  id="category-emotion" name="category" value="emotion_value" @change="selectSort()" v-model="formdata.sortCategory">
                                                 <span class="radio-label">Current Emotion</span>
                                             </label>
                                             <label class="form-group category-group" for="category-status">
@@ -149,7 +149,8 @@
                     </thead>
                     <tbody>
                         <tr v-for="user in recordData.data">
-                            <td><div class="table-profile-image"><img :src="base_url+'img/'+user.image" alt=""></div></td>
+                            <td v-if="user.facebook_id != ''"><div class="table-profile-image"><img :src="user.image" alt=""></div></td>
+                            <td v-else><div class="table-profile-image"><img :src="base_url+'img/'+user.image" alt=""></div></td>
                             <td><a :href="base_url + 'users/userProfile/'+user.id">{{ user.name }}</a></td>
                             <td>{{ user.gender }}</td>
                             <td>{{ user.age }}</td>
@@ -445,6 +446,10 @@
 
                 }).catch(function (error) {
                 });
+            },
+
+            downloadFile() {
+                window.open(base_url+'users/downloadFile?'+window.location.href.split('?')[1],'_self')
             },
 
             preventNext(event) {
