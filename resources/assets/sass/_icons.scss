@@ -62,6 +62,14 @@
 	    top: 19px;
 	    left: 9px;
 	}
+
+	@for $i from 36 through 42{
+		&:nth-child(#{$i}){
+			&:before{
+				display: none;
+			}
+		}
+	}
 }
 
 .ic-notification{

@@ -97,7 +97,10 @@
                             </tbody>
                             
                         </table>
-                        <infinite-loading @infinite="moodSteamInfiniteHandler" spinner="bubbles"></infinite-loading>
+                        <infinite-loading @infinite="moodSteamInfiniteHandler" spinner="bubbles">
+                            <span slot="no-more"></span>
+                            <span slot="no-results"></span>
+                        </infinite-loading>
                     </div>
                 </div>
             </div>
@@ -121,7 +124,10 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <infinite-loading @infinite="featuredInfiniteHandler" spinner="bubbles"></infinite-loading>
+                        <infinite-loading @infinite="featuredInfiniteHandler" spinner="bubbles">
+                            <span slot="no-more"></span>
+                            <span slot="no-results"></span>
+                        </infinite-loading>
                     </div>
                 </div>
             </div>

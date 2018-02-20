@@ -46,7 +46,10 @@
                         </li>
                     </div>
                 </ul>
-                <infinite-loading @infinite="messageInfiniteHandler" ref="infiniteLoading" spinner="bubbles"></infinite-loading>
+                <infinite-loading @infinite="messageInfiniteHandler" ref="infiniteLoading" spinner="bubbles">
+                    <span slot="no-more"></span>
+                    <span slot="no-results"></span>
+                </infinite-loading>
             </div>
             <!-- //messages -->
 
@@ -133,19 +136,22 @@
                             <label for="email-to">To:</label>
                             <input type="text" id="email-to" name="email-to"  data-role="tagsinput">
                         </div>
-                        <div class="compose-suggestion" >
-
-                            <div class="suggestion-row" v-for="availableEmail in availableEmails" @click="selectEmail(availableEmail.email)">
-                                <div class="image-wrapper">
-                                    <img :src="base_url + 'img/'+availableEmail.image" alt="">
-                                </div>
-                                <div class="suggestion-content">
-                                    <div class="suggestion-name">{{availableEmail.name}}</div>
-                                    <div class="suggestion-email">{{availableEmail.email}}</div>
-                                    <i class="suggestion-ic ic-check-contact" v-if="checkSelected(availableEmail.email)"></i>
+                        <div class="compose-suggestion">
+                            <div class="suggestion-wrapper">
+                                <div class="suggestion-row" v-for="availableEmail in availableEmails" @click="selectEmail(availableEmail.email)">
+                                    <div class="image-wrapper">
+                                        <img :src="base_url + 'img/'+availableEmail.image" alt="">
+                                    </div>
+                                    <div class="suggestion-content">
+                                        <div class="suggestion-name">{{availableEmail.name}}</div>
+                                        <div class="suggestion-email">{{availableEmail.email}}</div>
+                                        <i class="suggestion-ic ic-check-contact" v-if="checkSelected(availableEmail.email)"></i>
+                                    </div>
                                 </div>
                             </div>
-
+                            <div class="loading" id="suggestion-loading">
+                                <img :src="base_url + 'img/spinner.svg'" alt="">
+                            </div>
                         </div>
 
                     </div>
@@ -509,11 +515,16 @@
                 function(){
                     let vue = this;
 
-                    var searchEmail = $('.bootstrap-tagsinput > input').val(); 
+                    var searchEmail = $('.bootstrap-tagsinput > input').val();
+
+                    $(".suggestion-wrapper").hide();
+                    $("#suggestion-loading").show();
 
                     axios.get(base_url+'messages/emailSearch?email='+searchEmail+'&conemail='+vue.contactEmail).then(function (response) {
                         vue.availableEmails = response['data'];
                         $(".suggestion-row").show();
+                        $("#suggestion-loading").hide();
+                        $(".suggestion-wrapper").show();
 
                     }).catch(function (error) {
                     });
@@ -525,10 +536,12 @@
                 $('#email-to').tagsinput('refresh');
                 $(".contact-wrapper").hide();
                 $(".compose-suggestion").hide();
+                $(".suggestion-wrapper").hide();
             },
 
             checkSelected(val){
                 var duplicateId = $('#email-to').val().split(",").find(item => item === val);
+
 
                 if(typeof duplicateId != 'undefined'){
                     return true
