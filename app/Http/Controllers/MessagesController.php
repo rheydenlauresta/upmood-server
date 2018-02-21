@@ -143,14 +143,17 @@ class MessagesController extends Controller
     public function emailSearch(){ // Get Available emails
         $data = Input::all();
 
+        $unregistered_emails = SentMessage::selectraw("'unknown', '', email")
+            ->where('email','like','%'.$data['email'].'%');
+
     	$emails = User::selectraw("name, image, email")
     				->where(function($query) use($data){
     					$query->orWhere('email','like','%'.$data['email'].'%');
     					$query->orWhere('name','like','%'.$data['email'].'%');
     				})
+                    ->union($unregistered_emails)
     				->take(10)
     				->get();
-
 
     	return $emails->toArray();
     }

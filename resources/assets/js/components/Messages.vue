@@ -27,7 +27,8 @@
                             <div class="message-header row">
                                 <div class="col-md-2">
                                     <div class="image-wrapper ">
-                                        <img :src="base_url+'img/'+message.image" alt="">
+                                        <img :src="message.image" alt="" v-if="message.facebook_id != ''">
+                                        <img :src="base_url+'img/'+message.image" alt=""  v-else>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -85,7 +86,8 @@
             <div class="message-content-row">
                 <div class="message-header">
                     <div class="image-wrapper pull-left">
-                        <img :src="base_url+'img/'+messageContent.image" alt="">
+                        <img :src="messageContent.image" alt="" v-if="messageContent.facebook_id != ''">
+                        <img :src="base_url+'img/'+messageContent.image" alt=""  v-else>
                     </div>
                     <div class="message-to">{{ messageContent.name }} to Upmood admin</div>
                     <div class="message-subject">{{ messageType(messageContent.type) }}</div>
@@ -136,17 +138,17 @@
                             <label for="email-to">To:</label>
                             <input type="text" id="email-to" name="email-to"  data-role="tagsinput">
                         </div>
-                        <div class="compose-suggestion">
-                            <div class="suggestion-wrapper">
-                                <div class="suggestion-row" v-for="availableEmail in availableEmails" @click="selectEmail(availableEmail.email)">
-                                    <div class="image-wrapper">
-                                        <img :src="base_url + 'img/'+availableEmail.image" alt="">
-                                    </div>
-                                    <div class="suggestion-content">
-                                        <div class="suggestion-name">{{availableEmail.name}}</div>
-                                        <div class="suggestion-email">{{availableEmail.email}}</div>
-                                        <i class="suggestion-ic ic-check-contact" v-if="checkSelected(availableEmail.email)"></i>
-                                    </div>
+
+                        <div class="compose-suggestion" >
+                            <div class="suggestion-row" v-for="availableEmail in availableEmails" @click="selectEmail(availableEmail.email)">
+                                <div class="image-wrapper">
+                                    <img :src="availableEmail.image" alt="" v-if="availableEmail.facebook_id != ''">
+                                    <img :src="base_url+'img/'+availableEmail.image" alt=""  v-else>
+                                </div>
+                                <div class="suggestion-content">
+                                    <div class="suggestion-name">{{availableEmail.name}}</div>
+                                    <div class="suggestion-email">{{availableEmail.email}}</div>
+                                    <i class="suggestion-ic ic-check-contact" v-if="checkSelected(availableEmail.email)"></i>
                                 </div>
                             </div>
                             <div class="loading" id="suggestion-loading">

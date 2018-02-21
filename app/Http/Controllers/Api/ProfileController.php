@@ -81,7 +81,7 @@ class ProfileController extends BaseController
         // VALIDATE REQUEST METHOD REQUIREMENTS
 
         $checker = $this->methodCheck($module, [
-            'status', 'basicEmoji'
+            'status', 'basicEmoji','isOnline'
         ], 'profile-update');
 
         if($checker['status'] == 204) return $checker;
@@ -132,6 +132,22 @@ class ProfileController extends BaseController
         $emoji = User::basicEmoji();
 
         return array_merge($validator, $emoji);
+
+    }
+
+    public function isOnline()
+    {
+        // VALIDATE REQUEST REQUIREMENTS
+
+        $validator = $this->validator(request()->all(), [
+            'is_online'      => 'required',
+        ], 'change-online-status');
+
+        if($validator['status'] == 422) return $validator;
+
+        $online = User::isOnline();
+
+        return array_merge($validator, $online);
 
     }
 }

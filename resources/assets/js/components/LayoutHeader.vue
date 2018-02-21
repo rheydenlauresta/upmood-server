@@ -60,7 +60,7 @@
             }
         },
         mounted() {
-            var socket = io('http://localhost:8011');
+            var socket = io('http://localhost:8012');
 
             socket.on('notification', function(response) {
                 this.notification = response.data

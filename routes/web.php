@@ -13,9 +13,12 @@
 |
 */
 
-// Route::get('/', function () {
-//     return view('auth/login');
+// Route::get('/test', function () {
+//     return view('test');
 // });
+
+Route::get('/test', 'HomeController@test');
+
 Route::get('/reset', function () {
     return view('auth/passwords/reset');
 });

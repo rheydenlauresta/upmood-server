@@ -142,7 +142,7 @@ class Record extends Model
             }
         }
 
-        $featured = Feature::where('user_id', request()->user()->id)->pluck('friend_id')->toArray();
+        $featured = Feature::where('friend_id', request()->user()->id)->pluck('user_id')->toArray();
 
         if(count($featured) > 0){
 
