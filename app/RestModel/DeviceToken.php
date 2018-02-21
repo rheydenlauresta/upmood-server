@@ -67,7 +67,7 @@ class DeviceToken extends Model
                 Notification::store($value, $data['type_id'], $data);
             }
         }
-
+        // dd($user_id);
         $optionBuiler = new OptionsBuilder();
         $optionBuiler->setTimeToLive(1);
 

@@ -47435,7 +47435,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         };
     },
     mounted: function mounted() {
-        var socket = io('http://localhost:8011');
+        var socket = io('http://localhost:8012');
 
         socket.on('notification', function (response) {
             this.notification = response.data;
@@ -51356,6 +51356,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 
 
@@ -51910,12 +51913,16 @@ var render = function() {
                     _c("div", { staticClass: "message-header row" }, [
                       _c("div", { staticClass: "col-md-2" }, [
                         _c("div", { staticClass: "image-wrapper " }, [
-                          _c("img", {
-                            attrs: {
-                              src: _vm.base_url + "img/" + message.image,
-                              alt: ""
-                            }
-                          })
+                          message.facebook_id != ""
+                            ? _c("img", {
+                                attrs: { src: message.image, alt: "" }
+                              })
+                            : _c("img", {
+                                attrs: {
+                                  src: _vm.base_url + "img/" + message.image,
+                                  alt: ""
+                                }
+                              })
                         ])
                       ]),
                       _vm._v(" "),
@@ -52038,12 +52045,16 @@ var render = function() {
         _c("div", { staticClass: "message-content-row" }, [
           _c("div", { staticClass: "message-header" }, [
             _c("div", { staticClass: "image-wrapper pull-left" }, [
-              _c("img", {
-                attrs: {
-                  src: _vm.base_url + "img/" + _vm.messageContent.image,
-                  alt: ""
-                }
-              })
+              _vm.messageContent.facebook_id != ""
+                ? _c("img", {
+                    attrs: { src: _vm.messageContent.image, alt: "" }
+                  })
+                : _c("img", {
+                    attrs: {
+                      src: _vm.base_url + "img/" + _vm.messageContent.image,
+                      alt: ""
+                    }
+                  })
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "message-to" }, [
@@ -52212,12 +52223,17 @@ var render = function() {
                     },
                     [
                       _c("div", { staticClass: "image-wrapper" }, [
-                        _c("img", {
-                          attrs: {
-                            src: _vm.base_url + "img/" + availableEmail.image,
-                            alt: ""
-                          }
-                        })
+                        availableEmail.facebook_id != ""
+                          ? _c("img", {
+                              attrs: { src: availableEmail.image, alt: "" }
+                            })
+                          : _c("img", {
+                              attrs: {
+                                src:
+                                  _vm.base_url + "img/" + availableEmail.image,
+                                alt: ""
+                              }
+                            })
                       ]),
                       _vm._v(" "),
                       _c("div", { staticClass: "suggestion-content" }, [

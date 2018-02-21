@@ -32,6 +32,18 @@ class HomeController extends Controller
         return view('users');
     }
 
+    public function test()
+    {
+
+        $data['email'] = 'rhey.taisondigital@gmail.com';
+        $data['subject'] = 'email test';
+        $data['message'] = 'testing content';
+
+        dispatch(new MessageCreate($data));
+
+        return $res;
+    }
+
     // public function sample(){
 
     //     $user = User::simplePaginate(4);

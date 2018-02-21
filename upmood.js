@@ -22,4 +22,4 @@ redis.on('message', function (channel, data) {
 });
 
 
-server.listen(8011);
+server.listen(8012);

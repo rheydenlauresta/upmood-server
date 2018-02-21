@@ -124,6 +124,67 @@ class User extends Authenticatable
 
     }
 
+    public function scopeIsOnline($query)
+    {
+     
+        $user = $this->where('id',request()->user()->id)->first();
+
+        $user->is_online   = request('is_online');
+
+        if(!$user->update()){
+
+            return [
+                'status'   => (int) env('BAD_REQUEST'),
+                'message' => 'something went wrong',
+            ];
+
+        }
+
+        if(request('is_online') == 1){
+
+            $friends = DB::table('connections')
+                ->selectraw('connections.*, users.id as user_friend_id, users.name as user_name, users.image as user_image, users.email as user_email')
+
+                ->where(function($qry){
+                    $qry->where('connections.user_id',request()->user()->id);
+                    $qry->orWhere('connections.friend_id',request()->user()->id);
+                })
+                ->leftJoin('user_groups',function($join){
+                    $join->on('user_groups.friend_id','=',DB::raw('CASE '.request()->user()->id.' WHEN connections.user_id THEN connections.friend_id ELSE connections.user_id END'));
+                    $join->where('user_groups.user_id','=',request()->user()->id);
+                })
+                ->where('user_groups.user_id','=',null)
+                ->where('connections.status','=',1)
+                ->leftJoin('users', 'users.id', '=', DB::raw('CASE '.request()->user()->id.' WHEN connections.user_id THEN connections.friend_id ELSE connections.user_id END'))->get()
+                ->pluck('user_friend_id')->toArray();
+                
+            $data = [
+                "module"=>"Push Notification",
+                "type"=>"Online Notification",
+                "type_id"=>"5",
+                "request_from"=> [
+                                    "id"=>request()->user()->id,
+                                    "name"=>request()->user()->name,
+                                    "image"=>request()->user()->image,
+                                ],
+            ];
+            // dd($data);
+            DeviceToken::fcmSend($data, $friends);
+        }
+
+        return [
+            'status'  => (int) env('SUCCESS_RESPONSE_CODE'),
+            'message' => 'success',
+            'data'    => [
+                'user_id'         => $user->id,
+                'name'            => $user->name,
+                'image'           => $user->image,
+                'is_online'       => request('is_online'),
+            ]
+        ];
+
+    }
+
     public function notifications($status, $type = null)
     {
         $query = $this->hasMany('App\RestModel\Notification')
