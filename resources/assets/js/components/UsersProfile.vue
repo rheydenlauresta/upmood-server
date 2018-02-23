@@ -71,9 +71,9 @@
                 </div>
             </div>
             <div class="col-md-8">
-                <div class="mood-steam">
-                    <div class="title">Mood Steam</div>
-                    <div class="scrollbar-outer mood-steam-table infinite-wrapper" style="overflow-y:auto;">
+                <div class="mood-stream">
+                    <div class="title">Mood Stream</div>
+                    <div class="scrollbar-outer mood-stream-table infinite-wrapper" style="overflow-y:auto;">
                         <table class="table">
                             <thead>
                                 <th>Time</th>

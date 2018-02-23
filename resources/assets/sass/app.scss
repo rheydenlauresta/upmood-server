@@ -1859,7 +1859,7 @@ body{
           img{
             height: 100%;
             width: 100%;
-            object-fit: cover;
+            object-fit: contain;
           }
       }
 
@@ -1931,11 +1931,11 @@ body{
       }
     }
 
-    .mood-steam{
+    .mood-stream{
       @extend .user-profile-modules;
       margin-top: 15px;
 
-      .mood-steam-table{
+      .mood-stream-table{
           height: 410px;
           
           table{
@@ -1954,7 +1954,7 @@ body{
                               img{
                                 height: 100%;
                                 width: 100%;
-                                object-fit: cover;
+                                object-fit: contain;
                               }
                           }
                       }
@@ -1987,7 +1987,7 @@ body{
                               img{
                                 height: 100%;
                                 width: 100%;
-                                object-fit: cover;
+                                object-fit: contain;
                               }
                           }
                       }
