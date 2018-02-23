@@ -15,15 +15,15 @@
                             <div class="col-md-1 text-semibold">Age:</div>
                             <div class="age col-md-5">{{ profile.age | emptyVal('age')}}</div>
                             <div class="col-md-1"><i class="ic-location"></i></div>
-                            <div class="col-md-5 location">{{ profile.country | emptyVal()}}</div>
+                            <div class="col-md-5 location">{{ profile.country | emptyVal(null)}}</div>
                         </div>
                         <div class="row">
                             <div class="col-md-1 text-semibold">Gender:</div>
-                            <div class="col-md-11 gender">{{ profile.gender | emptyVal()}}</div>
+                            <div class="col-md-11 gender">{{ profile.gender | emptyVal(null)}}</div>
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="description" >"{{ profile.profile_post | emptyVal()}}"</div>
+                                <div class="description" >"{{ profile.profile_post | emptyVal(null)}}"</div>
                             </div>
                         </div>
                     </div>
@@ -89,7 +89,7 @@
                                 <tr>
                                     <td>{{ value.created_at }}</td>
                                     <td>{{ value.heartbeat_count }}</td>
-                                    <td>{{ value.ppi | ppiCount() }}</td>
+                                    <td>{{ value.ppi | ppiCount(null) }}</td>
                                     <td>{{ value.total_ppi }}</td>
                                     <td>{{ value.stress_level }}</td>
                                     <td><div class="image-wrapper"><img :src="base_url + 'img/resources/' + value.emotion_set + '/emoji/' + value.emotion_value + '.png'" alt=""></div></td>
@@ -132,11 +132,53 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="emotion-calendar">
-                    <div class="title">Upmood Emotion Calendar</div>
-                    <div class="calendar-wrapper">
-                        <vue-event-calendar :events="demoEvents"  @month-changed="handleMonthChanged"></vue-event-calendar>
+            <div class="col-md-8" id="animation-calendar">
+                <div class="emotion-calendar col-md-6">
+                    <div class="slide-calendar">
+                        <div class="title">Upmood Emotion Calendar</div>
+                        <div class="calendar-wrapper">
+                            <vue-event-calendar :events="demoEvents"  @month-changed="handleMonthChanged" @day-changed="handleDayChanged"></vue-event-calendar>
+                        </div>
+                    </div>
+                    <div class="slide-calendar-emotion">
+                        <div class="current-emotion for-calendar">
+                            <div class="title">Current Emotion</div>
+                            <div class="calendar-close" @click="closeCurrentEmotion">X</div>
+                            <div class="image-wrapper">
+                                <img :src="base_url + 'img/resources/' + profile.emotion_set + '/emoji/' + profile.emotion_value + '.png'" alt="">
+                            </div>
+                            <div class="emotion-info">
+                                <div class="row">
+                                    <div class="col-md-4">BPM:</div>
+                                    <div class="col-md-8 BPM">{{ profile.heartbeat_count }}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">Stress Level:</div>
+                                    <div class="col-md-8 stress-level">{{ profile.stress_level }}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">Mood Meter:</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="upmood-meter">
+                                            <div class="meter">
+                                                <div class="meter-control">
+                                                    <img :src="base_url + 'img/profile-avatar.png'" alt="">
+                                                </div>
+                                            </div>
+                                            <div class="row meter-description">
+                                                <div class="description-tag">Sad</div>
+                                                <div class="description-tag">Unpleasant</div>
+                                                <div class="description-tag">Calm</div>
+                                                <div class="description-tag">Pleasant</div>
+                                                <div class="description-tag">Happy</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -270,6 +312,15 @@
                     vue.demoEvents = response['data'];
                 }).catch(function (error) {
                 });
+            },
+
+            handleDayChanged(val){
+                alert('sample');
+            },
+
+            closeCurrentEmotion(){
+                $(".slide-calendar").removeClass('slide-out');
+                $(".slide-calendar-emotion").removeClass('slide-in');
             }
         }
     }

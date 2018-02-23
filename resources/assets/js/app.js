@@ -123,3 +123,8 @@ $(document).on('click','.cal-header > .r',function(){
     }
     $('.cal-header > .title').html(monthNames[dateIndex] + ' ' + dateYear);
 });
+
+$(document).on('click','.cal-body > .dates > .calendar-ic',function(){
+    $(".slide-calendar").addClass('slide-out');
+    $(".slide-calendar-emotion").addClass('slide-in');
+});

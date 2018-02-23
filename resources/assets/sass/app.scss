@@ -1848,6 +1848,21 @@ body{
       @extend .user-profile-modules;
       margin-top: 15px;
 
+      &.for-calendar{
+        background-color: transparent !important;
+        box-shadow: none !important;
+        padding:0px !important;
+      }
+
+      .calendar-close{
+        position: absolute;
+        top: 10px;
+        right: 0px;
+        font-size: 22px;
+        color: #FF0000;
+        cursor: pointer;
+      }
+
       .image-wrapper{
           @extend .content-center;
           margin-top: 15px;
@@ -2000,6 +2015,7 @@ body{
     .emotion-calendar{
         @extend .user-profile-modules;
         margin-top: 15px;
+        overflow: hidden;
 
         .calendar-wrapper{
 
@@ -2138,4 +2154,24 @@ body{
         }
       }
     }
+}
+
+.slide-calendar{
+  transition: 0.3s ease-in-out all;
+  
+  &.slide-out{
+    transform: translateX(-370px);
+  }
+}
+
+.slide-calendar-emotion{
+  transition: 0.3s ease-in-out all;
+  transform: translateX(370px);
+  position: absolute;
+  top: 0px;
+  left: 15px;
+
+  &.slide-in{
+    transform: translateX(0px);
+  }
 }
