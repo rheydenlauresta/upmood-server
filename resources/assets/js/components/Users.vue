@@ -362,15 +362,26 @@
                 var lastpage = this.recordData.last_page;
                 var path = this.recordData.path;
                 var limit = 5;
+                var limitControl = 2;
                 var numberstring = "";
-                if (counter >= (lastpage - limit)+1){
-                    counter = (lastpage - limit)+1;
+
+                // page control
+                if (counter >= (lastpage - (limit - limitControl))+1){
+                    counter = (lastpage - (limit - limitControl))+1;
                 }
 
                 if (counter <= 0){
                     counter = 1;
                 }
 
+                if (counter >= 3 ){
+                    counter = counter - limitControl;
+                }else{
+                    counter = 1
+                }
+                // /page control
+
+                // page creator
                 for (var i = 0 ; i < limit ; i++){
                     if (i < lastpage ){
 
@@ -386,9 +397,10 @@
                             }) 
                         }
 
-                        counter += 1;
                     }
+                    counter += 1;
                 }
+                // /page creator
             },
 
             updateData(){

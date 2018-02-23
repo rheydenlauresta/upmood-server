@@ -113,6 +113,7 @@ class Record extends Model
             'emotion_set'    => request('emotion_set'),
             'emotion_value'  => request('emotion_value'),
             'emotion_level'  => request('emotion_level'),
+            'filepath'  => request('emotion_set').'/emoji/'.request('emotion_value').'.png',
             'longitude'  => request('longitude'),
             'latitude'  => request('latitude'),
             'ppi'  => request('ppi'),
