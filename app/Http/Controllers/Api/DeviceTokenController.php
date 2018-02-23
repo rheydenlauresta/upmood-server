@@ -248,6 +248,27 @@ class DeviceTokenController extends BaseController
             ];
 
             return $data;
+        }elseif($fcm_type == 'heartbeatUpdate'){
+            $data = [
+                "module"=>"Push Notification",
+                "type"=>"Update Heartbeat and Emoticon",
+                "type_id"=>"3",
+                'heartbeat'    => '90',
+                'emotion_set'    => 'alien',
+                'emotion_value'  => 'anxious',
+                'emotion_level'  => 'moderate',
+                'filepath' => '/emoji/alien/anxious.png',
+                'longitude'  => '1.111',
+                'latitude'  => '1.111',
+                'ppi'  => '[21,21]',
+                'total_ppi'  => '123123',
+                "request_from"=> [
+                    "id" => 166,
+                    "name" => "Prof. Timothy Hudson",
+                    "image" => "default.png",
+                ],
+            ];
+            return $data;
         }
     }
 }

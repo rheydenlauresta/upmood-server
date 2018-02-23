@@ -21,7 +21,7 @@ class User extends Authenticatable
     public static function searchFilter($data)
     {
         $query = DB::table('users as u')
-                ->selectRaw('u.id,u.image, u.name, u.gender,
+                ->selectRaw('u.id,u.facebook_id,u.image, u.name, u.gender,
                             u.age, u.country, r.heartbeat_count, u.profile_post,
                             if(u.is_online,"online","offline") as active_level,
                             r.emotion_value, r.stress_level,
@@ -149,7 +149,7 @@ class User extends Authenticatable
     // user profile
     public static function getProfile($id)
     {
-        $res = User::select('users.id','users.name','users.age','users.country','r.heartbeat_count','r.stress_level','r.emotion_set', 
+        $res = User::select('users.id','users.image','users.facebook_id','users.name','users.profile_post','users.age','users.country','r.heartbeat_count','r.stress_level','r.emotion_set', 
             DB::raw('(CASE WHEN r.emotion_value = "sad" OR r.emotion_value = "anxious"THEN "sad"
             WHEN r.emotion_value = "happy" OR r.emotion_value = "zen" OR r.emotion_value = "excitement" THEN "happy"
             WHEN r.emotion_value = "pleasant" THEN "pleasant"
@@ -206,10 +206,15 @@ class User extends Authenticatable
     public static function getCalendar($data)
     {
         $records =  Records::select(DB::raw('CONCAT("calendar-ic emoji-",records.emotion_set,"-",records.emotion_value) as customClass'),DB::raw('DATE_FORMAT(created_at, "%Y/%m/%d") as date'))
-                    ->where('records.user_id', $data['id'])
-                    ->where('records.created_at', 'like','%'.$data['date'].'%')
-                    ->groupBy(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d")'))
-                    ->get();
+            ->whereraw('id IN (
+                SELECT MAX(id)
+                FROM records as r
+                WHERE r.user_id ='.$data['id'].'
+                and r.created_at like "%'.$data['date'].'%"
+                GROUP BY DATE_FORMAT(created_at, "%Y-%m-%d")
+            )') 
+
+            ->get();
 
         return $records;
     }

@@ -33,6 +33,7 @@ Route::group(['middleware' => 'auth'], function (){
 	// user
 
 	Route::get('users/userProfile/{id?}', 'UsersController@userProfile');
+	Route::get('users/moodStream/{id?}', 'UsersController@moodStream');
 	Route::resources([
 	    'users' => 'UsersController'
 	]);

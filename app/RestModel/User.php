@@ -41,6 +41,7 @@ class User extends Authenticatable
                     'birthday'        => request('birthday'),
                     'phonenumber'     => request('phonenumber'),
                     'image'           => request('image'),
+                    'country'         => request('country'),
                     'profile_post'    => null,
                     'paid_emoji_set'  => null,
                     'basic_emoji_set' => 'regular',
@@ -249,7 +250,7 @@ class User extends Authenticatable
               ->where('users.id', '!=', request()->user()->id)
               ->where(function($qry){
                 $qry->where('users.name', 'like', '%'.request('keyword').'%');
-                $qry->orWhere('users.email', 'like', '%'.request('keyword').'%');
+                // $qry->orWhere('users.email', 'like', '%'.request('keyword').'%');
               })
               ->paginate(20);
 
@@ -379,6 +380,10 @@ class User extends Authenticatable
                     ->leftJoin('resources', 'records.resources_id','=', 'resources.id')
                     ->selectRaw('users.id, users.name, users.email, users.image, users.profile_post, users.gender, users.age, users.birthday, users.phonenumber,
                                  CONCAT(resources.type,"/",resources.set_name,"/",resources.filename) as resource_file, records.heartbeat_count,users.is_online')
+                    ->where(function($qry){
+                        $qry->where('users.name', 'like', '%'.request('keyword').'%');
+                        // $qry->orWhere('users.email', 'like', '%'.request('keyword').'%');
+                    })
                     ->orderBy('records.id','DESC')
                     ->groupBy('records.user_id');
     }

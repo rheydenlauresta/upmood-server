@@ -4,7 +4,8 @@
             <div class="row">
                 <div class="col-md-2">
                     <div class="image-wrapper">
-                        <img :src="base_url + 'img/profile-avatar.png'" alt="">
+                        <img :src="profile.image" alt="" v-if="profile.facebook_id != null">
+                        <img :src="base_url+'img/'+profile.image+ '.png'" alt=""  v-else>
                     </div>
                 </div>
                 <div class="col-md-10">
@@ -12,18 +13,17 @@
                         <div class="name">{{ profile.name }} <span class="badge-online"></span></div>
                         <div class="row">
                             <div class="col-md-1 text-semibold">Age:</div>
-                            <div class="age col-md-5">{{ profile.age }} Years Old</div>
+                            <div class="age col-md-5">{{ profile.age | emptyVal('age')}}</div>
                             <div class="col-md-1"><i class="ic-location"></i></div>
-                            <div class="col-md-5 location">{{ profile.country }}</div>
+                            <div class="col-md-5 location">{{ profile.country | emptyVal()}}</div>
                         </div>
                         <div class="row">
                             <div class="col-md-1 text-semibold">Gender:</div>
-                            <div class="col-md-11 gender">{{ profile.gender }}</div>
+                            <div class="col-md-11 gender">{{ profile.gender | emptyVal()}}</div>
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="description" v-if="profile.profile_post != null">"{{ profile.profile_post }}"</div>
-                                <div class="description" v-else>"No Post"</div>
+                                <div class="description" >"{{ profile.profile_post | emptyVal()}}"</div>
                             </div>
                         </div>
                     </div>
@@ -54,7 +54,8 @@
                                 <div class="upmood-meter">
                                     <div class="meter">
                                         <div class="meter-control">
-                                            <img :src="base_url + 'img/profile-avatar.png'" alt="">
+                                            <img :src="profile.image" alt="" v-if="profile.facebook_id != null">
+                                            <img :src="base_url+'img/'+profile.image+ '.png'" alt=""  v-else>
                                         </div>
                                     </div>
                                     <div class="row meter-description">
@@ -88,7 +89,7 @@
                                 <tr>
                                     <td>{{ value.created_at }}</td>
                                     <td>{{ value.heartbeat_count }}</td>
-                                    <td>{{ value.ppi }}</td>
+                                    <td>{{ value.ppi | ppiCount() }}</td>
                                     <td>{{ value.total_ppi }}</td>
                                     <td>{{ value.stress_level }}</td>
                                     <td><div class="image-wrapper"><img :src="base_url + 'img/resources/' + value.emotion_set + '/emoji/' + value.emotion_value + '.png'" alt=""></div></td>
@@ -157,7 +158,7 @@
                 demoEvents: [],
                 sample: [],
                 sample2: [],
-                upmoodMeter: this.records,
+                upmoodMeter: [],
                 featuredFriend: this.featured
             }
         },
@@ -165,6 +166,26 @@
             $(".main-header > .title").html('<i class="header-ic ic-user-green"></i>Users');
             this.UpdateMoodMeter(this.profile.upmood_meter);
             this.handleMonthChanged(new Date().getUTCMonth() + 1+'/'+new Date().getUTCFullYear());
+            this.moodStream();
+            
+        },
+        filters: {
+      
+            emptyVal: function(string,type) {
+
+                if(string == null || string == ''){
+                    return 'N/A'
+                }else{
+                    if(type == 'age'){
+                        string = string + ' Years Old';
+                    }
+                    return string;
+                }
+            },
+
+            ppiCount: function(string){
+                return JSON.parse(string).length
+            },
         },
         methods: {
             featuredInfiniteHandler($state) {
@@ -187,6 +208,7 @@
                 }, 1000);
             },
             moodSteamInfiniteHandler($state) {
+
                 setTimeout(() => {
                     let vue = this;
                     if(vue.upmoodMeter.next_page_url != null){
@@ -224,6 +246,16 @@
                 }
             },
 
+            moodStream(){
+                let vue = this;
+                axios.get(base_url+'users/moodStream/'+this.profile.id).then(function (response) {
+                    vue.upmoodMeter.next_page_url = response['data']['next_page_url'];
+                    vue.upmoodMeter = response['data'];
+
+                }).catch(function (error) {
+                });
+            },
+
             handleMonthChanged(val){
                 let vue = this;
 
@@ -232,7 +264,6 @@
                 if(date[0].length == 1){
                     date[0] = '0'+date[0];
                 }
-
                 var dateFormat = date[1]+'-'+date[0];
                 
                 axios.get(base_url+'users/upmoodCalendar?id='+this.profile.id+'&date='+dateFormat).then(function (response) {

@@ -49163,15 +49163,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var lastpage = this.recordData.last_page;
             var path = this.recordData.path;
             var limit = 5;
+            var limitControl = 2;
             var numberstring = "";
-            if (counter >= lastpage - limit + 1) {
-                counter = lastpage - limit + 1;
+
+            // page control
+            if (counter >= lastpage - (limit - limitControl) + 1) {
+                counter = lastpage - (limit - limitControl) + 1;
             }
 
             if (counter <= 0) {
                 counter = 1;
             }
 
+            if (counter >= 3) {
+                counter = counter - limitControl;
+            } else {
+                counter = 1;
+            }
+            // /page control
+
+            // page creator
             for (var i = 0; i < limit; i++) {
                 if (i < lastpage) {
 
@@ -49186,10 +49197,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                             counter: counter
                         });
                     }
-
-                    counter += 1;
                 }
+                counter += 1;
             }
+            // /page creator
         },
         updateData: function updateData() {
             var filters = window.location.href.split('?');
@@ -50627,6 +50638,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -50641,7 +50659,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             demoEvents: [],
             sample: [],
             sample2: [],
-            upmoodMeter: this.records,
+            upmoodMeter: [],
             featuredFriend: this.featured
         };
     },
@@ -50649,8 +50667,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         $(".main-header > .title").html('<i class="header-ic ic-user-green"></i>Users');
         this.UpdateMoodMeter(this.profile.upmood_meter);
         this.handleMonthChanged(new Date().getUTCMonth() + 1 + '/' + new Date().getUTCFullYear());
+        this.moodStream();
     },
 
+    filters: {
+
+        emptyVal: function emptyVal(string, type) {
+
+            if (string == null || string == '') {
+                return 'N/A';
+            } else {
+                if (type == 'age') {
+                    string = string + ' Years Old';
+                }
+                return string;
+            }
+        },
+
+        ppiCount: function ppiCount(string) {
+            return JSON.parse(string).length;
+        }
+    },
     methods: {
         featuredInfiniteHandler: function featuredInfiniteHandler($state) {
             var _this = this;
@@ -50703,6 +50740,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 $(".meter-control").css('left', '263px');
             }
         },
+        moodStream: function moodStream() {
+            var vue = this;
+            axios.get(base_url + 'users/moodStream/' + this.profile.id).then(function (response) {
+                vue.upmoodMeter.next_page_url = response['data']['next_page_url'];
+                vue.upmoodMeter = response['data'];
+            }).catch(function (error) {});
+        },
         handleMonthChanged: function handleMonthChanged(val) {
             var vue = this;
 
@@ -50711,7 +50755,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             if (date[0].length == 1) {
                 date[0] = '0' + date[0];
             }
-
             var dateFormat = date[1] + '-' + date[0];
 
             axios.get(base_url + 'users/upmoodCalendar?id=' + this.profile.id + '&date=' + dateFormat).then(function (response) {
@@ -50734,9 +50777,14 @@ var render = function() {
       _c("div", { staticClass: "row" }, [
         _c("div", { staticClass: "col-md-2" }, [
           _c("div", { staticClass: "image-wrapper" }, [
-            _c("img", {
-              attrs: { src: _vm.base_url + "img/profile-avatar.png", alt: "" }
-            })
+            _vm.profile.facebook_id != null
+              ? _c("img", { attrs: { src: _vm.profile.image, alt: "" } })
+              : _c("img", {
+                  attrs: {
+                    src: _vm.base_url + "img/" + _vm.profile.image + ".png",
+                    alt: ""
+                  }
+                })
           ])
         ]),
         _vm._v(" "),
@@ -50753,13 +50801,13 @@ var render = function() {
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "age col-md-5" }, [
-                _vm._v(_vm._s(_vm.profile.age) + " Years Old")
+                _vm._v(_vm._s(_vm._f("emptyVal")(_vm.profile.age, "age")))
               ]),
               _vm._v(" "),
               _vm._m(0),
               _vm._v(" "),
               _c("div", { staticClass: "col-md-5 location" }, [
-                _vm._v(_vm._s(_vm.profile.country))
+                _vm._v(_vm._s(_vm._f("emptyVal")(_vm.profile.country)))
               ])
             ]),
             _vm._v(" "),
@@ -50769,19 +50817,19 @@ var render = function() {
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "col-md-11 gender" }, [
-                _vm._v(_vm._s(_vm.profile.gender))
+                _vm._v(_vm._s(_vm._f("emptyVal")(_vm.profile.gender)))
               ])
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "row" }, [
               _c("div", { staticClass: "col-md-12" }, [
-                _vm.profile.profile_post != null
-                  ? _c("div", { staticClass: "description" }, [
-                      _vm._v('"' + _vm._s(_vm.profile.profile_post) + '"')
-                    ])
-                  : _c("div", { staticClass: "description" }, [
-                      _vm._v('"No Post"')
-                    ])
+                _c("div", { staticClass: "description" }, [
+                  _vm._v(
+                    '"' +
+                      _vm._s(_vm._f("emptyVal")(_vm.profile.profile_post)) +
+                      '"'
+                  )
+                ])
               ])
             ])
           ])
@@ -50833,12 +50881,20 @@ var render = function() {
                 _c("div", { staticClass: "upmood-meter" }, [
                   _c("div", { staticClass: "meter" }, [
                     _c("div", { staticClass: "meter-control" }, [
-                      _c("img", {
-                        attrs: {
-                          src: _vm.base_url + "img/profile-avatar.png",
-                          alt: ""
-                        }
-                      })
+                      _vm.profile.facebook_id != null
+                        ? _c("img", {
+                            attrs: { src: _vm.profile.image, alt: "" }
+                          })
+                        : _c("img", {
+                            attrs: {
+                              src:
+                                _vm.base_url +
+                                "img/" +
+                                _vm.profile.image +
+                                ".png",
+                              alt: ""
+                            }
+                          })
                     ])
                   ]),
                   _vm._v(" "),
@@ -50874,7 +50930,9 @@ var render = function() {
                         _vm._v(" "),
                         _c("td", [_vm._v(_vm._s(value.heartbeat_count))]),
                         _vm._v(" "),
-                        _c("td", [_vm._v(_vm._s(value.ppi))]),
+                        _c("td", [
+                          _vm._v(_vm._s(_vm._f("ppiCount")(value.ppi)))
+                        ]),
                         _vm._v(" "),
                         _c("td", [_vm._v(_vm._s(value.total_ppi))]),
                         _vm._v(" "),
@@ -50923,10 +50981,21 @@ var render = function() {
                 2
               ),
               _vm._v(" "),
-              _c("infinite-loading", {
-                attrs: { spinner: "bubbles" },
-                on: { infinite: _vm.moodSteamInfiniteHandler }
-              })
+              _c(
+                "infinite-loading",
+                {
+                  attrs: { spinner: "bubbles" },
+                  on: { infinite: _vm.moodSteamInfiniteHandler }
+                },
+                [
+                  _c("span", { attrs: { slot: "no-more" }, slot: "no-more" }),
+                  _vm._v(" "),
+                  _c("span", {
+                    attrs: { slot: "no-results" },
+                    slot: "no-results"
+                  })
+                ]
+              )
             ],
             1
           )
@@ -51001,10 +51070,21 @@ var render = function() {
                 2
               ),
               _vm._v(" "),
-              _c("infinite-loading", {
-                attrs: { spinner: "bubbles" },
-                on: { infinite: _vm.featuredInfiniteHandler }
-              })
+              _c(
+                "infinite-loading",
+                {
+                  attrs: { spinner: "bubbles" },
+                  on: { infinite: _vm.featuredInfiniteHandler }
+                },
+                [
+                  _c("span", { attrs: { slot: "no-more" }, slot: "no-more" }),
+                  _vm._v(" "),
+                  _c("span", {
+                    attrs: { slot: "no-results" },
+                    slot: "no-results"
+                  })
+                ]
+              )
             ],
             1
           )
@@ -51164,6 +51244,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_infinite_loading__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_infinite_loading___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue_infinite_loading__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_js__ = __webpack_require__(2);
+//
+//
+//
+//
+//
 //
 //
 //
@@ -51662,9 +51747,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             var searchEmail = $('.bootstrap-tagsinput > input').val();
 
+            $(".suggestion-wrapper").hide();
+            $("#suggestion-loading").show();
+
             axios.get(base_url + 'messages/emailSearch?email=' + searchEmail + '&conemail=' + vue.contactEmail).then(function (response) {
                 vue.availableEmails = response['data'];
                 $(".suggestion-row").show();
+                $("#suggestion-loading").hide();
+                $(".suggestion-wrapper").show();
             }).catch(function (error) {});
         }, 100),
 
@@ -51673,6 +51763,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             $('#email-to').tagsinput('refresh');
             $(".contact-wrapper").hide();
             $(".compose-suggestion").hide();
+            $(".suggestion-wrapper").hide();
         },
         checkSelected: function checkSelected(val) {
             var duplicateId = $('#email-to').val().split(",").find(function (item) {
@@ -51843,47 +51934,51 @@ var render = function() {
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "messages-list" }, [
-      _c("form", { attrs: { action: "", method: "post" } }, [
-        _c("input", {
-          attrs: { type: "hidden" },
-          domProps: { value: _vm.csrf }
-        }),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "input-ic ic-search messages-search-wrapper" },
-          [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.search,
-                  expression: "search"
-                }
-              ],
-              staticClass: "form-control messages-search",
-              attrs: {
-                type: "text",
-                name: "messages-search",
-                placeholder: "Search Messages"
-              },
-              domProps: { value: _vm.search },
-              on: {
-                keyup: function($event) {
-                  _vm.getAxios()
-                },
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
+      _c(
+        "form",
+        { attrs: { action: "", method: "post", onSubmit: "return false" } },
+        [
+          _c("input", {
+            attrs: { type: "hidden" },
+            domProps: { value: _vm.csrf }
+          }),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "input-ic ic-search messages-search-wrapper" },
+            [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.search,
+                    expression: "search"
                   }
-                  _vm.search = $event.target.value
+                ],
+                staticClass: "form-control messages-search",
+                attrs: {
+                  type: "text",
+                  name: "messages-search",
+                  placeholder: "Search Messages"
+                },
+                domProps: { value: _vm.search },
+                on: {
+                  keyup: function($event) {
+                    _vm.getAxios()
+                  },
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.search = $event.target.value
+                  }
                 }
-              }
-            })
-          ]
-        )
-      ]),
+              })
+            ]
+          )
+        ]
+      ),
       _vm._v(" "),
       _c(
         "div",
@@ -51913,13 +52008,17 @@ var render = function() {
                     _c("div", { staticClass: "message-header row" }, [
                       _c("div", { staticClass: "col-md-2" }, [
                         _c("div", { staticClass: "image-wrapper " }, [
-                          message.facebook_id != ""
+                          message.facebook_id != null
                             ? _c("img", {
                                 attrs: { src: message.image, alt: "" }
                               })
                             : _c("img", {
                                 attrs: {
-                                  src: _vm.base_url + "img/" + message.image,
+                                  src:
+                                    _vm.base_url +
+                                    "img/" +
+                                    message.image +
+                                    ".png",
                                   alt: ""
                                 }
                               })
@@ -51958,11 +52057,19 @@ var render = function() {
             })
           ),
           _vm._v(" "),
-          _c("infinite-loading", {
-            ref: "infiniteLoading",
-            attrs: { spinner: "bubbles" },
-            on: { infinite: _vm.messageInfiniteHandler }
-          })
+          _c(
+            "infinite-loading",
+            {
+              ref: "infiniteLoading",
+              attrs: { spinner: "bubbles" },
+              on: { infinite: _vm.messageInfiniteHandler }
+            },
+            [
+              _c("span", { attrs: { slot: "no-more" }, slot: "no-more" }),
+              _vm._v(" "),
+              _c("span", { attrs: { slot: "no-results" }, slot: "no-results" })
+            ]
+          )
         ],
         1
       ),
@@ -52045,13 +52152,17 @@ var render = function() {
         _c("div", { staticClass: "message-content-row" }, [
           _c("div", { staticClass: "message-header" }, [
             _c("div", { staticClass: "image-wrapper pull-left" }, [
-              _vm.messageContent.facebook_id != ""
+              _vm.messageContent.facebook_id != null
                 ? _c("img", {
                     attrs: { src: _vm.messageContent.image, alt: "" }
                   })
                 : _c("img", {
                     attrs: {
-                      src: _vm.base_url + "img/" + _vm.messageContent.image,
+                      src:
+                        _vm.base_url +
+                        "img/" +
+                        _vm.messageContent.image +
+                        ".png",
                       alt: ""
                     }
                   })
@@ -52210,50 +52321,72 @@ var render = function() {
               _c(
                 "div",
                 { staticClass: "compose-suggestion" },
-                _vm._l(_vm.availableEmails, function(availableEmail) {
-                  return _c(
+                [
+                  _vm._l(_vm.availableEmails, function(availableEmail) {
+                    return _c(
+                      "div",
+                      {
+                        staticClass: "suggestion-row",
+                        on: {
+                          click: function($event) {
+                            _vm.selectEmail(availableEmail.email)
+                          }
+                        }
+                      },
+                      [
+                        _c("div", { staticClass: "image-wrapper" }, [
+                          availableEmail.facebook_id != null
+                            ? _c("img", {
+                                attrs: { src: availableEmail.image, alt: "" }
+                              })
+                            : _c("img", {
+                                attrs: {
+                                  src:
+                                    _vm.base_url +
+                                    "img/" +
+                                    availableEmail.image +
+                                    ".png",
+                                  alt: ""
+                                }
+                              })
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "suggestion-content" }, [
+                          _c("div", { staticClass: "suggestion-name" }, [
+                            _vm._v(_vm._s(availableEmail.name))
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "suggestion-email" }, [
+                            _vm._v(_vm._s(availableEmail.email))
+                          ]),
+                          _vm._v(" "),
+                          _vm.checkSelected(availableEmail.email)
+                            ? _c("i", {
+                                staticClass: "suggestion-ic ic-check-contact"
+                              })
+                            : _vm._e()
+                        ])
+                      ]
+                    )
+                  }),
+                  _vm._v(" "),
+                  _c(
                     "div",
                     {
-                      staticClass: "suggestion-row",
-                      on: {
-                        click: function($event) {
-                          _vm.selectEmail(availableEmail.email)
-                        }
-                      }
+                      staticClass: "loading",
+                      attrs: { id: "suggestion-loading" }
                     },
                     [
-                      _c("div", { staticClass: "image-wrapper" }, [
-                        availableEmail.facebook_id != ""
-                          ? _c("img", {
-                              attrs: { src: availableEmail.image, alt: "" }
-                            })
-                          : _c("img", {
-                              attrs: {
-                                src:
-                                  _vm.base_url + "img/" + availableEmail.image,
-                                alt: ""
-                              }
-                            })
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "suggestion-content" }, [
-                        _c("div", { staticClass: "suggestion-name" }, [
-                          _vm._v(_vm._s(availableEmail.name))
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "suggestion-email" }, [
-                          _vm._v(_vm._s(availableEmail.email))
-                        ]),
-                        _vm._v(" "),
-                        _vm.checkSelected(availableEmail.email)
-                          ? _c("i", {
-                              staticClass: "suggestion-ic ic-check-contact"
-                            })
-                          : _vm._e()
-                      ])
+                      _c("img", {
+                        attrs: {
+                          src: _vm.base_url + "img/spinner.svg",
+                          alt: ""
+                        }
+                      })
                     ]
                   )
-                })
+                ],
+                2
               )
             ]),
             _vm._v(" "),

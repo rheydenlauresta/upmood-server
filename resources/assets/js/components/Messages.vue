@@ -13,7 +13,7 @@
             </ul>
         </div>
         <div class="messages-list">
-            <form action="" method="post">
+            <form action="" method="post" onSubmit="return false">
                 <input type="hidden" :value="csrf">
                 <div class="input-ic ic-search messages-search-wrapper">
                     <input v-model="search" @keyup="getAxios()" type="text"  name="messages-search" class="form-control messages-search" placeholder="Search Messages">
@@ -27,8 +27,8 @@
                             <div class="message-header row">
                                 <div class="col-md-2">
                                     <div class="image-wrapper ">
-                                        <img :src="message.image" alt="" v-if="message.facebook_id != ''">
-                                        <img :src="base_url+'img/'+message.image" alt=""  v-else>
+                                        <img :src="message.image" alt="" v-if="message.facebook_id != null">
+                                        <img :src="base_url+'img/'+message.image+'.png'" alt=""  v-else>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -86,8 +86,8 @@
             <div class="message-content-row">
                 <div class="message-header">
                     <div class="image-wrapper pull-left">
-                        <img :src="messageContent.image" alt="" v-if="messageContent.facebook_id != ''">
-                        <img :src="base_url+'img/'+messageContent.image" alt=""  v-else>
+                        <img :src="messageContent.image" alt="" v-if="messageContent.facebook_id != null">
+                        <img :src="base_url+'img/'+messageContent.image+'.png'" alt=""  v-else>
                     </div>
                     <div class="message-to">{{ messageContent.name }} to Upmood admin</div>
                     <div class="message-subject">{{ messageType(messageContent.type) }}</div>
@@ -142,8 +142,8 @@
                         <div class="compose-suggestion" >
                             <div class="suggestion-row" v-for="availableEmail in availableEmails" @click="selectEmail(availableEmail.email)">
                                 <div class="image-wrapper">
-                                    <img :src="availableEmail.image" alt="" v-if="availableEmail.facebook_id != ''">
-                                    <img :src="base_url+'img/'+availableEmail.image" alt=""  v-else>
+                                    <img :src="availableEmail.image" alt="" v-if="availableEmail.facebook_id != null">
+                                    <img :src="base_url+'img/'+availableEmail.image+'.png'" alt=""  v-else>
                                 </div>
                                 <div class="suggestion-content">
                                     <div class="suggestion-name">{{availableEmail.name}}</div>

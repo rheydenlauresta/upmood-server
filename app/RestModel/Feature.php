@@ -55,7 +55,7 @@ class Feature extends Model
     	$count_featured = $this->where('user_id',request()->user()->id)->count();
         $check_featured = $this->where('user_id',request()->user()->id)->where('friend_id',request('friend_id'))->first();
 
-    	if($count_featured >= '4'){
+    	if($count_featured >= '5'){
     		return ['status' => false, 'message' => 'Featured friend have reached the limit(4).'];
     	}
 
