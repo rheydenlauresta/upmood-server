@@ -6,13 +6,13 @@
                 <i class="nav-ic ic-notification" @click="toggleNotification"></i>
                 <div class="notification-count notification-count-active">{{ notificationCount }}</div>
                 <div class="notification-list">
-                    <!-- <div class="notification-empty">
+                    <div class="notification-empty" v-if="this.notificationCount == 0">
                         <div class="image-wrapper">
                             <img :src="base_url +'img/ic_no_notification.png'" alt="">
                         </div>
                         <span>No Notification</span>
-                    </div> -->
-                    <div class="notification-list-container">
+                    </div>
+                    <div class="notification-list-container" v-if="this.notificationCount > 0">
                         <div class="title">Notifications</div>
                         <div class="scrollbar-outer infinite-wrapper" style="overflow-y:auto" >
                             <ul v-for="noti in notification.data">

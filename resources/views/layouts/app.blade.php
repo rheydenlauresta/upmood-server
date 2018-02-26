@@ -12,6 +12,7 @@
 
     <!-- Styles -->
     <link rel="stylesheet" href="{{ asset('css/bootstrap-tagsinput.css') }}">
+    <link rel="shortcut icon" href="{{{ asset('favicon.png') }}}">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <script>
         var base_url = "{{url('/')}}/";
@@ -24,9 +25,9 @@
             <div class="sidenav">
                 <div class="upmood-logo"></div>
                 <ul>
-                    <li><i class="nav-ic ic-dashboard"></i><a href="{{ url('/') }}"> Dashboard</a></li>
-                    <li><i class="nav-ic ic-user"></i><a href="{{ url('/users') }}"> Users</a></li>
-                    <li><i class="nav-ic ic-message"></i><a href="{{ url('/messages') }}"> Messages</a></li>
+                    <li id="sidenav-dashboard"><i class="nav-ic ic-dashboard"></i><a href="{{ url('/') }}"> Dashboard</a></li>
+                    <li id="sidenav-users"><i class="nav-ic ic-user"></i><a href="{{ url('/users') }}"> Users</a></li>
+                    <li id="sidenav-messages"><i class="nav-ic ic-message"></i><a href="{{ url('/messages') }}"> Messages</a></li>
                 </ul>
             </div>
             <div class="main-container">

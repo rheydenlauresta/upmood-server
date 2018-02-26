@@ -94,7 +94,7 @@
                         <div class="row">
                             <div class="col-md-4 col-md-offset-8" id="advance-filter-menu-open">
                                 <ul class="filter-right-menu">
-                                    <li><a href="javascript:;" class="advance-search" @click="addFilter" >{{ advanceFilter.length <= 0 ? 'Advance Search' : '+ Add Another Filter Fields' }}</a></li>
+                                    <li id="addfilter"><a href="javascript:;" class="advance-search" @click="addFilter" >{{ advanceFilter.length <= 0 ? 'Advance Search' : '+ Add Another Filter Fields' }}</a></li>
                                     <li><a href="javascript:;" class="advance-search" v-on:click="clearFields()">Clear Fields</a></li>
                                 </ul>
                             </div>
@@ -253,6 +253,7 @@
         },
         mounted() {
             $(".main-header > .title").html('<i class="header-ic ic-user-green"></i>Users');
+            $("#sidenav-users").addClass('active');
             this.generatePaginationNumbers();
             this.searchFilters();
         },
@@ -324,6 +325,7 @@
             },
 
             addFilter(){
+                var filterMax = 4;
 
                 if(this.filterCount < this.filters.length){
 
@@ -334,6 +336,10 @@
                         selectedFilter: '', 
                         advanceFilterValues: '', 
                     });
+
+                    if (this.filterCount == filterMax + 1){
+                        $("#addfilter").css('display','none');
+                    }
 
                     this.formdata.advance_filter_id = this.formdata.advance_filter_id + 1;
                 }
@@ -520,6 +526,7 @@
                 this.formdata.sortOrder = '';
 
                 this.searchFilters()
+                $("#addfilter").css('display','inline-block');
             },
 
             up_meter: function(val){
@@ -544,6 +551,7 @@
             },
 
             RemoveAdvanceFilter(event){
+                var filterMax = 4;
 
                 this.filterCount = this.filterCount - 1;
 
@@ -563,6 +571,9 @@
 
                 this.advanceFilter.splice(event,1);
                 this.searchFilters()
+                if (this.filterCount < filterMax + 1){
+                    $("#addfilter").css('display','inline-block');
+                }
             },
 
             ToggleSortWrapper(){

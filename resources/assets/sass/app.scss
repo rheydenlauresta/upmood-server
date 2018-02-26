@@ -461,6 +461,10 @@ body{
       &:hover{
         border-color: #BCCB87;
       }
+
+      &.active{
+        border-color: #BCCB87; 
+      }
     }
   }
 }
@@ -1227,6 +1231,10 @@ body{
                   background-color: #699BD5;
               }
 
+              &.active{
+                  background-color: #699BD5;
+              }
+
               a{
                 display: inline-block;
                 width: 100%;
@@ -1324,6 +1332,18 @@ body{
                     color: #AFAFAF;
                     font-weight: 300;
                     font-size: 12px;
+
+                    pre{
+                      max-height: 200px;
+                      overflow-y: hidden;
+                      overflow-x: hidden;
+                      text-align: justify;
+                      font-weight: 300;
+                      font-size: 12px;
+                      background: none;
+                      border: none;
+                      color: #AFAFAF;
+                    }
                   }
 
                   &.active{
@@ -2176,5 +2196,14 @@ body{
 
   &.slide-in{
     transform: translateX(0px);
+  }
+}
+
+.message-sent-content{
+
+  pre{
+    max-height: 600px;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 }
