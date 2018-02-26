@@ -113,6 +113,7 @@ class Record extends Model
             'emotion_set'    => request('emotion_set'),
             'emotion_value'  => request('emotion_value'),
             'emotion_level'  => request('emotion_level'),
+            'stress_level' => request('stress_level'),
             'filepath'  => request('emotion_set').'/emoji/'.request('emotion_value').'.png',
             'longitude'  => request('longitude'),
             'latitude'  => request('latitude'),
@@ -155,8 +156,17 @@ class Record extends Model
 			'status'  => (int) env('SUCCESS_RESPONSE_CODE'),
 			'message' => 'success',
 			'data'    => [
+                'heartbeat'    => request('heartbeat_count'),
+                'emotion_set'  => request('emotion_set'),
+                'emotion_value'=> request('emotion_value'),
+                'emotion_level'=> request('emotion_level'),
+                'stress_level' => request('stress_level'),
+                'filepath'     => request('emotion_set').'/emoji/'.request('emotion_value').'.png',
+                'longitude'    => request('longitude'),
+                'latitude'     => request('latitude'),
+                'ppi'          => request('ppi'),
+                'total_ppi'    => request('total_ppi'),
                 'record_count' => $user->record_count,
-                'filePath'     => request('emotion_set').'/emoji/'.request('emotion_value').'.png',
             ]
         ];
     }

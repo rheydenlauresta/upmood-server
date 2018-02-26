@@ -123,7 +123,7 @@ class MessagesController extends Controller
     public function getSentmessage(){ // Get Send Messages
         $data = Input::all();
 
-    	$sentMessages = SentMessage::selectraw("subject, message,GROUP_CONCAT(email) as emails, DATE_FORMAT(created_at, '%Y-%m-%d') as date_created, DATE_FORMAT(created_at, '%r') as time_created");
+    	$sentMessages = SentMessage::selectraw("sent_messages.id,subject, message,GROUP_CONCAT(email) as emails, DATE_FORMAT(created_at, '%Y-%m-%d') as date_created, DATE_FORMAT(created_at, '%r') as time_created");
 			
             if($data['search'] != '' && $data['search'] != null){
                 $sentMessages = $sentMessages->where(function($query) use($data){
