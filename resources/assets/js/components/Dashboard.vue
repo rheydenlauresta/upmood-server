@@ -50,9 +50,9 @@
                         <div class="scrollbar-outer dashboard-cancellation-table">
                             <table class="table table-stripe">
                                 <tbody>
-                                    <tr v-for="accountCancellation in messages">
-                                        <div class="listview-row" v-if="accountCancellation.type == 'account_cancellation'">
-                                            <div class="listview-title">{{accountCancellation.type}}</div>
+                                    <tr v-for="accountCancellation in accountCancellation">
+                                        <div class="listview-row">
+                                            <div class="listview-title">{{accountCancellation.name}}</div>
                                             <div class="listview-time">{{accountCancellation.created_at}}</div>
                                             <p class="listview-content">{{accountCancellation.content}}</p>
                                         </div>
@@ -70,9 +70,9 @@
                         <div class="scrollbar-outer dashboard-inquiries-table">
                             <table class="table table-stripe">
                                 <tbody>
-                                    <tr v-for="inquire in messages">
-                                        <div class="listview-row" v-if="inquire.type == 'inquiries'">
-                                            <div class="listview-title">{{inquire.type}}</div>
+                                    <tr v-for="inquire in inquire">
+                                        <div class="listview-row">
+                                            <div class="listview-title">{{inquire.name}}</div>
                                             <div class="listview-time">{{inquire.created_at}}</div>
                                             <p class="listview-content">{{inquire.content}}</p>
                                         </div>
@@ -89,9 +89,9 @@
                         <div class="scrollbar-outer dashboard-reports-table">
                             <table class="table table-stripe">
                                 <tbody>
-                                    <tr v-for="report in messages">
-                                        <div class="listview-row" v-if="report.type == 'reports'">
-                                            <div class="listview-title">{{report.type}}</div>
+                                    <tr v-for="report in report">
+                                        <div class="listview-row">
+                                            <div class="listview-title">{{report.name}}</div>
                                             <div class="listview-time">{{report.created_at}}</div>
                                             <p class="listview-content">{{report.content}}</p>
                                         </div>
@@ -112,10 +112,37 @@
             return {
                 csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                 base_url: window.base_url,
+
+                report:[],
+                accountCancellation:[],
+                inquire:[],
             }
         },
         mounted() {
             $(".main-header > .title").html('<i class="header-ic ic-dashboard-green"></i>Dashboard');
+            let vue = this;
+            $.each(this.messages,function(k,v){
+                if(v.type == 'reports'){
+                    vue.report.push({
+                        name : v.name,
+                        content : v.content,
+                        created_at : v.created_at
+                    })
+                }else if(v.type == 'account_cancellation'){
+                    vue.accountCancellation.push({
+                        name : v.name,
+                        content : v.content,
+                        created_at : v.created_at
+                    })
+
+                }else if(v.type == 'inquiries'){
+                    vue.inquire.push({
+                        name : v.name,
+                        content : v.content,
+                        created_at : v.created_at
+                    })
+                }
+            })
         }
     }
 </script>

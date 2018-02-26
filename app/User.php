@@ -149,7 +149,7 @@ class User extends Authenticatable
     // user profile
     public static function getProfile($id)
     {
-        $res = User::select('users.id','users.image','users.facebook_id','users.name','users.profile_post','users.age','users.country','r.heartbeat_count','r.stress_level','r.emotion_set', 
+        $res = User::select('users.id','users.image','users.facebook_id','users.name','users.profile_post','users.age','users.gender','users.country','r.heartbeat_count','r.stress_level','r.emotion_set', 
             DB::raw('(CASE WHEN r.emotion_value = "sad" OR r.emotion_value = "anxious"THEN "sad"
             WHEN r.emotion_value = "happy" OR r.emotion_value = "zen" OR r.emotion_value = "excitement" THEN "happy"
             WHEN r.emotion_value = "pleasant" THEN "pleasant"

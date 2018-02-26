@@ -20,12 +20,13 @@
                                     <div class="list-wrapper">
                                         <div class="image-flex">
                                             <div class="image-wrapper">
-                                                <img :src="base_url +'img/'+noti.image" alt="">
+                                                <img :src="noti.image" alt="" v-if="noti.facebook_id != null">
+                                                <img :src="base_url+'img/'+noti.image+'.png'" alt=""  v-else>
                                             </div>
                                         </div>
                                         <div class="content-wrapper content-flex">
                                             <div class="content">{{ noti.name }}, send an inquire <b>"{{noti.content | truncate('50')}}"</b></div>
-                                            <div class="time">{{ noti.time_created }}</div>
+                                            <div class="time">{{ noti.date_created }} {{ noti.time_created }}</div>
                                         </div>
                                     </div>
                                 </a></li>
