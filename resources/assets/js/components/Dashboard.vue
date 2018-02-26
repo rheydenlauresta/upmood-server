@@ -120,6 +120,7 @@
         },
         mounted() {
             $(".main-header > .title").html('<i class="header-ic ic-dashboard-green"></i>Dashboard');
+            $("#sidenav-dashboard").addClass('active');
             let vue = this;
             $.each(this.messages,function(k,v){
                 if(v.type == 'reports'){

@@ -98,9 +98,9 @@
                             </tbody>
                             
                         </table>
-                        <infinite-loading @infinite="moodSteamInfiniteHandler" spinner="bubbles">
+                        <infinite-loading @infinite="moodStreamInfiniteHandler" spinner="bubbles">
                             <span slot="no-more"></span>
-                            <span slot="no-results"></span>
+                            <span id="moodstreamnoresults" slot="no-results"></span>
                         </infinite-loading>
                     </div>
                 </div>
@@ -127,7 +127,7 @@
                         </table>
                         <infinite-loading @infinite="featuredInfiniteHandler" spinner="bubbles">
                             <span slot="no-more"></span>
-                            <span slot="no-results"></span>
+                            <span id="featurednoresults" slot="no-results"></span>
                         </infinite-loading>
                     </div>
                 </div>
@@ -206,6 +206,7 @@
         },
         mounted() {
             $(".main-header > .title").html('<i class="header-ic ic-user-green"></i>Users');
+            $("#sidenav-users").addClass('active');
             this.UpdateMoodMeter(this.profile.upmood_meter);
             this.handleMonthChanged(new Date().getUTCMonth() + 1+'/'+new Date().getUTCFullYear());
             this.moodStream();
@@ -246,10 +247,16 @@
                         $state.loaded();
                     }else{
                         $state.complete();
+                        if (vue.featuredFriend.data.length <= 0){
+                            $("#featurednoresults").html('No Results');
+                        }
+                        else{
+                            $("#featurednoresults").html('');   
+                        }
                     }
                 }, 1000);
             },
-            moodSteamInfiniteHandler($state) {
+            moodStreamInfiniteHandler($state) {
 
                 setTimeout(() => {
                     let vue = this;
@@ -266,6 +273,12 @@
                         $state.loaded();
                     }else{
                         $state.complete();
+                        if (vue.featuredFriend.data.length <= 0){
+                            $("#moodstreamnoresults").html('No Results');
+                        }
+                        else{
+                            $("#moodstreamnoresults").html('');   
+                        }
                     }
                 }, 1000);
             },

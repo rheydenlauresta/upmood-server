@@ -3,13 +3,13 @@
         <div class="messages-nav">
             <button class="btn btn-success compose" v-on:click="ComposeMessage">Compose</button>
             <ul class="menu-list">
-                <li><a href="javascript:;" @click="getContent('')">Inbox</a></li>
-                <li><a href="javascript:;" @click="getSent('send')">Send</a></li>
+                <li class="messages-highlight" id="message-1" @click="messageMenuHighlight(1)"><a href="javascript:;" @click="getContent('')">Inbox</a></li>
+                <li class="messages-highlight" id="message-2" @click="messageMenuHighlight(2)"><a href="javascript:;" @click="getSent('send')">Send</a></li>
                 <li class="seperator"></li>
-                <li><a href="javascript:;" @click="getContent('general')">General</a></li>
-                <li><a href="javascript:;" @click="getContent('inquiries')">Inquiries</a></li>
-                <li><a href="javascript:;" @click="getContent('reports')">Reports</a></li>
-                <li><a href="javascript:;" @click="getContent('account_cancellation')">Account Cancellation</a></li>
+                <li class="messages-highlight" id="message-3" @click="messageMenuHighlight(3)"><a href="javascript:;" @click="getContent('general')">General</a></li>
+                <li class="messages-highlight" id="message-4" @click="messageMenuHighlight(4)"><a href="javascript:;" @click="getContent('inquiries')">Inquiries</a></li>
+                <li class="messages-highlight" id="message-5" @click="messageMenuHighlight(5)"><a href="javascript:;" @click="getContent('reports')">Reports</a></li>
+                <li class="messages-highlight" id="message-6" @click="messageMenuHighlight(6)"><a href="javascript:;" @click="getContent('account_cancellation')">Account Cancellation</a></li>
             </ul>
         </div>
         <div class="messages-list">
@@ -49,7 +49,7 @@
                 </ul>
                 <infinite-loading @infinite="messageInfiniteHandler" ref="infiniteLoading" spinner="bubbles">
                     <span slot="no-more"></span>
-                    <span slot="no-results"></span>
+                    <span id="messagenoresults" slot="no-results"></span>
                 </infinite-loading>
             </div>
             <!-- //messages -->
@@ -271,6 +271,8 @@
         },
         mounted() {
             $(".main-header > .title").html('<i class="header-ic ic-message-green"></i>Messages');
+            $("#sidenav-messages").addClass('active');
+            $("#message-1").addClass('active');
             
             if(typeof window.location.href.split('?')[1] != 'undefined'){
                 this.url_search = window.location.href.split('?')[1].split('=')[1]
@@ -314,6 +316,12 @@
                         $state.loaded();
                     }else{
                         $state.complete();
+                        if (vue.messages.data.length <= 0){
+                            $("#messagenoresults").html('No Results');
+                        }
+                        else{
+                            $("#messagenoresults").html('');   
+                        }
                     }
                 }, 1000);
             },
@@ -444,6 +452,7 @@
                 this.composeContent.time = sentMessage.time_created
                 this.composeContent.date = sentMessage.date_created
 
+                
                 $("#compose").hide();
 
                 $("#messagesent").hide();
@@ -586,6 +595,11 @@
             Notify(title,message){
                 $('.notification-title').html(title);
                 $('.notification-description').html(message);
+            },
+
+            messageMenuHighlight(id){
+                $(".messages-highlight").removeClass('active');
+                $("#message-" + id).addClass('active');
             },
 
             getAxios: _.debounce(
