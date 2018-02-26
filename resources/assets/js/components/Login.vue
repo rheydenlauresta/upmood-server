@@ -29,6 +29,7 @@
                         v-model="email"
                         :class="error.email ? 'has-error' : ''"
                         required autofocus
+                        maxlength="64"
                       > <i class="ic ic-error"></i>
                   </div>
                   <div class="form-group text-left" :class="error.password ? 'has-error' : ''">
@@ -42,6 +43,7 @@
                         name="password"
                         v-model="password"
                         required
+                        maxlength="32"
                       >
                       <i class="ic ic-error"></i>
                       <span class="ic decrypt" v-if="password.length" @click="togglePassword">{{status}}</span>

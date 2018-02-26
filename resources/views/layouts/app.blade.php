@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Upmood CMS') }}</title>
+    <title>Upmood CMS</title>
 
     <!-- Styles -->
     <link rel="stylesheet" href="{{ asset('css/bootstrap-tagsinput.css') }}">

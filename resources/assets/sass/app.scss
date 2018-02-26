@@ -107,10 +107,13 @@ body{
         border-radius: 2px;
         border: 1px #BCBDBD solid;
         background: #ffffff;
-        color: #95989A;
         font-size: 12px;
         padding-left: 40px;
         height: 40px;
+
+        &:placeholder{
+          color: #95989A;
+        }
       }
 
       span.decrypt{
