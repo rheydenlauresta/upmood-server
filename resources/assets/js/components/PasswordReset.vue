@@ -8,8 +8,8 @@
           <p>Enter your email address below and we'll get you back on track.</p>
 
           <div class="form">
-              <form class="form-horizontal" method="POST" :action="base_url+'login'">
-                  <div class="form-group alert" :class="error.email && error.password ? 'has-error' : ''">
+              <form class="form-horizontal" method="POST" :action="base_url+'login'" @submit.prevent="submitReset">
+                  <div class="form-group alert" :class="error.email ? 'has-error' : ''">
                     <i class="ic ic-warn"></i>
                     <p>Whoops!!<br><span class="msg">Username Already Used!!</span></p>
                   </div>
@@ -34,7 +34,7 @@
                   </div>
 
                   <div class="form-group">
-                      <button @click="submit" type="button" class="btn btn-block"> Request Reset Link </button>
+                      <button type="submit" class="btn btn-block"> Request Reset Link </button>
                   </div>
                   <div class="form-group text-center">
                       <a class="btn-link" :href="base_url">Back to Sign In</a>
@@ -61,8 +61,8 @@
         },
 
         methods:{
-          submit(){
-            
+          submitReset(){
+              
           }
         }
     }
