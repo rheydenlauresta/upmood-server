@@ -105,6 +105,12 @@ return [
         ],
     ],
 
+    'custom' => [
+        'password' => [
+            'regex' => 'Password must contain at least one number and both uppercase and lowercase letters.',
+        ],
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Attributes

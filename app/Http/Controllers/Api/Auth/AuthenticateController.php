@@ -27,7 +27,7 @@ class AuthenticateController extends BaseController
         $validator = $this->validator($request->all(), [
             'facebook_id' => 'required',
             'name'        => 'required',
-            'email'       => 'required|email',
+            'email'       => 'email',
             'image'       => 'required',
         ], 'facebook-login');
 

@@ -13,11 +13,14 @@
 |
 */
 
-// Route::get('/test', function () {
-//     return view('test');
-// });
+Route::get('/test', function () {
+    $check = DB::select('SELECT email FROM users WHERE BINARY email = "Admin@taisondigital.com"');
+    return count($check);
+});
 
-Route::get('/test', 'HomeController@test');
+// Route::get('/test', 'HomeController@test');
+
+
 
 Route::get('/reset', function () {
     return view('auth/passwords/reset');
