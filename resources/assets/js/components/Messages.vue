@@ -7,7 +7,7 @@
                 <li><a href="javascript:;" @click="getSent('send')">Send</a></li>
                 <li class="seperator"></li>
                 <li><a href="javascript:;" @click="getContent('general')">General</a></li>
-                <li><a href="javascript:;" @click="getContent('inquiries')">Inquires</a></li>
+                <li><a href="javascript:;" @click="getContent('inquiries')">Inquiries</a></li>
                 <li><a href="javascript:;" @click="getContent('reports')">Reports</a></li>
                 <li><a href="javascript:;" @click="getContent('account_cancellation')">Account Cancellation</a></li>
             </ul>
@@ -36,7 +36,7 @@
                                     <div class="subject">{{ messageType(message.type) }}</div>
                                 </div>
                                 <div class="col-md-3">
-                                    <div class="time pull-right">{{ message.time_created }}</div>
+                                    <div class="time pull-right">{{ message.date_created }} {{ message.time_created }}</div>
                                 </div>
                             </div>
                             <div class="row">
@@ -65,7 +65,7 @@
                                     <div class="subject">{{ sentMessage.subject }}</div>
                                 </div>
                                 <div class="col-md-3">
-                                    <div class="time pull-right">{{ sentMessage.time_created }}</div>
+                                    <div class="time pull-right">{{ sentMessage.date_created }} {{ sentMessage.time_created }}</div>
                                 </div>
                             </div>
                             <div class="row">

@@ -48,14 +48,19 @@
   position: absolute;
 }
 
+.calendar-ic {
+  cursor: pointer !important;
+}
+
 .calendar-ic:before {
   content: '';
   position: absolute;
   display: inline-block;
   height: 28px;
   width: 28px;
-  background-size: cover;
+  background-size: contain;
   background-position: center center;
+  background-repeat: no-repeat;
   top: 19px;
   left: 9px;
 }
@@ -1952,7 +1957,7 @@
   color: #DB2828;
 }
 
-.content-center, .loading, .main-container .main-header .header-right .notification .notification-list .notification-empty .image-wrapper, .main-container .main-header .header-right .notification .notification-list .notification-list-container ul li a .list-wrapper .image-flex .image-wrapper, .users-wrapper .users-table-wrapper .pagination, .users-wrapper .users-table-wrapper .filter-wrapper .sort-by-wrapper .order-sort:before, .messages-wrapper .messages-nav .compose, .messages-wrapper .messages-nav .menu-list, .messages-wrapper .messages-nav .menu-list li.seperator, .messages-wrapper .messages-list .messages-search-wrapper .messages-search, .messages-wrapper .messages-content#compose .compose-wrapper, .messages-wrapper .messages-content#messagesent .message-sent-wrapper, .user-profile-wrapper .current-emotion .image-wrapper, .user-profile-wrapper .mood-steam .mood-steam-table table tbody tr td .image-wrapper, .user-profile-wrapper .featured-friends .featured-friends-table table tbody tr td .image-wrapper {
+.content-center, .loading, .main-container .main-header .header-right .notification .notification-list .notification-empty .image-wrapper, .main-container .main-header .header-right .notification .notification-list .notification-list-container ul li a .list-wrapper .image-flex .image-wrapper, .users-wrapper .users-table-wrapper .pagination, .users-wrapper .users-table-wrapper .filter-wrapper .sort-by-wrapper .order-sort:before, .messages-wrapper .messages-nav .compose, .messages-wrapper .messages-nav .menu-list, .messages-wrapper .messages-nav .menu-list li.seperator, .messages-wrapper .messages-list .messages-search-wrapper .messages-search, .messages-wrapper .messages-content#compose .compose-wrapper, .messages-wrapper .messages-content#messagesent .message-sent-wrapper, .user-profile-wrapper .current-emotion .image-wrapper, .user-profile-wrapper .mood-stream .mood-stream-table table tbody tr td .image-wrapper, .user-profile-wrapper .featured-friends .featured-friends-table table tbody tr td .image-wrapper {
   display: block;
   margin: 0 auto;
 }
@@ -11692,7 +11697,7 @@ body {
   text-overflow: ellipsis;
 }
 
-.user-profile-wrapper .user-profile-modules, .user-profile-wrapper .current-emotion, .user-profile-wrapper .mood-steam, .user-profile-wrapper .featured-friends, .user-profile-wrapper .emotion-calendar {
+.user-profile-wrapper .user-profile-modules, .user-profile-wrapper .current-emotion, .user-profile-wrapper .mood-stream, .user-profile-wrapper .featured-friends, .user-profile-wrapper .emotion-calendar {
   height: 479px;
   padding: 20px;
   background: #fff;
@@ -11701,7 +11706,7 @@ body {
           box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
 }
 
-.user-profile-wrapper .user-profile-modules .title, .user-profile-wrapper .current-emotion .title, .user-profile-wrapper .mood-steam .title, .user-profile-wrapper .featured-friends .title, .user-profile-wrapper .emotion-calendar .title {
+.user-profile-wrapper .user-profile-modules .title, .user-profile-wrapper .current-emotion .title, .user-profile-wrapper .mood-stream .title, .user-profile-wrapper .featured-friends .title, .user-profile-wrapper .emotion-calendar .title {
   font-weight: 600;
   font-size: 20px;
   font-style: italic;
@@ -11709,6 +11714,22 @@ body {
 
 .user-profile-wrapper .current-emotion {
   margin-top: 15px;
+}
+
+.user-profile-wrapper .current-emotion.for-calendar {
+  background-color: transparent !important;
+  -webkit-box-shadow: none !important;
+          box-shadow: none !important;
+  padding: 0px !important;
+}
+
+.user-profile-wrapper .current-emotion .calendar-close {
+  position: absolute;
+  top: 10px;
+  right: 0px;
+  font-size: 22px;
+  color: #FF0000;
+  cursor: pointer;
 }
 
 .user-profile-wrapper .current-emotion .image-wrapper {
@@ -11722,8 +11743,8 @@ body {
 .user-profile-wrapper .current-emotion .image-wrapper img {
   height: 100%;
   width: 100%;
-  -o-object-fit: cover;
-     object-fit: cover;
+  -o-object-fit: contain;
+     object-fit: contain;
 }
 
 .user-profile-wrapper .current-emotion .col-md-4, .user-profile-wrapper .current-emotion .users-wrapper .users-table-wrapper .filter-wrapper form .advance-filter .advance-filter-row .filter-width, .users-wrapper .users-table-wrapper .filter-wrapper form .advance-filter .advance-filter-row .user-profile-wrapper .current-emotion .filter-width {
@@ -11793,29 +11814,29 @@ body {
   font-style: italic;
 }
 
-.user-profile-wrapper .mood-steam {
+.user-profile-wrapper .mood-stream {
   margin-top: 15px;
 }
 
-.user-profile-wrapper .mood-steam .mood-steam-table {
+.user-profile-wrapper .mood-stream .mood-stream-table {
   height: 410px;
 }
 
-.user-profile-wrapper .mood-steam .mood-steam-table table {
+.user-profile-wrapper .mood-stream .mood-stream-table table {
   margin-top: 15px;
 }
 
-.user-profile-wrapper .mood-steam .mood-steam-table table tbody tr td .image-wrapper {
+.user-profile-wrapper .mood-stream .mood-stream-table table tbody tr td .image-wrapper {
   height: 50px;
   width: 50px;
   overflow: hidden;
 }
 
-.user-profile-wrapper .mood-steam .mood-steam-table table tbody tr td .image-wrapper img {
+.user-profile-wrapper .mood-stream .mood-stream-table table tbody tr td .image-wrapper img {
   height: 100%;
   width: 100%;
-  -o-object-fit: cover;
-     object-fit: cover;
+  -o-object-fit: contain;
+     object-fit: contain;
 }
 
 .user-profile-wrapper .featured-friends {
@@ -11839,12 +11860,13 @@ body {
 .user-profile-wrapper .featured-friends .featured-friends-table table tbody tr td .image-wrapper img {
   height: 100%;
   width: 100%;
-  -o-object-fit: cover;
-     object-fit: cover;
+  -o-object-fit: contain;
+     object-fit: contain;
 }
 
 .user-profile-wrapper .emotion-calendar {
   margin-top: 15px;
+  overflow: hidden;
 }
 
 .user-profile-wrapper .emotion-calendar .calendar-wrapper .__vev_calendar-wrapper .cal-wrapper {
@@ -11963,4 +11985,29 @@ body {
 
 #notification-modal .modal-dialog .modal-body .close:hover {
   color: #FF0000;
+}
+
+.slide-calendar {
+  -webkit-transition: 0.3s ease-in-out all;
+  transition: 0.3s ease-in-out all;
+}
+
+.slide-calendar.slide-out {
+  -webkit-transform: translateX(-370px);
+          transform: translateX(-370px);
+}
+
+.slide-calendar-emotion {
+  -webkit-transition: 0.3s ease-in-out all;
+  transition: 0.3s ease-in-out all;
+  -webkit-transform: translateX(370px);
+          transform: translateX(370px);
+  position: absolute;
+  top: 0px;
+  left: 15px;
+}
+
+.slide-calendar-emotion.slide-in {
+  -webkit-transform: translateX(0px);
+          transform: translateX(0px);
 }

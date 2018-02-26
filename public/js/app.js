@@ -613,6 +613,11 @@ $(document).on('click', '.cal-header > .r', function () {
     $('.cal-header > .title').html(monthNames[dateIndex] + ' ' + dateYear);
 });
 
+$(document).on('click', '.cal-body > .dates > .calendar-ic', function () {
+    $(".slide-calendar").addClass('slide-out');
+    $(".slide-calendar-emotion").addClass('slide-in');
+});
+
 /***/ }),
 /* 3 */
 /***/ (function(module, exports) {
@@ -47419,6 +47424,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
@@ -47551,12 +47557,20 @@ var render = function() {
                           _c("div", { staticClass: "list-wrapper" }, [
                             _c("div", { staticClass: "image-flex" }, [
                               _c("div", { staticClass: "image-wrapper" }, [
-                                _c("img", {
-                                  attrs: {
-                                    src: _vm.base_url + "img/" + noti.image,
-                                    alt: ""
-                                  }
-                                })
+                                noti.facebook_id != null
+                                  ? _c("img", {
+                                      attrs: { src: noti.image, alt: "" }
+                                    })
+                                  : _c("img", {
+                                      attrs: {
+                                        src:
+                                          _vm.base_url +
+                                          "img/" +
+                                          noti.image +
+                                          ".png",
+                                        alt: ""
+                                      }
+                                    })
                               ])
                             ]),
                             _vm._v(" "),
@@ -47580,7 +47594,11 @@ var render = function() {
                                 ]),
                                 _vm._v(" "),
                                 _c("div", { staticClass: "time" }, [
-                                  _vm._v(_vm._s(noti.time_created))
+                                  _vm._v(
+                                    _vm._s(noti.date_created) +
+                                      " " +
+                                      _vm._s(noti.time_created)
+                                  )
                                 ])
                               ]
                             )
@@ -48533,11 +48551,37 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     data: function data() {
         return {
             csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-            base_url: window.base_url
+            base_url: window.base_url,
+
+            report: [],
+            accountCancellation: [],
+            inquire: []
         };
     },
     mounted: function mounted() {
         $(".main-header > .title").html('<i class="header-ic ic-dashboard-green"></i>Dashboard');
+        var vue = this;
+        $.each(this.messages, function (k, v) {
+            if (v.type == 'reports') {
+                vue.report.push({
+                    name: v.name,
+                    content: v.content,
+                    created_at: v.created_at
+                });
+            } else if (v.type == 'account_cancellation') {
+                vue.accountCancellation.push({
+                    name: v.name,
+                    content: v.content,
+                    created_at: v.created_at
+                });
+            } else if (v.type == 'inquiries') {
+                vue.inquire.push({
+                    name: v.name,
+                    content: v.content,
+                    created_at: v.created_at
+                });
+            }
+        });
     }
 });
 
@@ -48635,23 +48679,23 @@ var render = function() {
               _c("table", { staticClass: "table table-stripe" }, [
                 _c(
                   "tbody",
-                  _vm._l(_vm.messages, function(accountCancellation) {
+                  _vm._l(_vm.accountCancellation, function(
+                    accountCancellation
+                  ) {
                     return _c("tr", [
-                      accountCancellation.type == "account_cancellation"
-                        ? _c("div", { staticClass: "listview-row" }, [
-                            _c("div", { staticClass: "listview-title" }, [
-                              _vm._v(_vm._s(accountCancellation.type))
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "listview-time" }, [
-                              _vm._v(_vm._s(accountCancellation.created_at))
-                            ]),
-                            _vm._v(" "),
-                            _c("p", { staticClass: "listview-content" }, [
-                              _vm._v(_vm._s(accountCancellation.content))
-                            ])
-                          ])
-                        : _vm._e()
+                      _c("div", { staticClass: "listview-row" }, [
+                        _c("div", { staticClass: "listview-title" }, [
+                          _vm._v(_vm._s(accountCancellation.name))
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "listview-time" }, [
+                          _vm._v(_vm._s(accountCancellation.created_at))
+                        ]),
+                        _vm._v(" "),
+                        _c("p", { staticClass: "listview-content" }, [
+                          _vm._v(_vm._s(accountCancellation.content))
+                        ])
+                      ])
                     ])
                   })
                 )
@@ -48676,23 +48720,21 @@ var render = function() {
               _c("table", { staticClass: "table table-stripe" }, [
                 _c(
                   "tbody",
-                  _vm._l(_vm.messages, function(inquire) {
+                  _vm._l(_vm.inquire, function(inquire) {
                     return _c("tr", [
-                      inquire.type == "inquiries"
-                        ? _c("div", { staticClass: "listview-row" }, [
-                            _c("div", { staticClass: "listview-title" }, [
-                              _vm._v(_vm._s(inquire.type))
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "listview-time" }, [
-                              _vm._v(_vm._s(inquire.created_at))
-                            ]),
-                            _vm._v(" "),
-                            _c("p", { staticClass: "listview-content" }, [
-                              _vm._v(_vm._s(inquire.content))
-                            ])
-                          ])
-                        : _vm._e()
+                      _c("div", { staticClass: "listview-row" }, [
+                        _c("div", { staticClass: "listview-title" }, [
+                          _vm._v(_vm._s(inquire.name))
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "listview-time" }, [
+                          _vm._v(_vm._s(inquire.created_at))
+                        ]),
+                        _vm._v(" "),
+                        _c("p", { staticClass: "listview-content" }, [
+                          _vm._v(_vm._s(inquire.content))
+                        ])
+                      ])
                     ])
                   })
                 )
@@ -48713,23 +48755,21 @@ var render = function() {
               _c("table", { staticClass: "table table-stripe" }, [
                 _c(
                   "tbody",
-                  _vm._l(_vm.messages, function(report) {
+                  _vm._l(_vm.report, function(report) {
                     return _c("tr", [
-                      report.type == "reports"
-                        ? _c("div", { staticClass: "listview-row" }, [
-                            _c("div", { staticClass: "listview-title" }, [
-                              _vm._v(_vm._s(report.type))
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "listview-time" }, [
-                              _vm._v(_vm._s(report.created_at))
-                            ]),
-                            _vm._v(" "),
-                            _c("p", { staticClass: "listview-content" }, [
-                              _vm._v(_vm._s(report.content))
-                            ])
-                          ])
-                        : _vm._e()
+                      _c("div", { staticClass: "listview-row" }, [
+                        _c("div", { staticClass: "listview-title" }, [
+                          _vm._v(_vm._s(report.name))
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "listview-time" }, [
+                          _vm._v(_vm._s(report.created_at))
+                        ]),
+                        _vm._v(" "),
+                        _c("p", { staticClass: "listview-content" }, [
+                          _vm._v(_vm._s(report.content))
+                        ])
+                      ])
                     ])
                   })
                 )
@@ -50645,6 +50685,48 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -50760,6 +50842,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             axios.get(base_url + 'users/upmoodCalendar?id=' + this.profile.id + '&date=' + dateFormat).then(function (response) {
                 vue.demoEvents = response['data'];
             }).catch(function (error) {});
+        },
+        handleDayChanged: function handleDayChanged(val) {
+            alert('sample');
+        },
+        closeCurrentEmotion: function closeCurrentEmotion() {
+            $(".slide-calendar").removeClass('slide-out');
+            $(".slide-calendar-emotion").removeClass('slide-in');
         }
     }
 });
@@ -50807,7 +50896,7 @@ var render = function() {
               _vm._m(0),
               _vm._v(" "),
               _c("div", { staticClass: "col-md-5 location" }, [
-                _vm._v(_vm._s(_vm._f("emptyVal")(_vm.profile.country)))
+                _vm._v(_vm._s(_vm._f("emptyVal")(_vm.profile.country, null)))
               ])
             ]),
             _vm._v(" "),
@@ -50817,7 +50906,7 @@ var render = function() {
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "col-md-11 gender" }, [
-                _vm._v(_vm._s(_vm._f("emptyVal")(_vm.profile.gender)))
+                _vm._v(_vm._s(_vm._f("emptyVal")(_vm.profile.gender, null)))
               ])
             ]),
             _vm._v(" "),
@@ -50826,7 +50915,9 @@ var render = function() {
                 _c("div", { staticClass: "description" }, [
                   _vm._v(
                     '"' +
-                      _vm._s(_vm._f("emptyVal")(_vm.profile.profile_post)) +
+                      _vm._s(
+                        _vm._f("emptyVal")(_vm.profile.profile_post, null)
+                      ) +
                       '"'
                   )
                 ])
@@ -50907,13 +50998,13 @@ var render = function() {
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "col-md-8" }, [
-        _c("div", { staticClass: "mood-steam" }, [
-          _c("div", { staticClass: "title" }, [_vm._v("Mood Steam")]),
+        _c("div", { staticClass: "mood-stream" }, [
+          _c("div", { staticClass: "title" }, [_vm._v("Mood Stream")]),
           _vm._v(" "),
           _c(
             "div",
             {
-              staticClass: "scrollbar-outer mood-steam-table infinite-wrapper",
+              staticClass: "scrollbar-outer mood-stream-table infinite-wrapper",
               staticStyle: { "overflow-y": "auto" }
             },
             [
@@ -50931,7 +51022,7 @@ var render = function() {
                         _c("td", [_vm._v(_vm._s(value.heartbeat_count))]),
                         _vm._v(" "),
                         _c("td", [
-                          _vm._v(_vm._s(_vm._f("ppiCount")(value.ppi)))
+                          _vm._v(_vm._s(_vm._f("ppiCount")(value.ppi, null)))
                         ]),
                         _vm._v(" "),
                         _c("td", [_vm._v(_vm._s(value.total_ppi))]),
@@ -51091,25 +51182,107 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "col-md-4" }, [
-        _c("div", { staticClass: "emotion-calendar" }, [
-          _c("div", { staticClass: "title" }, [
-            _vm._v("Upmood Emotion Calendar")
-          ]),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "calendar-wrapper" },
-            [
-              _c("vue-event-calendar", {
-                attrs: { events: _vm.demoEvents },
-                on: { "month-changed": _vm.handleMonthChanged }
-              })
-            ],
-            1
-          )
-        ])
-      ])
+      _c(
+        "div",
+        { staticClass: "col-md-8", attrs: { id: "animation-calendar" } },
+        [
+          _c("div", { staticClass: "emotion-calendar col-md-6" }, [
+            _c("div", { staticClass: "slide-calendar" }, [
+              _c("div", { staticClass: "title" }, [
+                _vm._v("Upmood Emotion Calendar")
+              ]),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "calendar-wrapper" },
+                [
+                  _c("vue-event-calendar", {
+                    attrs: { events: _vm.demoEvents },
+                    on: {
+                      "month-changed": _vm.handleMonthChanged,
+                      "day-changed": _vm.handleDayChanged
+                    }
+                  })
+                ],
+                1
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "slide-calendar-emotion" }, [
+              _c("div", { staticClass: "current-emotion for-calendar" }, [
+                _c("div", { staticClass: "title" }, [
+                  _vm._v("Current Emotion")
+                ]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "calendar-close",
+                    on: { click: _vm.closeCurrentEmotion }
+                  },
+                  [_vm._v("X")]
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "image-wrapper" }, [
+                  _c("img", {
+                    attrs: {
+                      src:
+                        _vm.base_url +
+                        "img/resources/" +
+                        _vm.profile.emotion_set +
+                        "/emoji/" +
+                        _vm.profile.emotion_value +
+                        ".png",
+                      alt: ""
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "emotion-info" }, [
+                  _c("div", { staticClass: "row" }, [
+                    _c("div", { staticClass: "col-md-4" }, [_vm._v("BPM:")]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-md-8 BPM" }, [
+                      _vm._v(_vm._s(_vm.profile.heartbeat_count))
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "row" }, [
+                    _c("div", { staticClass: "col-md-4" }, [
+                      _vm._v("Stress Level:")
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-md-8 stress-level" }, [
+                      _vm._v(_vm._s(_vm.profile.stress_level))
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _vm._m(5),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "row" }, [
+                    _c("div", { staticClass: "col-md-12" }, [
+                      _c("div", { staticClass: "upmood-meter" }, [
+                        _c("div", { staticClass: "meter" }, [
+                          _c("div", { staticClass: "meter-control" }, [
+                            _c("img", {
+                              attrs: {
+                                src: _vm.base_url + "img/profile-avatar.png",
+                                alt: ""
+                              }
+                            })
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _vm._m(6)
+                      ])
+                    ])
+                  ])
+                ])
+              ])
+            ])
+          ])
+        ]
+      )
     ])
   ])
 }
@@ -51176,6 +51349,30 @@ var staticRenderFns = [
       _c("th", [_vm._v("Emotion")]),
       _vm._v(" "),
       _c("th", [_vm._v("Reaction")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-md-12" }, [_vm._v("Mood Meter:")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row meter-description" }, [
+      _c("div", { staticClass: "description-tag" }, [_vm._v("Sad")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "description-tag" }, [_vm._v("Unpleasant")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "description-tag" }, [_vm._v("Calm")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "description-tag" }, [_vm._v("Pleasant")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "description-tag" }, [_vm._v("Happy")])
     ])
   }
 ]
@@ -51897,7 +52094,7 @@ var render = function() {
                 }
               }
             },
-            [_vm._v("Inquires")]
+            [_vm._v("Inquiries")]
           )
         ]),
         _vm._v(" "),
@@ -52037,7 +52234,11 @@ var render = function() {
                       _vm._v(" "),
                       _c("div", { staticClass: "col-md-3" }, [
                         _c("div", { staticClass: "time pull-right" }, [
-                          _vm._v(_vm._s(message.time_created))
+                          _vm._v(
+                            _vm._s(message.date_created) +
+                              " " +
+                              _vm._s(message.time_created)
+                          )
                         ])
                       ])
                     ]),
@@ -52113,7 +52314,11 @@ var render = function() {
                       _vm._v(" "),
                       _c("div", { staticClass: "col-md-3" }, [
                         _c("div", { staticClass: "time pull-right" }, [
-                          _vm._v(_vm._s(sentMessage.time_created))
+                          _vm._v(
+                            _vm._s(sentMessage.date_created) +
+                              " " +
+                              _vm._s(sentMessage.time_created)
+                          )
                         ])
                       ])
                     ]),

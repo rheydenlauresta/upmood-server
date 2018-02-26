@@ -54,7 +54,7 @@ class MessagesController extends BaseController
             ->leftJoin('users',function($query){
                 $query->on('users.id','=','contact_message.user_id');
             })
-            ->selectraw("contact_message.id, users.image, users.name, contact_message.type, content, DATE_FORMAT(contact_message.created_at, '%Y-%m-%d') as date_created, DATE_FORMAT(contact_message.created_at, '%r') as time_created")
+            ->selectraw("contact_message.id, users.image, users.facebook_id, users.name, contact_message.type, content, DATE_FORMAT(contact_message.created_at, '%Y-%m-%d') as date_created, DATE_FORMAT(contact_message.created_at, '%r') as time_created")
             ->orderBy('contact_message.id','DESC')
             ->paginate(10);
 

@@ -44,7 +44,14 @@ class Dashboard extends Model
 
     public static function getContactForm()
     {
-      $res = DB::table('contact_message')->orderBy('created_at','DESC')->limit(50)->get();
+      $res = DB::table('contact_message')
+        ->select('contact_message.content','contact_message.email','users.name','contact_message.created_at','contact_message.type')
+        ->leftjoin('users',function($query){
+          $query->on('users.id','=','contact_message.user_id');
+        })
+        ->orderBy('created_at','DESC')
+        ->limit(50)
+        ->get();
       return $res;
     }
 }
