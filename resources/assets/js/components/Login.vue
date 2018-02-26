@@ -10,7 +10,7 @@
                   <!-- Warning Alerts -->
                   <div class="form-group alert" v-bind:class="{'has-error': error}">
                     <i class="ic ic-warn"></i>
-                    <p><span class="msg">Username/Password is invalid!</span></p>
+                    <p><span class="msg">{{errorMsg.substring(2)}}</span></p>
                   </div>
                   <div class="form-group alert notif" :class="warning.email ? 'has-notif' : ''">
                     <p>A password reset link has been sent. </p>
@@ -28,8 +28,7 @@
                         name="email"
                         v-model="email"
                         :class="error.email ? 'has-error' : ''"
-                        required autofocus
-                        maxlength="64"
+                        autofocus
                       > <i class="ic ic-error"></i>
                   </div>
                   <div class="form-group text-left" :class="error.password ? 'has-error' : ''">
@@ -42,8 +41,6 @@
                         class="form-control"
                         name="password"
                         v-model="password"
-                        required
-                        maxlength="32"
                       >
                       <i class="ic ic-error"></i>
                       <span class="ic decrypt" v-if="password.length" @click="togglePassword">{{status}}</span>
@@ -73,6 +70,7 @@
                 warning: [],
                 email: '',
                 password: '',
+                errorMsg: '',
                 status: 'show'
             }
         },
@@ -94,13 +92,23 @@
           submitForm(){
 
               let vue = this;
+              vue.errorMsg = '';
+              vue.error = false;
 
               axios.post(base_url + 'login',{
                 email: this.email,
                 password: this.password
               }).then(function(response){
+                console.log(response)
                 location.href = base_url+'dashboard';
+
               }).catch(function(e){
+        
+                  console.log(vue.errorMsg)
+                  $.each(e.response.data,function(k,v){
+                      vue.errorMsg += ', ' + v;
+                  })
+                  
                   vue.error = true;
                   vue.password = '';
               })

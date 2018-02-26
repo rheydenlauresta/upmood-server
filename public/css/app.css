@@ -1957,6 +1957,10 @@
   color: #DB2828;
 }
 
+pre {
+  white-space: pre-wrap;
+}
+
 .content-center, .loading, .main-container .main-header .header-right .notification .notification-list .notification-empty .image-wrapper, .main-container .main-header .header-right .notification .notification-list .notification-list-container ul li a .list-wrapper .image-flex .image-wrapper, .users-wrapper .users-table-wrapper .pagination, .users-wrapper .users-table-wrapper .filter-wrapper .sort-by-wrapper .order-sort:before, .messages-wrapper .messages-nav .compose, .messages-wrapper .messages-nav .menu-list, .messages-wrapper .messages-nav .menu-list li.seperator, .messages-wrapper .messages-list .messages-search-wrapper .messages-search, .messages-wrapper .messages-content#compose .compose-wrapper, .messages-wrapper .messages-content#messagesent .message-sent-wrapper, .user-profile-wrapper .current-emotion .image-wrapper, .user-profile-wrapper .mood-stream .mood-stream-table table tbody tr td .image-wrapper, .user-profile-wrapper .featured-friends .featured-friends-table table tbody tr td .image-wrapper {
   display: block;
   margin: 0 auto;
@@ -10045,10 +10049,13 @@ body {
   border-radius: 2px;
   border: 1px #BCBDBD solid;
   background: #ffffff;
-  color: #95989A;
   font-size: 12px;
   padding-left: 40px;
   height: 40px;
+}
+
+.login .form .form-group input.form-control:placeholder {
+  color: #95989A;
 }
 
 .login .form .form-group span.decrypt {
@@ -10416,6 +10423,10 @@ body {
 }
 
 .sidenav ul li:hover {
+  border-color: #BCCB87;
+}
+
+.sidenav ul li.active {
   border-color: #BCCB87;
 }
 
@@ -11129,6 +11140,10 @@ body {
   background-color: #699BD5;
 }
 
+.messages-wrapper .messages-nav .menu-list li.active {
+  background-color: #699BD5;
+}
+
 .messages-wrapper .messages-nav .menu-list li a {
   display: inline-block;
   width: 100%;
@@ -11223,6 +11238,18 @@ body {
   color: #AFAFAF;
   font-weight: 300;
   font-size: 12px;
+}
+
+.messages-wrapper .messages-list .messages-row-wrapper ul.message-row-menu .messages-row .message-glance pre {
+  max-height: 200px;
+  overflow-y: hidden;
+  overflow-x: hidden;
+  text-align: justify;
+  font-weight: 300;
+  font-size: 12px;
+  background: none;
+  border: none;
+  color: #AFAFAF;
 }
 
 .messages-wrapper .messages-list .messages-row-wrapper ul.message-row-menu .messages-row.active {
@@ -12010,4 +12037,10 @@ body {
 .slide-calendar-emotion.slide-in {
   -webkit-transform: translateX(0px);
           transform: translateX(0px);
+}
+
+.message-sent-content pre {
+  max-height: 600px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }

@@ -37,6 +37,7 @@
                                         <td>{{ country.country }}</td>
                                         <td>{{ country.online }}</td>
                                         <td>{{ country.offline }}</td>
+                                        <td>{{ up_meter(country.upmood_meter) }}</td>
                                         <td></td>
                                     </tr>
                                 </tbody>
@@ -144,6 +145,25 @@
                     })
                 }
             })
+        },
+        methods: {
+
+            up_meter: function(val){
+                if(val == null){
+                    return "No Record Found";
+                }
+                if(val <= -61){
+                    return 'Sad';
+                }else if(val <= -21){
+                    return 'Unpleasant';
+                }else if(val <= 20){
+                    return 'Calm';
+                }else if(val <= 60){
+                    return 'Pleasant';
+                }else if(val <= 100){
+                    return 'Happy';
+                }
+            },
         }
     }
 </script>

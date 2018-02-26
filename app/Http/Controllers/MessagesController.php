@@ -67,7 +67,7 @@ class MessagesController extends Controller
         	return $this->getSentmessage();
         }
 
-    	$messages = Message::selectraw("contact_message.id, users.image, users.name, contact_message.type, content, DATE_FORMAT(contact_message.created_at, '%Y-%m-%d') as date_created, DATE_FORMAT(contact_message.created_at, '%r') as time_created")
+    	$messages = Message::selectraw("contact_message.id, users.facebook_id, users.image, users.name, contact_message.type, content, DATE_FORMAT(contact_message.created_at, '%Y-%m-%d') as date_created, DATE_FORMAT(contact_message.created_at, '%r') as time_created")
 	    	->leftjoin('users',function($query){
 	    		$query->on('users.id','=','contact_message.user_id');
 	    	});
@@ -98,8 +98,11 @@ class MessagesController extends Controller
         $data = Input::all();
 
 
-    	$replies = Reply::selectraw("message, DATE_FORMAT(created_at, '%Y-%m-%d') as date_created, DATE_FORMAT(created_at, '%r') as time_created")
+    	$replies = Reply::selectraw("users.facebook_id, message, DATE_FORMAT(created_at, '%Y-%m-%d') as date_created, DATE_FORMAT(created_at, '%r') as time_created")
     				->where('contact_message_id',$data['id'])
+                    ->leftjoin('users',function($query){
+                        $query->on('users.id','=','contact_message.user_id');
+                    })
     				->get()->toArray();
 
         $seencheck = Message::find($data['id']);

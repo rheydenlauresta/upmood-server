@@ -238,6 +238,7 @@
                     date: '',
                     time: '',
                     content: '',
+                    facebook_id: '',
                     image: '',
                     id: 0,
                 },
@@ -435,6 +436,7 @@
                 this.messageContent.content = message.content;
                 this.messageContent.image = message.image;
                 this.messageContent.id = message.id;
+                this.messageContent.facebook_id = message.facebook_id;
 
                 this.getReply(message.id);
 

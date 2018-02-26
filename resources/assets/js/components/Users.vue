@@ -150,8 +150,8 @@
                     </thead>
                     <tbody>
                         <tr v-for="user in recordData.data">
-                            <td v-if="user.facebook_id != ''"><div class="table-profile-image"><img :src="user.image" alt=""></div></td>
-                            <td v-else><div class="table-profile-image"><img :src="base_url+'img/'+user.image" alt=""></div></td>
+                            <td v-if="user.facebook_id != null"><div class="table-profile-image"><img :src="user.image" alt=""></div></td>
+                            <td v-else><div class="table-profile-image"><img :src="base_url+'img/'+user.image+'.png'" alt=""></div></td>
                             <td><a :href="base_url + 'users/userProfile/'+user.id">{{ user.name }}</a></td>
                             <td>{{ user.gender }}</td>
                             <td>{{ user.age }}</td>
