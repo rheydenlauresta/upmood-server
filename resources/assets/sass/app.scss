@@ -2140,7 +2140,14 @@ body{
       width: 407px;
 
       .modal-body{
-        background-color:#BCCB87;
+        
+        &.success{
+          background-color:#BCCB87;
+        }
+
+        &.error{
+          background-color:#FF0000;
+        }
 
         .notification-content{
             padding: 10px 20px 10px 20px;
