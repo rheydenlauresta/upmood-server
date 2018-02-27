@@ -218,4 +218,28 @@ class User extends Authenticatable
 
         return $records;
     }
+
+    public static function getMoodForTheDay($data)
+    {
+        $records =  Records::select(
+                DB::raw('CONCAT("calendar-ic emoji-",emotion_set,"-",emotion_value) as customClass'),
+                DB::raw('DATE_FORMAT(created_at, "%Y/%m/%d") as date'),'heartbeat_count','stress_level','emotion_set', 
+                DB::raw('(CASE WHEN emotion_value = "sad" OR emotion_value = "anxious"THEN "sad"
+                WHEN emotion_value = "happy" OR emotion_value = "zen" OR emotion_value = "excitement" THEN "happy"
+                WHEN emotion_value = "pleasant" THEN "pleasant"
+                WHEN emotion_value = "unpleasant" OR emotion_value = "confused" OR emotion_value = "challenged" OR emotion_value = "hyped" THEN "unpleasant"
+                WHEN emotion_value = "loading" OR emotion_value = "calm" THEN "calm"
+                ELSE 0 END) as upmood_meter'),'emotion_value'
+            )
+            ->whereraw('id IN (
+                SELECT MAX(id)
+                FROM records as r
+                WHERE r.user_id ='.$data['id'].'
+                and r.created_at like "%'.$data['date'].'%"
+                GROUP BY DATE_FORMAT(created_at, "%Y-%m-%d")
+            )') 
+            ->first();
+
+        return $records;
+    }
 }

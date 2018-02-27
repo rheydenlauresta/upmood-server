@@ -59,5 +59,6 @@ class Kernel extends HttpKernel
         'account-status' => \App\Http\Middleware\AccountStatus::class,
         'user-access'   => \App\Http\Middleware\UserAccess::class,
         'admin-access'   => \App\Http\Middleware\AdminAccess::class,
+        'preventBackHistory' => \App\Http\Middleware\PreventBackHistory::class,
     ];
 }

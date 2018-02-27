@@ -47425,6 +47425,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 
 
@@ -47651,11 +47654,28 @@ var render = function() {
                       ])
                     }),
                     _vm._v(" "),
-                    _c("infinite-loading", {
-                      ref: "infiniteLoading",
-                      attrs: { spinner: "bubbles" },
-                      on: { infinite: _vm.notificationInfiniteHandler }
-                    })
+                    _c(
+                      "infinite-loading",
+                      {
+                        ref: "infiniteLoading",
+                        attrs: { spinner: "bubbles" },
+                        on: { infinite: _vm.notificationInfiniteHandler }
+                      },
+                      [
+                        _c("span", {
+                          attrs: { slot: "no-more" },
+                          slot: "no-more"
+                        }),
+                        _vm._v(" "),
+                        _c("span", {
+                          attrs: {
+                            slot: "no-results",
+                            id: "notificationnoresults"
+                          },
+                          slot: "no-results"
+                        })
+                      ]
+                    )
                   ],
                   2
                 )
@@ -47916,6 +47936,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -48107,7 +48128,8 @@ var render = function() {
                       id: "password",
                       placeholder: "Enter Password",
                       type: "password",
-                      name: "password"
+                      name: "password",
+                      autocomplete: "off"
                     },
                     domProps: { value: _vm.password },
                     on: {
@@ -50820,6 +50842,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -50831,10 +50854,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
             base_url: window.base_url,
-            demoEvents: [],
-            sample: [],
-            sample2: [],
+            upmoodCalendar: [],
             upmoodMeter: [],
+            moodForTheDay: [],
             featuredFriend: this.featured
         };
     },
@@ -50944,11 +50966,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var dateFormat = date[1] + '-' + date[0];
 
             axios.get(base_url + 'users/upmoodCalendar?id=' + this.profile.id + '&date=' + dateFormat).then(function (response) {
-                vue.demoEvents = response['data'];
+                vue.upmoodCalendar = response['data'];
             }).catch(function (error) {});
         },
         handleDayChanged: function handleDayChanged(val) {
-            alert('sample');
+            var vue = this;
+
+            var date = val.date.split('/');
+
+            if (date[1].length == 1) {
+                date[1] = '0' + date[1];
+            }
+            var dateFormat = date[0] + '-' + date[1] + '-' + date[2];
+
+            axios.get(base_url + 'users/moodForTheDay?id=' + this.profile.id + '&date=' + dateFormat).then(function (response) {
+                vue.moodForTheDay = response.data;
+            }).catch(function (error) {});
         },
         closeCurrentEmotion: function closeCurrentEmotion() {
             $(".slide-calendar").removeClass('slide-out');
@@ -51301,7 +51334,7 @@ var render = function() {
                 { staticClass: "calendar-wrapper" },
                 [
                   _c("vue-event-calendar", {
-                    attrs: { events: _vm.demoEvents },
+                    attrs: { events: _vm.upmoodCalendar },
                     on: {
                       "month-changed": _vm.handleMonthChanged,
                       "day-changed": _vm.handleDayChanged
@@ -51333,9 +51366,9 @@ var render = function() {
                       src:
                         _vm.base_url +
                         "img/resources/" +
-                        _vm.profile.emotion_set +
+                        _vm.moodForTheDay.emotion_set +
                         "/emoji/" +
-                        _vm.profile.emotion_value +
+                        _vm.moodForTheDay.emotion_value +
                         ".png",
                       alt: ""
                     }
@@ -51347,7 +51380,7 @@ var render = function() {
                     _c("div", { staticClass: "col-md-4" }, [_vm._v("BPM:")]),
                     _vm._v(" "),
                     _c("div", { staticClass: "col-md-8 BPM" }, [
-                      _vm._v(_vm._s(_vm.profile.heartbeat_count))
+                      _vm._v(_vm._s(_vm.moodForTheDay.heartbeat_count))
                     ])
                   ]),
                   _vm._v(" "),
@@ -51357,7 +51390,7 @@ var render = function() {
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "col-md-8 stress-level" }, [
-                      _vm._v(_vm._s(_vm.profile.stress_level))
+                      _vm._v(_vm._s(_vm.moodForTheDay.stress_level))
                     ])
                   ]),
                   _vm._v(" "),
@@ -51368,12 +51401,20 @@ var render = function() {
                       _c("div", { staticClass: "upmood-meter" }, [
                         _c("div", { staticClass: "meter" }, [
                           _c("div", { staticClass: "meter-control" }, [
-                            _c("img", {
-                              attrs: {
-                                src: _vm.base_url + "img/profile-avatar.png",
-                                alt: ""
-                              }
-                            })
+                            _vm.profile.facebook_id != null
+                              ? _c("img", {
+                                  attrs: { src: _vm.profile.image, alt: "" }
+                                })
+                              : _c("img", {
+                                  attrs: {
+                                    src:
+                                      _vm.base_url +
+                                      "img/" +
+                                      _vm.profile.image +
+                                      ".png",
+                                    alt: ""
+                                  }
+                                })
                           ])
                         ]),
                         _vm._v(" "),

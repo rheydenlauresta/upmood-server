@@ -28,7 +28,7 @@ class UsersController extends Controller
     public function show($module)
     {
         $checker = $this->methodCheckCms($module, [
-           'userFilter', 'userProfile', 'upmoodCalendar', 'downloadFile', 'moodStream'
+           'userFilter', 'userProfile', 'upmoodCalendar', 'downloadFile', 'moodStream', 'moodForTheDay'
         ]);
 
         if($checker['status'] == 204) return $checker;
@@ -81,6 +81,14 @@ class UsersController extends Controller
         $upmood_calendar = User::getCalendar($data);
 
         return $upmood_calendar;
+    }
+
+    public function moodForTheDay(){
+        $data = Input::all();
+
+        $moodForTheDay = User::getMoodForTheDay($data);
+        // print_r($moodForTheDay);
+        return $moodForTheDay->toArray();
     }
 
     public function moodStream($id)
