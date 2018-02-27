@@ -53,7 +53,7 @@
                             <div class="col-md-12">
                                 <div class="upmood-meter">
                                     <div class="meter">
-                                        <div class="meter-control">
+                                        <div class="meter-control current-emotion-meter">
                                             <img :src="profile.image" alt="" v-if="profile.facebook_id != null">
                                             <img :src="base_url+'img/'+profile.image+ '.png'" alt=""  v-else>
                                         </div>
@@ -141,8 +141,8 @@
                         </div>
                     </div>
                     <div class="slide-calendar-emotion">
-                        <div class="current-emotion for-calendar">
-                            <div class="title">Current Emotion</div>
+                        <div class="current-emotion for-calendar emotion-information">
+                            <div class="title">Emotion Information</div>
                             <div class="calendar-close" @click="closeCurrentEmotion">X</div>
                             <div class="image-wrapper">
                                 <img :src="base_url + 'img/resources/' + profile.emotion_set + '/emoji/' + profile.emotion_value + '.png'" alt="">
@@ -163,7 +163,7 @@
                                     <div class="col-md-12">
                                         <div class="upmood-meter">
                                             <div class="meter">
-                                                <div class="meter-control">
+                                                <div class="meter-control calendar-emotion-meter">
                                                     <img :src="base_url + 'img/profile-avatar.png'" alt="">
                                                 </div>
                                             </div>
@@ -207,7 +207,8 @@
         mounted() {
             $(".main-header > .title").html('<i class="header-ic ic-user-green"></i>Users');
             $("#sidenav-users").addClass('active');
-            this.UpdateMoodMeter(this.profile.upmood_meter);
+            this.UpdateCurrentMoodMeter(this.profile.upmood_meter);
+            this.UpdateCalendarMoodMeter('happy');
             this.handleMonthChanged(new Date().getUTCMonth() + 1+'/'+new Date().getUTCFullYear());
             this.moodStream();
             
@@ -283,21 +284,39 @@
                 }, 1000);
             },
 
-            UpdateMoodMeter(mood){
+            UpdateCurrentMoodMeter(mood){
                 if (mood == 'Sad' || mood == 'sad'){
-                    $(".meter-control").css('left','0px');
+                    $(".current-emotion-meter").css('left','0px');
                 }
                 else if (mood == 'Unpleasant' || mood == 'unpleasant'){
-                    $(".meter-control").css('left','62px');     
+                    $(".current-emotion-meter").css('left','62px');     
                 }
                 else if (mood == 'Calm' || mood == 'calm'){
-                    $(".meter-control").css('left','134px');
+                    $(".current-emotion-meter").css('left','134px');
                 }
                 else if (mood == 'Pleasant' || mood == 'pleasant'){
-                    $(".meter-control").css('left','200px');
+                    $(".current-emotion-meter").css('left','200px');
                 }
                 else if (mood == 'Happy' || mood == 'happy'){
-                    $(".meter-control").css('left','263px');
+                    $(".current-emotion-meter").css('left','263px');
+                }
+            },
+
+            UpdateCalendarMoodMeter(mood){
+                if (mood == 'Sad' || mood == 'sad'){
+                    $(".calendar-emotion-meter").css('left','0px');
+                }
+                else if (mood == 'Unpleasant' || mood == 'unpleasant'){
+                    $(".calendar-emotion-meter").css('left','62px');     
+                }
+                else if (mood == 'Calm' || mood == 'calm'){
+                    $(".calendar-emotion-meter").css('left','134px');
+                }
+                else if (mood == 'Pleasant' || mood == 'pleasant'){
+                    $(".calendar-emotion-meter").css('left','200px');
+                }
+                else if (mood == 'Happy' || mood == 'happy'){
+                    $(".calendar-emotion-meter").css('left','263px');
                 }
             },
 
