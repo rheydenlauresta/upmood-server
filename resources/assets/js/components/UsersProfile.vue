@@ -143,7 +143,7 @@
                     <div class="slide-calendar-emotion">
                         <div class="current-emotion for-calendar emotion-information">
                             <div class="title">Emotion Information</div>
-                            <div class="calendar-close" @click="closeCurrentEmotion">X</div>
+                            <div class="calendar-close" @click="closeCurrentEmotion"><img :src="base_url + 'img/ic_close.png'"></div>
                             <div class="image-wrapper">
                                 <img :src="base_url + 'img/resources/' + profile.emotion_set + '/emoji/' + profile.emotion_value + '.png'" alt="">
                             </div>

@@ -467,7 +467,7 @@
                 this.formData._method = 'PUT';
 
                 if(this.formData.message == ''){
-                    this.Notify("Oops!","Please Complete All Fields");
+                    this.Notify("Oops!","Please Complete All Fields","error");
                 }else{
                     this.submit('messages/sendReply', this.formData, 'clearFormData')
                 }
@@ -479,7 +479,7 @@
                 this.composeMessage._method = 'PUT';
 
                 if(this.composeMessage.message == '' || this.composeMessage.subject == '' || $('#email-to').val() == ''){
-                    this.Notify("Oops!","Please Complete All Fields");
+                    this.Notify("Oops!","Please Complete All Fields","error");
                 }else{
                     this.submit('messages/sendMessage', this.composeMessage, 'clearComposeMessage')
                 }
@@ -498,7 +498,7 @@
                 axios.post(base_url+url, data).then(function (response) {
 
 console.log(response.data)
-                    vue.Notify("Well Done!","You're message has been successfully sent");
+                    vue.Notify("Well Done!","You're message has been successfully sent","success");
                     if(successAction == 'clearFormData'){
                         vue.formData.contact_message_id = 0;
                         vue.formData.message = '';
@@ -516,9 +516,9 @@ console.log(response.data)
                     
                 }).catch(function (error) {
                     if(successAction == 'clearFormData'){
-                        vue.Notify('Error',error);
+                        vue.Notify('Error',error,'error');
                     }else if(successAction == 'clearComposeMessage'){
-                        vue.Notify('Error','Please make sure that all addresses are properly formed.');
+                        vue.Notify('Error','Please make sure that all addresses are properly formed.','error');
                     }
                     vue.sendButton.disable = false;
                     vue.sendButton.text = 'Send';
@@ -595,9 +595,17 @@ console.log(response.data)
                 $(".contact-wrapper").hide();
             },
 
-            Notify(title,message){
+            Notify(title,message,modaltype){
                 $('.notification-title').html(title);
                 $('.notification-description').html(message);
+                if (modaltype == 'success' || modaltype == 'Success'){
+                    $(".notification-modal-color").removeClass('error').addClass('success');
+                    $(".notification-modal-image").attr('src',base_url + 'img/ic_check_notification.png');
+                }
+                else if (modaltype == 'error' || modaltype == 'Error'){
+                    $(".notification-modal-color").removeClass('success').addClass('error');
+                    $(".notification-modal-image").attr('src',base_url + 'img/ic_warning.png');
+                }
             },
 
             messageMenuHighlight(id){
