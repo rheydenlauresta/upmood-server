@@ -366,6 +366,7 @@
 
                 if(typeof type != 'undefined'){
                     vue.type = type;
+                    // this.search = ''
                 }
 
                 axios.get(base_url+'messages/getMessages?type='+vue.type+'&search='+vue.search+'&urlsearch='+vue.url_search).then(function (response) {
@@ -389,10 +390,10 @@
                 $(".messages-menu").hide();
                 $(".compose-suggestion").hide();
                 $(".messages-content").hide();
-                vue.search = ''
 
                 if(typeof type != 'undefined'){
                     vue.type = type;
+                    // this.search = ''
                 }
 
                 axios.get(base_url+'messages/getSentmessage?search='+vue.search).then(function (response) {
@@ -407,7 +408,6 @@
                 let vue = this;
 
                 axios.get(base_url+'messages/getReplies?id='+id).then(function (response) {
-
                     if(response.data.seen == 0){
                         EventBus.$emit('updateNoti');
                     }
@@ -497,6 +497,7 @@
 
                 axios.post(base_url+url, data).then(function (response) {
 
+console.log(response.data)
                     vue.Notify("Well Done!","You're message has been successfully sent");
                     if(successAction == 'clearFormData'){
                         vue.formData.contact_message_id = 0;

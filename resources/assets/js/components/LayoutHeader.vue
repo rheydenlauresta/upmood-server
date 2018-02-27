@@ -25,7 +25,7 @@
                                             </div>
                                         </div>
                                         <div class="content-wrapper content-flex">
-                                            <div class="content">{{ noti.name }}, send an {{noti.type | messageType(noti.type)}} <b>"{{noti.content | truncate('50')}}"</b></div>
+                                            <div class="content">{{ noti.name }}, sent {{noti.type | messageType(noti.type)}} <b>"{{noti.content | truncate('50')}}"</b></div>
                                             <div class="time">{{ noti.date_created }} {{ noti.time_created }}</div>
                                         </div>
                                     </div>
@@ -91,13 +91,13 @@
       
             messageType: function(string, value) {
                 if(string == 'general'){
-                    return 'General';
+                    return 'a General';
                 }else if(string == 'reports'){
-                    return 'Report';
+                    return 'a Report';
                 }else if(string == 'account_cancellation'){
-                    return 'Account Cancellation';
+                    return 'an Account Cancellation';
                 }else if(string == 'inquiries'){
-                    return 'Inquiry';
+                    return 'an Inquiry';
                 }
             },
         },
