@@ -31,7 +31,10 @@
                                     </div>
                                 </a></li>
                             </ul>
-                            <infinite-loading @infinite="notificationInfiniteHandler" ref="infiniteLoading" spinner="bubbles"></infinite-loading>
+                            <infinite-loading @infinite="notificationInfiniteHandler" ref="infiniteLoading" spinner="bubbles">
+                                <span slot="no-more"></span>
+                                <span id="notificationnoresults" slot="no-results"></span>
+                            </infinite-loading>
                         </div>
                     </div>
                 </div>
@@ -127,6 +130,7 @@
                         $state.loaded();
                     }else{
                         $state.complete();
+                        
                     }
                 }, 1000);
             },

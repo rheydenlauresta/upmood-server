@@ -41,6 +41,7 @@
                         class="form-control"
                         name="password"
                         v-model="password"
+                        autocomplete="off"
                       >
                       <i class="ic ic-error"></i>
                       <span class="ic decrypt" v-if="password.length" @click="togglePassword">{{status}}</span>
