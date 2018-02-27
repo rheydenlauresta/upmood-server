@@ -28,7 +28,7 @@ Route::get('/reset', function () {
 
 Auth::routes();
 
-Route::group(['middleware' => 'auth'], function (){
+Route::group(['middleware' => ['auth','preventBackHistory']], function (){
 
 	// dashboard
 	Route::get('/dashboard', 'DashboardController@index');
@@ -48,3 +48,6 @@ Route::group(['middleware' => 'auth'], function (){
 
 	Route::get('/', 'DashboardController@index');
 });
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
