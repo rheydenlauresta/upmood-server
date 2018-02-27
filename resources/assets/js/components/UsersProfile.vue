@@ -35,7 +35,7 @@
                 <div class="current-emotion">
                     <div class="title">Current Emotion</div>
                     <div class="image-wrapper">
-                        <img :src="base_url + 'img/resources/' + profile.emotion_set + '/emoji/' + profile.emotion_value + '.png'" alt="">
+                        <img v-if="typeof profile.emotion_set != 'undefined'" :src="base_url + 'img/resources/' + profile.emotion_set + '/emoji/' + profile.emotion_value + '.png'" alt="">
                     </div>
                     <div class="emotion-info">
                         <div class="row">
@@ -92,8 +92,8 @@
                                     <td>{{ value.ppi | ppiCount(null) }}</td>
                                     <td>{{ value.total_ppi }}</td>
                                     <td>{{ value.stress_level }}</td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/' + value.emotion_set + '/emoji/' + value.emotion_value + '.png'" alt=""></div></td>
-                                    <td><div class="image-wrapper" v-if="value.set_name != null"><img :src="base_url + 'img/resources/' + value.set_name + '/' + value.type + '/' + value.filename" alt=""></div></td>
+                                    <td><div class="image-wrapper"><img v-if="typeof value.emotion_set != 'undefined'" :src="base_url + 'img/resources/' + value.emotion_set + '/emoji/' + value.emotion_value + '.png'" alt=""></div></td>
+                                    <td><div class="image-wrapper" v-if="value.set_name != null"><img v-if="typeof value.emotion_set != 'undefined'" :src="base_url + 'img/resources/' + value.set_name + '/' + value.type + '/' + value.filename" alt=""></div></td>
                                 </tr>
                             </tbody>
                             
@@ -120,8 +120,8 @@
                             <tbody v-for="value in featuredFriend.data">
                                 <tr>
                                     <td>{{ value.name }}</td>
-                                    <td><div class="image-wrapper"><img :src="base_url + 'img/resources/' + value.emotion_set + '/emoji/' + value.emotion_value + '.png'" alt=""></div></td>
-                                    <td><div class="image-wrapper" v-if="value.set_name != null"><img :src="base_url + 'img/resources/' + value.set_name + '/' + value.type + '/' + value.filename" alt=""></div></td>
+                                    <td><div class="image-wrapper"><img v-if="typeof value.emotion_set != 'undefined'" :src="base_url + 'img/resources/' + value.emotion_set + '/emoji/' + value.emotion_value + '.png'" alt=""></div></td>
+                                    <td><div class="image-wrapper" v-if="value.set_name != null"><img v-if="typeof value.emotion_set != 'undefined'" :src="base_url + 'img/resources/' + value.set_name + '/' + value.type + '/' + value.filename" alt=""></div></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -145,7 +145,7 @@
                             <div class="title">Emotion Information</div>
                             <div class="calendar-close" @click="closeCurrentEmotion"><img :src="base_url + 'img/ic_close.png'"></div>
                             <div class="image-wrapper">
-                                <img :src="base_url + 'img/resources/' + moodForTheDay.emotion_set + '/emoji/' + moodForTheDay.emotion_value + '.png'" alt="">
+                                <img v-if="typeof moodForTheDay.emotion_set != 'undefined'" :src="base_url + 'img/resources/' + moodForTheDay.emotion_set + '/emoji/' + moodForTheDay.emotion_value + '.png'" alt="">
                             </div>
                             <div class="emotion-info">
                                 <div class="row">
@@ -164,7 +164,7 @@
                                         <div class="upmood-meter">
                                             <div class="meter">
 
-                                                <div class="meter-control">
+                                                <div class="meter-control calendar-emotion-meter">
                                                     <img :src="profile.image" alt="" v-if="profile.facebook_id != null">
                                                     <img :src="base_url+'img/'+profile.image+ '.png'" alt=""  v-else>
                                                 </div>
@@ -359,6 +359,8 @@
                 
                 axios.get(base_url+'users/moodForTheDay?id='+this.profile.id+'&date='+dateFormat).then(function (response) {
                     vue.moodForTheDay = response.data;
+                    // alert(response.data.upmood_meter)
+                    vue.UpdateCalendarMoodMeter(response.data.upmood_meter)
                 }).catch(function (error) {
                 });
             },

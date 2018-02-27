@@ -50843,6 +50843,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -50863,7 +50864,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     mounted: function mounted() {
         $(".main-header > .title").html('<i class="header-ic ic-user-green"></i>Users');
         $("#sidenav-users").addClass('active');
-        this.UpdateMoodMeter(this.profile.upmood_meter);
+        this.UpdateCurrentMoodMeter(this.profile.upmood_meter);
+        this.UpdateCalendarMoodMeter('happy');
         this.handleMonthChanged(new Date().getUTCMonth() + 1 + '/' + new Date().getUTCFullYear());
         this.moodStream();
     },
@@ -50935,17 +50937,30 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }
             }, 1000);
         },
-        UpdateMoodMeter: function UpdateMoodMeter(mood) {
+        UpdateCurrentMoodMeter: function UpdateCurrentMoodMeter(mood) {
             if (mood == 'Sad' || mood == 'sad') {
-                $(".meter-control").css('left', '0px');
+                $(".current-emotion-meter").css('left', '0px');
             } else if (mood == 'Unpleasant' || mood == 'unpleasant') {
-                $(".meter-control").css('left', '62px');
+                $(".current-emotion-meter").css('left', '62px');
             } else if (mood == 'Calm' || mood == 'calm') {
-                $(".meter-control").css('left', '134px');
+                $(".current-emotion-meter").css('left', '134px');
             } else if (mood == 'Pleasant' || mood == 'pleasant') {
-                $(".meter-control").css('left', '200px');
+                $(".current-emotion-meter").css('left', '200px');
             } else if (mood == 'Happy' || mood == 'happy') {
-                $(".meter-control").css('left', '263px');
+                $(".current-emotion-meter").css('left', '263px');
+            }
+        },
+        UpdateCalendarMoodMeter: function UpdateCalendarMoodMeter(mood) {
+            if (mood == 'Sad' || mood == 'sad') {
+                $(".calendar-emotion-meter").css('left', '0px');
+            } else if (mood == 'Unpleasant' || mood == 'unpleasant') {
+                $(".calendar-emotion-meter").css('left', '62px');
+            } else if (mood == 'Calm' || mood == 'calm') {
+                $(".calendar-emotion-meter").css('left', '134px');
+            } else if (mood == 'Pleasant' || mood == 'pleasant') {
+                $(".calendar-emotion-meter").css('left', '200px');
+            } else if (mood == 'Happy' || mood == 'happy') {
+                $(".calendar-emotion-meter").css('left', '263px');
             }
         },
         moodStream: function moodStream() {
@@ -50981,6 +50996,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             axios.get(base_url + 'users/moodForTheDay?id=' + this.profile.id + '&date=' + dateFormat).then(function (response) {
                 vue.moodForTheDay = response.data;
+                // alert(response.data.upmood_meter)
+                vue.UpdateCalendarMoodMeter(response.data.upmood_meter);
             }).catch(function (error) {});
         },
         closeCurrentEmotion: function closeCurrentEmotion() {
@@ -51071,18 +51088,20 @@ var render = function() {
           _c("div", { staticClass: "title" }, [_vm._v("Current Emotion")]),
           _vm._v(" "),
           _c("div", { staticClass: "image-wrapper" }, [
-            _c("img", {
-              attrs: {
-                src:
-                  _vm.base_url +
-                  "img/resources/" +
-                  _vm.profile.emotion_set +
-                  "/emoji/" +
-                  _vm.profile.emotion_value +
-                  ".png",
-                alt: ""
-              }
-            })
+            typeof _vm.profile.emotion_set != "undefined"
+              ? _c("img", {
+                  attrs: {
+                    src:
+                      _vm.base_url +
+                      "img/resources/" +
+                      _vm.profile.emotion_set +
+                      "/emoji/" +
+                      _vm.profile.emotion_value +
+                      ".png",
+                    alt: ""
+                  }
+                })
+              : _vm._e()
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "emotion-info" }, [
@@ -51108,22 +51127,26 @@ var render = function() {
               _c("div", { staticClass: "col-md-12" }, [
                 _c("div", { staticClass: "upmood-meter" }, [
                   _c("div", { staticClass: "meter" }, [
-                    _c("div", { staticClass: "meter-control" }, [
-                      _vm.profile.facebook_id != null
-                        ? _c("img", {
-                            attrs: { src: _vm.profile.image, alt: "" }
-                          })
-                        : _c("img", {
-                            attrs: {
-                              src:
-                                _vm.base_url +
-                                "img/" +
-                                _vm.profile.image +
-                                ".png",
-                              alt: ""
-                            }
-                          })
-                    ])
+                    _c(
+                      "div",
+                      { staticClass: "meter-control current-emotion-meter" },
+                      [
+                        _vm.profile.facebook_id != null
+                          ? _c("img", {
+                              attrs: { src: _vm.profile.image, alt: "" }
+                            })
+                          : _c("img", {
+                              attrs: {
+                                src:
+                                  _vm.base_url +
+                                  "img/" +
+                                  _vm.profile.image +
+                                  ".png",
+                                alt: ""
+                              }
+                            })
+                      ]
+                    )
                   ]),
                   _vm._v(" "),
                   _vm._m(2)
@@ -51168,37 +51191,41 @@ var render = function() {
                         _vm._v(" "),
                         _c("td", [
                           _c("div", { staticClass: "image-wrapper" }, [
-                            _c("img", {
-                              attrs: {
-                                src:
-                                  _vm.base_url +
-                                  "img/resources/" +
-                                  value.emotion_set +
-                                  "/emoji/" +
-                                  value.emotion_value +
-                                  ".png",
-                                alt: ""
-                              }
-                            })
+                            typeof value.emotion_set != "undefined"
+                              ? _c("img", {
+                                  attrs: {
+                                    src:
+                                      _vm.base_url +
+                                      "img/resources/" +
+                                      value.emotion_set +
+                                      "/emoji/" +
+                                      value.emotion_value +
+                                      ".png",
+                                    alt: ""
+                                  }
+                                })
+                              : _vm._e()
                           ])
                         ]),
                         _vm._v(" "),
                         _c("td", [
                           value.set_name != null
                             ? _c("div", { staticClass: "image-wrapper" }, [
-                                _c("img", {
-                                  attrs: {
-                                    src:
-                                      _vm.base_url +
-                                      "img/resources/" +
-                                      value.set_name +
-                                      "/" +
-                                      value.type +
-                                      "/" +
-                                      value.filename,
-                                    alt: ""
-                                  }
-                                })
+                                typeof value.emotion_set != "undefined"
+                                  ? _c("img", {
+                                      attrs: {
+                                        src:
+                                          _vm.base_url +
+                                          "img/resources/" +
+                                          value.set_name +
+                                          "/" +
+                                          value.type +
+                                          "/" +
+                                          value.filename,
+                                        alt: ""
+                                      }
+                                    })
+                                  : _vm._e()
                               ])
                             : _vm._e()
                         ])
@@ -51257,37 +51284,41 @@ var render = function() {
                         _vm._v(" "),
                         _c("td", [
                           _c("div", { staticClass: "image-wrapper" }, [
-                            _c("img", {
-                              attrs: {
-                                src:
-                                  _vm.base_url +
-                                  "img/resources/" +
-                                  value.emotion_set +
-                                  "/emoji/" +
-                                  value.emotion_value +
-                                  ".png",
-                                alt: ""
-                              }
-                            })
+                            typeof value.emotion_set != "undefined"
+                              ? _c("img", {
+                                  attrs: {
+                                    src:
+                                      _vm.base_url +
+                                      "img/resources/" +
+                                      value.emotion_set +
+                                      "/emoji/" +
+                                      value.emotion_value +
+                                      ".png",
+                                    alt: ""
+                                  }
+                                })
+                              : _vm._e()
                           ])
                         ]),
                         _vm._v(" "),
                         _c("td", [
                           value.set_name != null
                             ? _c("div", { staticClass: "image-wrapper" }, [
-                                _c("img", {
-                                  attrs: {
-                                    src:
-                                      _vm.base_url +
-                                      "img/resources/" +
-                                      value.set_name +
-                                      "/" +
-                                      value.type +
-                                      "/" +
-                                      value.filename,
-                                    alt: ""
-                                  }
-                                })
+                                typeof value.emotion_set != "undefined"
+                                  ? _c("img", {
+                                      attrs: {
+                                        src:
+                                          _vm.base_url +
+                                          "img/resources/" +
+                                          value.set_name +
+                                          "/" +
+                                          value.type +
+                                          "/" +
+                                          value.filename,
+                                        alt: ""
+                                      }
+                                    })
+                                  : _vm._e()
                               ])
                             : _vm._e()
                         ])
@@ -51346,84 +51377,100 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "slide-calendar-emotion" }, [
-              _c("div", { staticClass: "current-emotion for-calendar" }, [
-                _c("div", { staticClass: "title" }, [
-                  _vm._v("Current Emotion")
-                ]),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    staticClass: "calendar-close",
-                    on: { click: _vm.closeCurrentEmotion }
-                  },
-                  [_vm._v("X")]
-                ),
-                _vm._v(" "),
-                _c("div", { staticClass: "image-wrapper" }, [
-                  _c("img", {
-                    attrs: {
-                      src:
-                        _vm.base_url +
-                        "img/resources/" +
-                        _vm.moodForTheDay.emotion_set +
-                        "/emoji/" +
-                        _vm.moodForTheDay.emotion_value +
-                        ".png",
-                      alt: ""
-                    }
-                  })
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "emotion-info" }, [
-                  _c("div", { staticClass: "row" }, [
-                    _c("div", { staticClass: "col-md-4" }, [_vm._v("BPM:")]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "col-md-8 BPM" }, [
-                      _vm._v(_vm._s(_vm.moodForTheDay.heartbeat_count))
-                    ])
+              _c(
+                "div",
+                {
+                  staticClass:
+                    "current-emotion for-calendar emotion-information"
+                },
+                [
+                  _c("div", { staticClass: "title" }, [
+                    _vm._v("Emotion Information")
                   ]),
                   _vm._v(" "),
-                  _c("div", { staticClass: "row" }, [
-                    _c("div", { staticClass: "col-md-4" }, [
-                      _vm._v("Stress Level:")
+                  _c(
+                    "div",
+                    {
+                      staticClass: "calendar-close",
+                      on: { click: _vm.closeCurrentEmotion }
+                    },
+                    [_vm._v("X")]
+                  ),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "image-wrapper" }, [
+                    typeof _vm.moodForTheDay.emotion_set != "undefined"
+                      ? _c("img", {
+                          attrs: {
+                            src:
+                              _vm.base_url +
+                              "img/resources/" +
+                              _vm.moodForTheDay.emotion_set +
+                              "/emoji/" +
+                              _vm.moodForTheDay.emotion_value +
+                              ".png",
+                            alt: ""
+                          }
+                        })
+                      : _vm._e()
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "emotion-info" }, [
+                    _c("div", { staticClass: "row" }, [
+                      _c("div", { staticClass: "col-md-4" }, [_vm._v("BPM:")]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-8 BPM" }, [
+                        _vm._v(_vm._s(_vm.moodForTheDay.heartbeat_count))
+                      ])
                     ]),
                     _vm._v(" "),
-                    _c("div", { staticClass: "col-md-8 stress-level" }, [
-                      _vm._v(_vm._s(_vm.moodForTheDay.stress_level))
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _vm._m(5),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "row" }, [
-                    _c("div", { staticClass: "col-md-12" }, [
-                      _c("div", { staticClass: "upmood-meter" }, [
-                        _c("div", { staticClass: "meter" }, [
-                          _c("div", { staticClass: "meter-control" }, [
-                            _vm.profile.facebook_id != null
-                              ? _c("img", {
-                                  attrs: { src: _vm.profile.image, alt: "" }
-                                })
-                              : _c("img", {
-                                  attrs: {
-                                    src:
-                                      _vm.base_url +
-                                      "img/" +
-                                      _vm.profile.image +
-                                      ".png",
-                                    alt: ""
-                                  }
-                                })
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _vm._m(6)
+                    _c("div", { staticClass: "row" }, [
+                      _c("div", { staticClass: "col-md-4" }, [
+                        _vm._v("Stress Level:")
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-8 stress-level" }, [
+                        _vm._v(_vm._s(_vm.moodForTheDay.stress_level))
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _vm._m(5),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "row" }, [
+                      _c("div", { staticClass: "col-md-12" }, [
+                        _c("div", { staticClass: "upmood-meter" }, [
+                          _c("div", { staticClass: "meter" }, [
+                            _c(
+                              "div",
+                              {
+                                staticClass:
+                                  "meter-control calendar-emotion-meter"
+                              },
+                              [
+                                _vm.profile.facebook_id != null
+                                  ? _c("img", {
+                                      attrs: { src: _vm.profile.image, alt: "" }
+                                    })
+                                  : _c("img", {
+                                      attrs: {
+                                        src:
+                                          _vm.base_url +
+                                          "img/" +
+                                          _vm.profile.image +
+                                          ".png",
+                                        alt: ""
+                                      }
+                                    })
+                              ]
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _vm._m(6)
+                        ])
                       ])
                     ])
                   ])
-                ])
-              ])
+                ]
+              )
             ])
           ])
         ]

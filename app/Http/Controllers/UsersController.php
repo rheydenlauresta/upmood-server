@@ -88,7 +88,7 @@ class UsersController extends Controller
 
         $moodForTheDay = User::getMoodForTheDay($data);
         // print_r($moodForTheDay);
-        return $moodForTheDay->toArray();
+        return $moodForTheDay;
     }
 
     public function moodStream($id)

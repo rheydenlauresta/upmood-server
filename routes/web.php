@@ -48,3 +48,6 @@ Route::group(['middleware' => ['auth','preventBackHistory']], function (){
 
 	Route::get('/', 'DashboardController@index');
 });
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
