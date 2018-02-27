@@ -47468,13 +47468,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         messageType: function messageType(string, value) {
             if (string == 'general') {
-                return 'General';
+                return 'a General';
             } else if (string == 'reports') {
-                return 'Report';
+                return 'a Report';
             } else if (string == 'account_cancellation') {
-                return 'Account Cancellation';
+                return 'an Account Cancellation';
             } else if (string == 'inquiries') {
-                return 'Inquiry';
+                return 'an Inquiry';
             }
         }
     },
@@ -47612,7 +47612,7 @@ var render = function() {
                                     _c("div", { staticClass: "content" }, [
                                       _vm._v(
                                         _vm._s(noti.name) +
-                                          ", send an " +
+                                          ", sent " +
                                           _vm._s(
                                             _vm._f("messageType")(
                                               noti.type,
@@ -51908,6 +51908,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             if (typeof type != 'undefined') {
                 vue.type = type;
+                // this.search = ''
             }
 
             axios.get(base_url + 'messages/getMessages?type=' + vue.type + '&search=' + vue.search + '&urlsearch=' + vue.url_search).then(function (response) {
@@ -51928,10 +51929,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             $(".messages-menu").hide();
             $(".compose-suggestion").hide();
             $(".messages-content").hide();
-            vue.search = '';
 
             if (typeof type != 'undefined') {
                 vue.type = type;
+                // this.search = ''
             }
 
             axios.get(base_url + 'messages/getSentmessage?search=' + vue.search).then(function (response) {
@@ -51943,7 +51944,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var vue = this;
 
             axios.get(base_url + 'messages/getReplies?id=' + id).then(function (response) {
-
                 if (response.data.seen == 0) {
                     __WEBPACK_IMPORTED_MODULE_1__app_js__["EventBus"].$emit('updateNoti');
                 }
@@ -52025,6 +52025,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             axios.post(base_url + url, data).then(function (response) {
 
+                console.log(response.data);
                 vue.Notify("Well Done!", "You're message has been successfully sent");
                 if (successAction == 'clearFormData') {
                     vue.formData.contact_message_id = 0;

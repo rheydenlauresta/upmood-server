@@ -20,18 +20,18 @@ class LoginController extends Controller
     | to conveniently provide its functionality to your applications.
     |
     */
-
+    
     use AuthenticatesUsers;
-
+    
     /**
      * Where to redirect users after login.
      *
      * @var string
      */
     protected $redirectTo = '/dashboard';
-    protected $maxAttempts = 3;
-    protected $decayMinutes = 5;
-
+    protected $maxAttempts = 5;
+    protected $decayMinutes = 3;
+    
     /**
      * Create a new controller instance.
      *
@@ -41,7 +41,7 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
-
+    
     protected function validateLogin(Request $request)
     { 
         $validator = $this->validate($request, [

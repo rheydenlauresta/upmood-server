@@ -79,7 +79,7 @@ class MessagesController extends Controller
             if($data['search'] != '' && $data['search'] != null){
                 $messages = $messages->where(function($query) use($data){
                     $query->where('users.name','like','%'.$data['search'].'%');
-                    $query->orWhere('contact_message.type','like','%'.$data['search'].'%');
+                    $query->orWhereRaw('CASE WHEN contact_message.type = "reports" THEN "Report" like "%'.$data['search'].'%" WHEN contact_message.type = "inquiries" THEN "Inquire" like "%'.$data['search'].'%" WHEN contact_message.type = "general" THEN "General" like "%'.$data['search'].'%" WHEN contact_message.type = "account_cancellation" THEN "Account Cancellation" like "%'.$data['search'].'%" END');
                     $query->orWhere('content','like','%'.$data['search'].'%');
                 });
             }
@@ -97,11 +97,10 @@ class MessagesController extends Controller
     public function getReplies(){ // Get Messages Replies
         $data = Input::all();
 
-
-    	$replies = Reply::selectraw("users.facebook_id, message, DATE_FORMAT(created_at, '%Y-%m-%d') as date_created, DATE_FORMAT(created_at, '%r') as time_created")
+    	$replies = Reply::selectraw("users.facebook_id, message, DATE_FORMAT(replies.created_at, '%Y-%m-%d') as date_created, DATE_FORMAT(replies.created_at, '%r') as time_created")
     				->where('contact_message_id',$data['id'])
                     ->leftjoin('users',function($query){
-                        $query->on('users.id','=','contact_message.user_id');
+                        $query->on('users.id','=','replies.contact_message_id');
                     })
     				->get()->toArray();
 
@@ -146,10 +145,10 @@ class MessagesController extends Controller
     public function emailSearch(){ // Get Available emails
         $data = Input::all();
 
-        $unregistered_emails = SentMessage::selectraw("'unknown', '', email")
+        $unregistered_emails = SentMessage::selectraw("'unknown', '', '', email")
             ->where('email','like','%'.$data['email'].'%');
 
-    	$emails = User::selectraw("name, image, email")
+    	$emails = User::selectraw("name, facebook_id, image, email")
     				->where(function($query) use($data){
     					$query->orWhere('email','like','%'.$data['email'].'%');
     					$query->orWhere('name','like','%'.$data['email'].'%');
@@ -183,19 +182,27 @@ class MessagesController extends Controller
 
         $last_batch = SentMessage::selectraw('max(batch) as batch')->first();
         $data['batch'] = $last_batch->batch + 1;
+        $checker = true;
+
         if(count($data['emailArray']) == 0){
             return false;
         }
 
         foreach($data['emailArray'] as $key => $value){
-            if(isset(explode('@',$value)[1])){
+            if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
+                $checker = false;
+            }
+        }
+
+        if($checker == true){
+
+            foreach($data['emailArray'] as $key => $value){
                 $data['email'] = $value;
 
-            	$res = $this->get_store($data,new SentMessage());
+                $res = $this->get_store($data,new SentMessage());
 
-           		dispatch(new MessageCreate($data));
+                dispatch(new MessageCreate($data));
             }
-
         }
 
         return $res;
